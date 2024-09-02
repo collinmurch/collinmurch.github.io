@@ -1,3 +1,3 @@
 # collinmurch
 
-Under construction
+Under construction. Built with SolidJS.
