@@ -17,7 +17,7 @@ function App() {
       <div class={styles.intro}>
         <img src={logo} class={styles.logo} alt="logo" />
         <h1 class={styles.name}>
-          Collin Murch
+          [Under Development]
         </h1>
         <p class={styles.about}>
           Full stack software engineer.
