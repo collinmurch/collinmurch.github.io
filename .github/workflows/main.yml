@@ -9,7 +9,9 @@ on:
       - main
 
 permissions:
+  contents: write
   pages: write
+  deployments: write
 
 jobs:
   build-and-deploy:
@@ -27,7 +29,7 @@ jobs:
         run: touch dist/assets/.nojekyll
 
       - name: Deploy to Pages
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        uses: JamesIves/github-pages-deploy-action@v4.6.3
         with:
           branch: gh-pages
           folder: dist
