@@ -17,4 +17,11 @@ export default defineConfig({
   build: {
     target: 'esnext',
   },
+  start: {
+    ssr: true,
+    server: {
+      baseURL: process.env.BASE_PATH,
+      preset: "static"
+    }
+  }
 });
