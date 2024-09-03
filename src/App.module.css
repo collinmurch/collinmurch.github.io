@@ -1,37 +1,48 @@
 .App {
   position: relative;
+  overflow: hidden;
   text-align: center;
   background-color: #1f3746;
-  font-weight: lighter;
+  height: 100vh;
+  width: 100vw;
 }
 
 .intro {
-  display: flex;
   position: absolute;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   color: #AD6600;
   font-family: Josefin Sans, sans-serif;
-  top: 15vh;
-  left: 50%;
+  top: 30vh;
+  left: 30vw;
   transform: translateX(-50%);
+  width: 50vw;
 }
 
 .logo {
+  position: absolute;
+  align-items: center;
+  justify-content: flex-start;
   height: 30vmin;
   border-radius: 25px;
   border: 5px solid #1F3746;
   filter: drop-shadow(5px 5px 4px #000000a0);
   pointer-events: none;
+  right: 0;
+  top: 30vh;
+  transform: translateX(-15vw);
 }
 
 .name {
-  font-size: calc(10px + 4vmin);
-  font-weight: regular;
+  font-size: calc(10px + 8vmin);
   filter: drop-shadow(3px 3px 1px #000000a0);
+  /* white-space: nowrap; */
 }
 
 .about {
-  font-size: calc(10px + 2vmin);
+  font-weight: lighter;
+  font-size: calc(10px + 3vmin);
+  margin-top: 0;
 }

@@ -9,7 +9,7 @@ const NavBar = ({ type, links }) => {
     return (
         <div class={type === NavType.Header ? styles.Header : styles.Footer}>
             {links.map((link, _) => (
-                <a href={link.href}>{link.text}</a>
+                <a href={link.href}> {link.text} </a>
             ))}
         </div>
     );

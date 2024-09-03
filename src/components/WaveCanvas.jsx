@@ -17,7 +17,7 @@ const WaveCanvas = () => {
         void main() {
             gl_Position = a_position;
         }
-    `;
+        `;
 
         const fragmentShaderSource = `
         precision mediump float;
@@ -68,7 +68,7 @@ const WaveCanvas = () => {
 
             gl_FragColor = vec4(color, 1.0);
         }
-    `;
+        `;
 
         function createShader(gl, type, source) {
             const shader = gl.createShader(type);
@@ -166,7 +166,7 @@ const WaveCanvas = () => {
     });
 
     return (
-        <canvas ref={canvas} style={styles}></canvas>
+        <canvas ref={canvas} style={styles.WaveCanvas} />
     );
 };
 
