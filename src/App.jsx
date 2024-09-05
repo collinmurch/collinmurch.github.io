@@ -19,7 +19,7 @@ function App() {
           Collin Murch
         </h1>
         <p class={styles.about}>
-          This site is under construction.
+          Full stack software engineer.
         </p>
       </div>
       <img src={logo} class={styles.logo} alt="logo" />

@@ -6,7 +6,7 @@
     justify-content: space-between;
     font-size: calc(3vmin);
     font-weight: regular;
-    width: 40vw;
+    width: 30vw;
     right: calc(10vw + 30vmin);
     transform: translateX(50%);
 }
