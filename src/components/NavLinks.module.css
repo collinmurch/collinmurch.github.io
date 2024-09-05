@@ -5,19 +5,19 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    font-size: calc(5px + 2vmin);
+    font-size: calc(3vmin);
     font-weight: regular;
-    width: 30vw;
+    width: 40vw;
     right: 0;
-    padding-right: 10vw;
+    transform: translateX(-15vmin);
 }
 
 .Header {
-    top: 0;
+    top: 1vh;
 }
 
 .Footer {
-    bottom: 10px;
+    bottom: 2vh;
 }
 
 a {
@@ -32,7 +32,7 @@ a:after {
     height: 1px;
     position: absolute;
     pointer-events: none;
-    bottom: -5px;
+    bottom: -1vh;
     left: 0;
     right: 0;
     opacity: 0;
@@ -52,4 +52,14 @@ a:hover:after {
 
 .Footer a {
     color: #FFFFFF;
+}
+
+@media (max-aspect-ratio: 1.33/1) {
+
+    .Header,
+    .Footer {
+        transform: none;
+        width: 90vw;
+        right: 5vw;
+    }
 }
