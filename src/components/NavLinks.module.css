@@ -6,8 +6,8 @@
     justify-content: space-between;
     font-size: calc(3vmin);
     font-weight: regular;
-    width: 30vw;
-    right: calc(10vw + 30vmin);
+    width: 30dvw;
+    right: calc(10dvw + 30vmin);
     transform: translateX(50%);
 }
 
@@ -31,7 +31,7 @@ a:after {
     height: 1px;
     position: absolute;
     pointer-events: none;
-    bottom: -1vh;
+    bottom: -1dvh;
     left: 0;
     right: 0;
     opacity: 0;
@@ -58,7 +58,7 @@ a:hover:after {
     .Header,
     .Footer {
         transform: none;
-        width: 90vw;
-        right: 5vw;
+        width: 90dvw;
+        right: 5dvw;
     }
 }
