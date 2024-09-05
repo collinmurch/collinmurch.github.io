@@ -4,12 +4,11 @@
     display: inline-flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
     font-size: calc(3vmin);
     font-weight: regular;
     width: 40vw;
-    right: 0;
-    transform: translateX(-15vmin);
+    right: calc(10vw + 30vmin);
+    transform: translateX(50%);
 }
 
 .Header {
