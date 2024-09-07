@@ -29,9 +29,9 @@ function App() {
       <img src={logo} class={styles.logo} alt="logo" />
 
       <NavBar loc={Location.Footer} links={[
-        { text: <img src={xLogo} alt="twitter logo" width="30vw" />, href: 'https://x.com/collinmurch' },
-        { text: <img src={githubLogo} alt="github logo" width="30vw" />, href: 'https://github.com/collinmurch' },
-        { text: <img src={linkedinLogo} alt="linkedin logo" width="30w" />, href: 'https://linkedin.com/in/collinmurch' },
+        { text: <img src={xLogo} alt="twitter logo" width="25vmin" />, href: 'https://x.com/collinmurch' },
+        { text: <img src={githubLogo} alt="github logo" width="25vmin" />, href: 'https://github.com/collinmurch' },
+        { text: <img src={linkedinLogo} alt="linkedin logo" width="25vmin" />, href: 'https://linkedin.com/in/collinmurch' },
       ]} />
       <WaveCanvas style={styles.waveCanvas} />
     </div>
