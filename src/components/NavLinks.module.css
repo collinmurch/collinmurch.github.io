@@ -4,11 +4,11 @@
     display: inline-flex;
     flex-direction: row;
     justify-content: space-between;
-    font-size: clamp(1.5em, 2vw, 3em);
     font-weight: regular;
     width: 30dvw;
     right: calc(10dvw + 30vmin);
     transform: translateX(50%);
+    font-size: clamp(1em, 2vw, 3em);
 }
 
 .Header {
@@ -60,5 +60,6 @@ a:hover:after {
         transform: none;
         width: 80dvw;
         right: 10dvw;
+        font-size: clamp(1.5em, 2vw, 3em);
     }
 }
