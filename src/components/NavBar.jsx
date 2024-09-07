@@ -7,9 +7,9 @@ export const Location = {
 
 const NavBar = ({ loc, links }) => {
     return (
-        <div class={loc === Location.Header ? styles.Header : styles.Footer}>
+        <div class={loc === Location.Footer ? styles.Footer : styles.Header}>
             {links.map((link, _) => (
-                <a href={link.href}> {link.text} </a>
+                <a href={link.href}>{link.text}</a>
             ))}
         </div>
     );

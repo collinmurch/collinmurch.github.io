@@ -2,6 +2,10 @@ import WaveCanvas from './components/WaveCanvas';
 import NavBar, { Location } from './components/NavBar';
 
 import logo from './assets/profile.jpeg';
+import githubLogo from './assets/github-logo.svg';
+import linkedinLogo from './assets/linkedin-logo.svg';
+import xLogo from './assets/x-logo.svg';
+
 import styles from './App.module.css';
 
 function App() {
@@ -25,9 +29,9 @@ function App() {
       <img src={logo} class={styles.logo} alt="logo" />
 
       <NavBar loc={Location.Footer} links={[
-        { text: 'Twitter', href: 'https://x.com/collinmurch' },
-        { text: 'GitHub', href: 'https://github.com/collinmurch' },
-        { text: 'LinkedIn', href: 'https://linkedin.com/in/collinmurch' },
+        { text: <img src={xLogo} alt="twitter logo" width="30vw" />, href: 'https://x.com/collinmurch' },
+        { text: <img src={githubLogo} alt="github logo" width="30vw" />, href: 'https://github.com/collinmurch' },
+        { text: <img src={linkedinLogo} alt="linkedin logo" width="30w" />, href: 'https://linkedin.com/in/collinmurch' },
       ]} />
       <WaveCanvas style={styles.waveCanvas} />
     </div>
