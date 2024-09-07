@@ -4,7 +4,7 @@
     display: inline-flex;
     flex-direction: row;
     justify-content: space-between;
-    font-size: clamp(2em, 2vw, 4em);
+    font-size: clamp(1.5em, 2vw, 3em);
     font-weight: regular;
     width: 30dvw;
     right: calc(10dvw + 30vmin);

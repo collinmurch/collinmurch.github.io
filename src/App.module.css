@@ -24,7 +24,7 @@
 .logo {
   position: absolute;
   justify-content: flex-start;
-  height: clamp(17.5em, 30vmin, 35em);
+  height: clamp(10em, 30vmin, 35em);
   border-radius: 4vmin;
   border: 0.75vmin solid #1F3746;
   filter: drop-shadow(0.33vw 0.33vmin 0.25vmin #000000a0);
@@ -35,7 +35,7 @@
 }
 
 .name {
-  font-size: clamp(4em, 8vmin, 9em);
+  font-size: clamp(3em, 8vmin, 9em);
   filter: drop-shadow(0.33vw 0.33vmin 0.25vmin #000000a0);
   white-space: nowrap;
   margin-bottom: 2dvh;
@@ -43,7 +43,7 @@
 
 .about {
   font-weight: lighter;
-  font-size: clamp(2em, 4vmin, 5em);
+  font-size: clamp(1em, 4vmin, 3em);
   margin-top: 0;
 }
 
