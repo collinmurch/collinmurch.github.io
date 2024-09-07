@@ -1,21 +1,21 @@
-import WaveCanvas from './components/WaveCanvas';
-import NavBar, { Location } from './components/NavBar';
+import WaveCanvas from '../components/WaveCanvas';
+import NavBar, { Location } from '../components/NavBar';
 
-import logo from './assets/profile.jpeg';
-import githubLogo from './assets/github-logo.svg';
-import linkedinLogo from './assets/linkedin-logo.svg';
-import xLogo from './assets/x-logo.svg';
+import logo from '../assets/profile.jpeg';
+import githubLogo from '../assets/github-logo.svg';
+import linkedinLogo from '../assets/linkedin-logo.svg';
+import xLogo from '../assets/x-logo.svg';
 
-import styles from './App.module.css';
+import styles from './Home.module.css';
 
-function App() {
+const Home = () => {
 
   return (
-    <div class={styles.App}>
+    <div class={styles.Home}>
       <NavBar loc={Location.Header} links={[
-        { text: 'About', href: '/' },
-        { text: 'Work', href: '/' },
-        { text: 'Contact', href: '/' }
+        { text: 'About', href: '/about' },
+        { text: 'Work', href: '/work' },
+        { text: 'Contact', href: '/contact' }
       ]} />
 
       <div class={styles.intro}>
@@ -38,4 +38,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
