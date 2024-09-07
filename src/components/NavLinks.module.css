@@ -4,7 +4,7 @@
     display: inline-flex;
     flex-direction: row;
     justify-content: space-between;
-    font-size: calc(3vmin);
+    font-size: 3vmin;
     font-weight: regular;
     width: 30dvw;
     right: calc(10dvw + 30vmin);
@@ -58,7 +58,8 @@ a:hover:after {
     .Header,
     .Footer {
         transform: none;
-        width: 90dvw;
-        right: 5dvw;
+        width: 80dvw;
+        right: 10dvw;
+        font-size: 3.5vmin;
     }
 }
