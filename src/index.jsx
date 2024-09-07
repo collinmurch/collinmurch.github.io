@@ -1,5 +1,5 @@
 /* @refresh reload */
-import { render } from 'solid-js/web';
+import { render, isServer } from 'solid-js/web';
 import { Router, Route } from "@solidjs/router";
 
 import { Home, About, Work, Contact } from './pages';
@@ -11,7 +11,7 @@ const root = document.getElementById("root");
 
 render(
   () => (
-    <Router>
+    <Router url={isServer ? req.url : ""}>
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/work" component={Work} />
