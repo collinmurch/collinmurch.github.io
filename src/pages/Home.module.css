@@ -8,20 +8,6 @@
   width: 100vw;
 }
 
-.intro {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  color: #AD6600;
-  font-family: Josefin Sans, sans-serif;
-  top: 33dvh;
-  left: 30dvw;
-  transform: translateX(-50%);
-  width: 50dvw;
-  pointer-events: none;
-}
-
 .logo {
   position: absolute;
   justify-content: flex-start;
@@ -31,8 +17,22 @@
   filter: drop-shadow(0.33vw 0.33vmin 0.25vmin #000000a0);
   pointer-events: none;
   right: 10dvw;
-  top: 30dvh;
-  transform: translateX(-50%);
+  top: 40vh;
+  transform: translate(-50%, -50%);
+}
+
+.intro {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  color: #AD6600;
+  font-family: Josefin Sans, sans-serif;
+  top: 40dvh;
+  left: 30dvw;
+  transform: translate(-50%, -50%);
+  width: 50dvw;
+  pointer-events: none;
 }
 
 .name {
@@ -66,7 +66,7 @@
 
   .intro {
     position: absolute;
-    top: 45dvh;
+    top: 60dvh;
     left: 50dvw;
     width: 90dvw;
   }
