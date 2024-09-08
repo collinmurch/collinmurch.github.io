@@ -72,5 +72,5 @@
 }
 
 .social {
-  width: clamp(1.5em, 2vw, 3em);
+  width: clamp(1em, 2vw, 3em);
 }
