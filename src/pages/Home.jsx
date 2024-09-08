@@ -1,3 +1,5 @@
+import { onMount } from 'solid-js';
+
 import WaveCanvas from '../components/WaveCanvas';
 import NavBar, { Location } from '../components/NavBar';
 
@@ -9,6 +11,10 @@ import xLogo from '../assets/x-logo.svg';
 import styles from './Home.module.css';
 
 const Home = () => {
+  onMount(() => {
+    // Disable scrolling on mobile
+    document.body.style.overflow = 'hidden';
+  });
 
   return (
     <div class={styles.Home}>
@@ -29,9 +35,9 @@ const Home = () => {
       <img src={logo} class={styles.logo} alt="logo" />
 
       <NavBar loc={Location.Footer} links={[
-        { text: <img src={xLogo} alt="twitter logo" width="25vmin" />, href: 'https://x.com/collinmurch' },
-        { text: <img src={githubLogo} alt="github logo" width="25vmin" />, href: 'https://github.com/collinmurch' },
-        { text: <img src={linkedinLogo} alt="linkedin logo" width="25vmin" />, href: 'https://linkedin.com/in/collinmurch' },
+        { text: <img src={xLogo} alt="twitter logo" style={styles.social} />, href: 'https://x.com/collinmurch' },
+        { text: <img src={githubLogo} alt="github logo" style={styles.social} />, href: 'https://github.com/collinmurch' },
+        { text: <img src={linkedinLogo} alt="linkedin logo" style={styles.social} />, href: 'https://linkedin.com/in/collinmurch' },
       ]} />
       <WaveCanvas style={styles.waveCanvas} />
     </div>

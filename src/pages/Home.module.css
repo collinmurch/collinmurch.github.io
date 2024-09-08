@@ -47,6 +47,10 @@
   margin-top: 0;
 }
 
+.social {
+  width: 25vmin;
+}
+
 /* Tablet-sized devices */
 @media (max-aspect-ratio: 1.33/1) {
   .App {
