@@ -7,7 +7,6 @@ const WaveCanvas = () => {
 
     onMount(() => {
         const gl = canvas.getContext("webgl");
-
         if (!gl) {
             console.error("WebGL not supported");
             return;
@@ -71,14 +70,19 @@ const WaveCanvas = () => {
         resizeCanvas();
         let startTime = performance.now();
 
-        // Handle mouse & touch movement
-        let pos = [0, 0];
+        // Handle mouse and touch movement
+        let mouse = [0, 0];
         const handleMouseMove = (event) => {
-            pos[0] = event.clientX;
-            pos[1] = event.clientY;
+            mouse[0] = event.clientX;
+            mouse[1] = event.clientY;
         }
         window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('touchmove', handleMouseMove);
+        const handleTouchMove = (event) => {
+            const touch = event.touches[0];
+            mouse[0] = touch.clientX;
+            mouse[1] = touch.clientY;
+        }
+        window.addEventListener('touchmove', handleTouchMove);
 
         const render = () => {
             const currentTime = (performance.now() - startTime) / 1000.0;
