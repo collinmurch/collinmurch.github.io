@@ -13,7 +13,10 @@ import styles from './Home.module.css';
 const Home = () => {
   onMount(() => {
     // Disable scrolling on mobile
-    document.body.style.overflow = 'hidden';
+    const preventDefault = (e) => {
+      e.preventDefault();
+    }
+    document.body.addEventListener('touchmove', preventDefault, { passive: false });
   });
 
   return (
