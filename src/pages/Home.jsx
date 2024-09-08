@@ -28,9 +28,9 @@ const Home = () => {
       <img src={logo} class={styles.logo} alt="logo" />
 
       <NavBar loc={Location.Footer} links={[
-        { text: <img src={xLogo} alt="twitter logo" style={styles.social} />, href: 'https://x.com/collinmurch' },
-        { text: <img src={githubLogo} alt="github logo" style={styles.social} />, href: 'https://github.com/collinmurch' },
-        { text: <img src={linkedinLogo} alt="linkedin logo" style={styles.social} />, href: 'https://linkedin.com/in/collinmurch' },
+        { text: <img src={xLogo} alt="twitter logo" class={styles.social} />, href: 'https://x.com/collinmurch' },
+        { text: <img src={githubLogo} alt="github logo" class={styles.social} />, href: 'https://github.com/collinmurch' },
+        { text: <img src={linkedinLogo} alt="linkedin logo" class={styles.social} />, href: 'https://linkedin.com/in/collinmurch' },
       ]} />
       <WaveCanvas style={styles.waveCanvas} />
     </div>
