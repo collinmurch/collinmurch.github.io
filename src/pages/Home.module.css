@@ -19,6 +19,7 @@
   left: 30dvw;
   transform: translateX(-50%);
   width: 50dvw;
+  pointer-events: none;
 }
 
 .logo {
