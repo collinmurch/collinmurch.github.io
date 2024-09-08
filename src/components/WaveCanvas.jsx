@@ -12,6 +12,12 @@ const WaveCanvas = () => {
             return;
         }
 
+        // Disable scrolling on mobile
+        const preventDefault = (e) => {
+            e.preventDefault();
+        }
+        document.body.addEventListener('touchmove', preventDefault, { passive: false });
+
         const createShader = (gl, type, source) => {
             const shader = gl.createShader(type);
             gl.shaderSource(shader, source);

@@ -1,5 +1,3 @@
-import { onMount } from 'solid-js';
-
 import WaveCanvas from '../components/WaveCanvas';
 import NavBar, { Location } from '../components/NavBar';
 
@@ -11,14 +9,6 @@ import xLogo from '../assets/x-logo.svg';
 import styles from './Home.module.css';
 
 const Home = () => {
-  onMount(() => {
-    // Disable scrolling on mobile
-    const preventDefault = (e) => {
-      e.preventDefault();
-    }
-    document.body.addEventListener('touchmove', preventDefault, { passive: false });
-  });
-
   return (
     <div class={styles.Home}>
       <NavBar loc={Location.Header} links={[
