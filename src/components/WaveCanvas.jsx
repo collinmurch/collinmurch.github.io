@@ -71,16 +71,16 @@ const WaveCanvas = () => {
         let startTime = performance.now();
 
         // Handle mouse and touch movement
-        let mouse = [0, 0];
+        let pos = [0, 0];
         const handleMouseMove = (event) => {
-            mouse[0] = event.clientX;
-            mouse[1] = event.clientY;
+            pos[0] = event.clientX;
+            pos[1] = event.clientY;
         }
         window.addEventListener('mousemove', handleMouseMove);
         const handleTouchMove = (event) => {
             const touch = event.touches[0];
-            mouse[0] = touch.clientX;
-            mouse[1] = touch.clientY;
+            pos[0] = touch.clientX;
+            pos[1] = touch.clientY;
         }
         window.addEventListener('touchmove', handleTouchMove);
 
