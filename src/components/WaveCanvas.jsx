@@ -68,9 +68,11 @@ const WaveCanvas = () => {
 
         // Resize canvas on window resize
         const resizeCanvas = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+            const width = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+            const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            gl.viewport(0, 0, width, height);
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
