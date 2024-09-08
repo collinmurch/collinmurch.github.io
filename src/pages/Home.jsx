@@ -1,10 +1,5 @@
-import WaveCanvas from '../components/WaveCanvas';
-import NavBar, { Location } from '../components/NavBar';
-
-import logo from '../assets/profile.jpeg';
-import githubLogo from '../assets/github-logo.svg';
-import linkedinLogo from '../assets/linkedin-logo.svg';
-import xLogo from '../assets/x-logo.svg';
+import { NavBar, WaveCanvas, Location } from '../components';
+import { Profile, GitHub, LinkedIn, X } from '../assets';
 
 import styles from './Home.module.css';
 
@@ -25,12 +20,12 @@ const Home = () => {
           Full stack software engineer.
         </p>
       </div>
-      <img src={logo} class={styles.logo} alt="logo" />
+      <img src={Profile} class={styles.logo} alt="logo" />
 
       <NavBar loc={Location.Footer} links={[
-        { text: <img src={xLogo} alt="twitter logo" class={styles.social} />, href: 'https://x.com/collinmurch' },
-        { text: <img src={githubLogo} alt="github logo" class={styles.social} />, href: 'https://github.com/collinmurch' },
-        { text: <img src={linkedinLogo} alt="linkedin logo" class={styles.social} />, href: 'https://linkedin.com/in/collinmurch' },
+        { text: <img src={X} alt="twitter logo" class={styles.social} />, href: 'https://x.com/collinmurch' },
+        { text: <img src={GitHub} alt="github logo" class={styles.social} />, href: 'https://github.com/collinmurch' },
+        { text: <img src={LinkedIn} alt="linkedin logo" class={styles.social} />, href: 'https://linkedin.com/in/collinmurch' },
       ]} />
       <WaveCanvas style={styles.waveCanvas} />
     </div>
