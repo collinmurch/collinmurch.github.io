@@ -1,6 +1,10 @@
 <script>
+    import { onMount, onDestroy } from "svelte";
     import "../app.css";
+
     const { children } = $props();
 </script>
 
-{@render children()}
+{#key children}
+    {@render children()}
+{/key}
