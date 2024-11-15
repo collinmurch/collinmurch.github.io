@@ -1,21 +1,18 @@
-import { defineConfig } from 'vite';
-import solidPlugin from 'vite-plugin-solid';
+import { sveltekit } from "@sveltejs/kit/vite";
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [
-    solidPlugin(),
-  ],
-  server: {
-    port: 3000,
-  },
-  build: {
-    target: 'esnext',
-  },
-  start: {
-    ssr: true,
-    server: {
-      baseURL: process.env.BASE_PATH,
-      preset: "static"
-    }
-  }
+    plugins: [sveltekit()],
+    resolve: {
+        alias: {
+            $components: "/src/components",
+        },
+    },
+    optimizeDeps: {
+        include: ["mdsvex"],
+        exclude: ["@sveltejs/kit"],
+    },
+    ssr: {
+        noExternal: ["@sveltejs/kit"],
+    },
 });
