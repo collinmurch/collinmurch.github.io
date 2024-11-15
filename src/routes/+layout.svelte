@@ -1,5 +1,4 @@
 <script>
-    import { onMount, onDestroy } from "svelte";
     import "../app.css";
 
     const { children } = $props();

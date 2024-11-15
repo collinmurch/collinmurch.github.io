@@ -1,5 +1,3 @@
-export const prerender = true;
-
 export async function load() {
     const posts = await import.meta.glob("../../posts/*.md", { eager: true });
 
