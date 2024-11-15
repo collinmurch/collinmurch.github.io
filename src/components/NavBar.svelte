@@ -1,6 +1,5 @@
 <script>
-    export let location;
-    export let links;
+    const { location, links } = $props();
 </script>
 
 <div class={location}>
@@ -18,6 +17,7 @@
 <style>
     .Header,
     .Footer {
+        text-align: center;
         position: absolute;
         display: inline-flex;
         flex-direction: row;

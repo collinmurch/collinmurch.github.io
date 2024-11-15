@@ -1,6 +1,8 @@
 <script>
     import { formatDate } from "$lib/utils";
-    const { data } = $props();
+
+    /** @type {import('./$types').PageData} */
+    let { data } = $props();
 </script>
 
 <svelte:head>
@@ -13,9 +15,9 @@
     {#each data.posts as post}
         <article>
             <h2>
-                <a href="/blog/{post.slug}">{post.title}</a>
+                <a href="/blog/{post.path}">{post.meta.title}</a>
             </h2>
-            <time>{formatDate(post.date)}</time>
+            <time>{formatDate(post.meta.date)}</time>
         </article>
     {/each}
 </div>

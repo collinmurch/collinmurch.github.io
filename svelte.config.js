@@ -11,7 +11,7 @@ export default {
             strict: true,
         }),
     },
-    experimental: {
+    compilerOptions: {
         runes: true,
     },
     extensions: [".svelte", ".md"], // Include .md files and the .svelte files from MDsveX
