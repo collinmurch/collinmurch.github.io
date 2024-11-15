@@ -17,7 +17,6 @@ uniform vec2 u_mouse;
 
 float wave(vec2 p, float frequency, float amplitude, float speed, float offset) {
     return sin(p.x * frequency + u_time * speed + offset + mix(-1.0, 1.0, smoothstep(0.4, 0.6, u_mouse.x / u_resolution.x))) * amplitude;
-
 }
 
 void main() {
@@ -54,7 +53,6 @@ void main() {
     } else {
         color = vec3(0.122, 0.216, 0.275); // #7AB2B2, darkest
     }
-
 
     gl_FragColor = vec4(color, 1.0);
 }

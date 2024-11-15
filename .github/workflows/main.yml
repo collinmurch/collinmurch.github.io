@@ -1,34 +1,37 @@
 name: Build and Deploy
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
 
 permissions:
-  contents: write
-  pages: write
+    contents: write
+    pages: write
 
 jobs:
-  build-and-deploy:
-    concurrency: ci-${{ github.ref }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    build-and-deploy:
+        concurrency: ci-${{ github.ref }}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Install and Build
-        run: |
-          npm i
-          npm run build
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v1
 
-      - name: Create .nojekyll
-        run: touch dist/assets/.nojekyll
+            - name: Install and Build
+              run: |
+                  bun install
+                  bun run build
 
-      - name: Deploy to Pages
-        uses: JamesIves/github-pages-deploy-action@v4.6.3
-        with:
-          branch: gh-pages
-          folder: dist
+            - name: Create .nojekyll
+              run: touch build/.nojekyll # Note: SvelteKit builds to 'build' not 'dist'
+
+            - name: Deploy to Pages
+              uses: JamesIves/github-pages-deploy-action@v4.6.3
+              with:
+                  branch: gh-pages
+                  folder: build
