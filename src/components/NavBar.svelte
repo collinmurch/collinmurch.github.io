@@ -21,7 +21,7 @@
         position: absolute;
         display: inline-flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: space-evenly;
         font-weight: regular;
         width: 30dvw;
         right: calc(10dvw + 30vmin);
@@ -32,16 +32,17 @@
     .Header {
         top: 1vh;
     }
-
     .Footer {
         bottom: 2vh;
     }
 
     a {
+        flex: 1;
         display: inline-block;
         position: relative;
         text-decoration: none;
         color: currentColor;
+        text-align: center;
     }
 
     a:after {
@@ -50,25 +51,24 @@
         position: absolute;
         pointer-events: none;
         bottom: -1dvh;
-        left: 0;
-        right: 0;
+        left: 33%;
+        right: 33%;
         opacity: 0;
         background: currentColor;
         transform: scale(0, 1);
         transition: all 200ms;
     }
 
-    a:hover:after {
-        opacity: 1;
-        transform: scale(1, 1);
-    }
-
     .Header a {
         color: #ad6600;
     }
-
     .Footer a {
         color: #ffffff;
+    }
+
+    a:hover:after {
+        opacity: 1;
+        transform: scale(1, 1);
     }
 
     @media (max-aspect-ratio: 1.33/1) {

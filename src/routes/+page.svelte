@@ -21,24 +21,19 @@
 
 <style>
     .Home {
-        height: 100vh;
-        width: 100vw;
-        overflow: hidden;
         text-align: center;
-        align-items: center;
     }
 
     .logo {
         position: absolute;
-        justify-content: flex-start;
         height: clamp(10em, 30vmin, 35em);
         border-radius: 4vmin;
         border: 0.75vmin solid #1f3746;
         filter: drop-shadow(0.33vw 0.33vmin 0.25vmin #000000a0);
         pointer-events: none;
-        right: 10dvw;
+        right: calc(10dvw + 30vmin);
         top: 40vh;
-        transform: translate(-50%, -50%);
+        transform: translateX(50%) translateY(-50%);
     }
 
     .intro {
@@ -81,7 +76,6 @@
         }
 
         .intro {
-            position: absolute;
             top: 60dvh;
             left: 50dvw;
             width: 90dvw;
