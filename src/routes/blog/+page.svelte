@@ -16,9 +16,9 @@
         {#each data.posts as post}
             <article>
                 <h2>
-                    <a href="/blog/{post.path}">{post.meta.title}</a>
+                    <a href="/blog/{post.path}">{post.meta?.title}</a>
                 </h2>
-                <time>{formatDate(post.meta.date)}</time>
+                <time>{formatDate(post.meta?.date)}</time>
             </article>
         {/each}
     </div>
@@ -28,6 +28,11 @@
     .container {
         max-width: 80ch;
         margin: 0 auto;
+        color: #1f3746;
+    }
+
+    h1 {
+        padding-bottom: 1.5rem;
     }
 
     .posts {
@@ -37,7 +42,6 @@
 
     article {
         border-bottom: 1px solid #eee;
-        padding-bottom: 1rem;
     }
 
     h2 {
@@ -45,7 +49,6 @@
     }
 
     time {
-        color: #666;
         font-size: 0.9rem;
     }
 </style>

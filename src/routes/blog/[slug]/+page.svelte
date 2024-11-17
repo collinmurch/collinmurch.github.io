@@ -4,11 +4,11 @@
 </script>
 
 <article>
-    <h1>{data.post.title}</h1>
-    <time>{formatDate(data.post.date)}</time>
+    <h1>{data?.post.title}</h1>
+    <time>{formatDate(data?.post.date)}</time>
 
     <div class="content">
-        {@render data.post?.content()}
+        {@render data?.post.content()}
     </div>
 </article>
 
@@ -16,6 +16,7 @@
     article {
         max-width: 80ch;
         margin: 0 auto;
+        color: #1f3746;
     }
 
     .content :global(p) {
