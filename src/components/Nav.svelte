@@ -1,26 +1,19 @@
 <script>
     import { page } from "$app/stores";
-    const { location, links } = $props();
+    const { links } = $props();
 </script>
 
-<div class={location}>
+<nav class="Header">
     {#each links as link}
         <a href={link.href} class:active={$page.url.pathname === link.href}>
-            <span class="text">
-                {#if link.type === "image"}
-                    <img src={link.src} alt={link.alt} class="social" />
-                {:else}
-                    {link.text}
-                {/if}
-            </span>
+            <span class="text">{link.text}</span>
             <span class="background"></span>
         </a>
     {/each}
-</div>
+</nav>
 
 <style>
-    .Header,
-    .Footer {
+    .Header {
         text-align: center;
         position: absolute;
         display: inline-flex;
@@ -32,13 +25,7 @@
         transform: translateX(50%);
         font-size: clamp(1em, 2vw, 3em);
         z-index: 10;
-    }
-
-    .Header {
         top: 1dvh;
-    }
-    .Footer {
-        bottom: 2dvh;
     }
 
     a {
@@ -46,18 +33,11 @@
         display: inline-block;
         position: relative;
         text-decoration: none;
-        color: currentColor;
+        color: #ad6600;
         text-align: center;
         padding: 0.2em 0.8em;
         overflow: hidden;
         border-radius: 0.5em;
-    }
-
-    .Header a {
-        color: #ad6600;
-    }
-    .Footer a {
-        color: #ffffff;
     }
 
     .text {
@@ -74,14 +54,7 @@
         transform: translate(-50%, -50%) scale(0);
         border-radius: 50%;
         transition: transform 0.4s ease-out;
-    }
-
-    .Header .background {
         background-color: rgba(173, 102, 0, 0.1);
-    }
-
-    .Footer .background {
-        background-color: rgba(255, 255, 255, 0.1);
     }
 
     a:hover .background {
@@ -93,8 +66,7 @@
     }
 
     @media (max-aspect-ratio: 1.33/1) {
-        .Header,
-        .Footer {
+        .Header {
             transform: none;
             width: 80dvw;
             right: 10dvw;

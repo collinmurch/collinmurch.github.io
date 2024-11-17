@@ -1,5 +1,5 @@
 <script>
-    import NavBar from "$components/NavBar.svelte";
+    import Socials from "$components/Socials.svelte";
     import WaveCanvas from "$components/WaveCanvas.svelte";
     import { headerLinks, footerLinks } from "$lib/data/navigation";
 </script>
@@ -14,7 +14,7 @@
 
     <img src="/images/profile.jpeg" class="logo" alt="profile" />
 
-    <NavBar location="Footer" links={footerLinks} />
+    <Socials links={footerLinks} />
 </div>
 
 <style>

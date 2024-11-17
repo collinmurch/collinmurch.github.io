@@ -1,12 +1,12 @@
 <script>
     import "../app.css";
-    import NavBar from "$components/NavBar.svelte";
+    import Nav from "$components/Nav.svelte";
     import { headerLinks } from "$lib/data/navigation";
     const { children } = $props();
 </script>
 
 <div class="layout">
-    <NavBar location="Header" links={headerLinks} />
+    <Nav location="Header" links={headerLinks} />
     <main>
         {#key children}
             {@render children()}
