@@ -5,7 +5,7 @@ date: '2024-01-30'
 
 # Hello World
 
-This is a test post to test markdown parsing with static sites.
+This is a test post to test markdown rendering with static sites.
 
 Here's some **bold** text and some *italic* text.
 

@@ -20,6 +20,6 @@
     }
 
     main {
-        padding-top: 4rem; /* Adjust this value based on your navbar height */
+        padding: clamp(3rem, 6vw, 8rem) 0 0;
     }
 </style>
