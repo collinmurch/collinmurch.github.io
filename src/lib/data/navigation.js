@@ -1,7 +1,7 @@
 export const headerLinks = [
-    { text: "About", href: "/about", type: "text" },
-    { text: "Blog", href: "/blog", type: "text" },
-    { text: "Contact", href: "/contact", type: "text" },
+    { href: "/about", text: "About" },
+    { href: "/", text: "Home" },
+    { href: "/blog", text: "Blog" },
 ];
 
 export const footerLinks = [

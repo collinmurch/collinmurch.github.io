@@ -7,8 +7,6 @@
 <div class="Home">
     <WaveCanvas />
 
-    <NavBar location="Header" links={headerLinks} />
-
     <div class="intro">
         <h1 class="name">Collin Murch</h1>
         <p class="about">Full stack software engineer.</p>
