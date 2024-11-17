@@ -16,7 +16,6 @@
     article {
         max-width: 80ch;
         margin: 0 auto;
-        padding: 2rem;
     }
 
     .content :global(p) {

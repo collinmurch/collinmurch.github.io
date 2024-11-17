@@ -9,20 +9,27 @@
     <title>Blog Posts</title>
 </svelte:head>
 
-<h1>Blog Posts</h1>
+<div class="container">
+    <h1>Blog Posts</h1>
 
-<div class="posts">
-    {#each data.posts as post}
-        <article>
-            <h2>
-                <a href="/blog/{post.path}">{post.meta.title}</a>
-            </h2>
-            <time>{formatDate(post.meta.date)}</time>
-        </article>
-    {/each}
+    <div class="posts">
+        {#each data.posts as post}
+            <article>
+                <h2>
+                    <a href="/blog/{post.path}">{post.meta.title}</a>
+                </h2>
+                <time>{formatDate(post.meta.date)}</time>
+            </article>
+        {/each}
+    </div>
 </div>
 
 <style>
+    .container {
+        max-width: 80ch;
+        margin: 0 auto;
+    }
+
     .posts {
         display: grid;
         gap: 2rem;
