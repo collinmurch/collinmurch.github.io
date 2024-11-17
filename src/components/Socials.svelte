@@ -24,7 +24,7 @@
         right: calc(10dvw + 30vmin);
         transform: translateX(50%);
         font-size: clamp(1em, 2vw, 3em);
-        z-index: 10;
+        z-index: 1;
         bottom: 2dvh;
     }
 

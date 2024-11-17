@@ -1,11 +1,34 @@
 <script>
     import { page } from "$app/stores";
+    import { goto } from "$app/navigation";
+    import { transitionState } from "$lib/stores/transition";
+    import { onMount } from "svelte";
+
     const { links } = $props();
+
+    onMount(() => {
+        if ($page.url.pathname !== "/") {
+            transitionState.set(true);
+        }
+    });
+
+    async function handleNavigation(href) {
+        if ($page.url.pathname === href) return;
+        transitionState.set(true);
+        await goto(href);
+    }
 </script>
 
 <nav class="Header">
     {#each links as link}
-        <a href={link.href} class:active={$page.url.pathname === link.href}>
+        <a
+            href={link.href}
+            class:active={$page.url.pathname === link.href}
+            onclick={(e) => {
+                e.preventDefault();
+                handleNavigation(link.href);
+            }}
+        >
             <span class="text">{link.text}</span>
             <span class="background"></span>
         </a>
@@ -24,8 +47,8 @@
         right: calc(10dvw + 30vmin);
         transform: translateX(50%);
         font-size: clamp(1em, 2vw, 3em);
-        z-index: 10;
         top: 1dvh;
+        z-index: 1;
     }
 
     a {
@@ -42,7 +65,6 @@
 
     .text {
         position: relative;
-        z-index: 1;
     }
 
     .background {
@@ -63,6 +85,10 @@
 
     a.active .background {
         transform: translate(-50%, -50%) scale(1);
+    }
+
+    :global(body.transitioning) a {
+        opacity: 0;
     }
 
     @media (max-aspect-ratio: 1.33/1) {

@@ -1,19 +1,8 @@
-/*
-    Todo: move these to invdividual .glsl files
-*/
-
-const vertexShaderSource = `
-attribute vec4 a_position;
-void main() {
-    gl_Position = a_position;
-}
-`;
-
-const fragmentShaderSource = `
 precision mediump float;
 uniform float u_time;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
+uniform float u_transition;
 
 float wave(vec2 p, float frequency, float amplitude, float speed, float offset) {
     return sin(p.x * frequency + u_time * speed + offset + mix(-1.0, 1.0, smoothstep(0.4, 0.6, u_mouse.x / u_resolution.x))) * amplitude;
@@ -22,6 +11,9 @@ float wave(vec2 p, float frequency, float amplitude, float speed, float offset) 
 void main() {
     vec2 st = gl_FragCoord.xy / u_resolution.xy;
     st.x *= u_resolution.x / u_resolution.y; // Correct aspect ratio
+
+    // For bringing up the wave on transition
+    float transitionOffset = u_transition * 0.9;
 
     // Adjust wave properties based on mouse position
     float frequencyMultiplier = mix(1.0, 15.0, pow(abs(0.5 - (u_mouse.x / u_resolution.x)), 2.0) * 10.0);
@@ -33,7 +25,7 @@ void main() {
     float wave3 = wave(st, frequencyMultiplier * 0.5, amplitudeMultiplier * 0.1, 2.5, 2.0);
 
     // Combine the waves to create a more complex wave pattern
-    float wavePattern = st.y + wave1 + wave2 + wave3 + 0.75;
+    float wavePattern = st.y + wave1 + wave2 + wave3 + 0.75 - transitionOffset;
 
     vec3 color;
     float gradientFactor;
@@ -56,6 +48,3 @@ void main() {
 
     gl_FragColor = vec4(color, 1.0);
 }
-`;
-
-export { vertexShaderSource, fragmentShaderSource };

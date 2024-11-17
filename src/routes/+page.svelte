@@ -1,12 +1,15 @@
 <script>
     import Socials from "$components/Socials.svelte";
-    import WaveCanvas from "$components/WaveCanvas.svelte";
     import { headerLinks, footerLinks } from "$lib/data/navigation";
+    import { transitionState } from "$lib/stores/transition";
+    import { onMount } from "svelte";
+
+    onMount(() => {
+        transitionState.set(false);
+    });
 </script>
 
 <div class="Home">
-    <WaveCanvas />
-
     <div class="intro">
         <h1 class="name">Collin Murch</h1>
         <p class="about">Full stack software engineer.</p>
@@ -20,6 +23,8 @@
 <style>
     .Home {
         text-align: center;
+        position: fixed;
+        inset: 0;
     }
 
     .logo {

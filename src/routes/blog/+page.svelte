@@ -28,11 +28,18 @@
     .container {
         max-width: 80ch;
         margin: 0 auto;
-        color: #1f3746;
     }
 
     h1 {
         padding-bottom: 1.5rem;
+    }
+
+    a:link {
+        color: #e6f4f1;
+    }
+
+    a:visited {
+        color: #cde8e5;
     }
 
     .posts {
@@ -41,6 +48,7 @@
     }
 
     article {
+        padding-bottom: 0.5rem;
         border-bottom: 1px solid #eee;
     }
 
@@ -49,6 +57,7 @@
     }
 
     time {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        font-style: italic;
     }
 </style>

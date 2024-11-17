@@ -1,6 +1,8 @@
 html,
 body {
-    background-color: rgb(230, 244, 241);
+    /* Hacky fix for now to deal with safe-area insert */
+    background-color: #1f3746;
+
     height: 100dvh;
     width: 100dvw;
     margin: 0;
