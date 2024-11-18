@@ -1,26 +1,20 @@
 <script>
-    import "$lib/styles/prism-nord.css";
+    import "$lib/styles/prism-laserwave.css";
     import { formatDate } from "$lib/utils";
+
     const { data } = $props();
 </script>
 
-<div class="container">
-    <h1>{data?.post.title}</h1>
-    <time>{formatDate(data?.post.date)}</time>
+<h1>{data?.post.title}</h1>
+<time>{formatDate(data?.post.date)}</time>
 
-    <article>
-        <div class="content">
-            {@render data?.post.content()}
-        </div>
-    </article>
-</div>
+<article>
+    <div class="content">
+        {@render data?.post.content()}
+    </div>
+</article>
 
 <style>
-    .container {
-        max-width: 80ch;
-        margin: 0 auto;
-    }
-
     h1 {
         margin-bottom: 0.5rem;
     }
@@ -33,12 +27,12 @@
         color: #cde8e5;
     }
 
-    .content :global(p) {
-        line-height: 1rem;
+    .content :global(code) {
+        font-size: 0.9rem;
     }
 
     time {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         font-style: italic;
     }
 

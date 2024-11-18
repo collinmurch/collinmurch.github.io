@@ -1,6 +1,6 @@
 html,
 body {
-    /* Hacky fix for now to deal with safe-area insert */
+    /* Fix for now to deal with safe-area insert */
     background-color: #1f3746;
 
     height: 100dvh;

@@ -37,7 +37,7 @@
 </div>
 
 <style>
-    /* Allow us to do the trnasforms without transition jitter */
+    /* Allow us to do CSS trnansforms without transition jitter */
     .content-wrapper {
         position: fixed;
         inset: 0;
