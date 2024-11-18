@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import vertexShaderSource from "$lib/webgl/vertex.glsl?raw";
     import fragmentShaderSource from "$lib/webgl/fragment.glsl?raw";
-    import { transitionState } from "$lib/stores/transition";
+    import { waveState } from "$lib/stores/wave";
     import {
         initializeWebGL,
         resizeCanvasToDisplaySize,
@@ -48,7 +48,7 @@
         let targetTransition = 0;
         let transitionStartTime = 0;
 
-        const unsubscribe = transitionState.subscribe((value) => {
+        const unsubscribe = waveState.subscribe((value) => {
             targetTransition = value ? 1.0 : 0.0;
             transitionStartTime = performance.now();
         });

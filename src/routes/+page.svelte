@@ -1,11 +1,11 @@
 <script>
     import Socials from "$components/Socials.svelte";
     import { headerLinks, footerLinks } from "$lib/data/navigation";
-    import { transitionState } from "$lib/stores/transition";
+    import { waveState } from "$lib/stores/wave";
     import { onMount } from "svelte";
 
     onMount(() => {
-        transitionState.set(false);
+        waveState.set(false);
     });
 </script>
 

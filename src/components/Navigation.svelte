@@ -1,20 +1,20 @@
 <script>
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
-    import { transitionState } from "$lib/stores/transition";
+    import { waveState } from "$lib/stores/wave";
     import { onMount } from "svelte";
 
     const { links } = $props();
 
     onMount(() => {
         if ($page.url.pathname !== "/") {
-            transitionState.set(true);
+            waveState.set(true);
         }
     });
 
     async function handleNavigation(href) {
         if ($page.url.pathname === href) return;
-        transitionState.set(true);
+        waveState.set(true);
         await goto(href);
     }
 </script>
@@ -24,6 +24,7 @@
         <a
             href={link.href}
             class:active={$page.url.pathname === link.href}
+            class:home={$page.url.pathname === "/"}
             onclick={(e) => {
                 e.preventDefault();
                 handleNavigation(link.href);
@@ -56,11 +57,15 @@
         display: inline-block;
         position: relative;
         text-decoration: none;
-        color: #ad6600;
+        color: #cde8e5;
         text-align: center;
         padding: 0.2em 0.8em;
         overflow: hidden;
         border-radius: 0.5em;
+    }
+
+    a.home {
+        color: #ad6600;
     }
 
     .text {
@@ -76,7 +81,11 @@
         transform: translate(-50%, -50%) scale(0);
         border-radius: 50%;
         transition: transform 0.4s ease-out;
-        background-color: rgba(173, 102, 0, 0.1);
+        background-color: #cde8e51a;
+    }
+
+    a.home .background {
+        background-color: #ad66001a;
     }
 
     a:hover .background {
