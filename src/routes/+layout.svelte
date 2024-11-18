@@ -1,18 +1,21 @@
 <script>
-    import { fly } from "svelte/transition";
-    import { page } from "$app/stores";
     import "../app.css";
-    import Navigation from "$components/Navigation.svelte";
+
+    import { page } from "$app/stores";
+    import { getTransition } from "$lib/animations/transitions";
     import { headerLinks } from "$lib/data/navigation";
+
+    import Navigation from "$components/Navigation.svelte";
     import WaveCanvas from "../components/WaveCanvas.svelte";
 
     const { children } = $props();
-    const duration = 300;
-    const yLoc = 2000;
 
-    let direction = $state();
+    let previousPath = $state("/");
+    let currentTransition = $state(getTransition("/", $page.url.pathname));
+
     $effect(() => {
-        direction = $page.url.pathname === "/" ? yLoc : -yLoc;
+        currentTransition = getTransition(previousPath, $page.url.pathname);
+        previousPath = $page.url.pathname;
     });
 </script>
 
@@ -22,7 +25,10 @@
     <main>
         <div class="content-wrapper">
             {#key $page.url.pathname}
-                <div class="padded-content" in:fly={{ y: direction, duration }}>
+                <div
+                    class="padded-content"
+                    in:currentTransition.transition={currentTransition.params}
+                >
                     {@render children()}
                 </div>
             {/key}
