@@ -19,36 +19,25 @@
     });
 </script>
 
-<div class="layout">
+<main>
     <Navigation location="Header" links={headerLinks} />
     <WaveCanvas />
-    <main>
-        <div class="content-wrapper">
-            {#key $page.url.pathname}
-                <div
-                    class="padded-content"
-                    in:currentTransition.transition={currentTransition.params}
-                >
-                    {@render children()}
-                </div>
-            {/key}
+
+    {#key $page.url.pathname}
+        <div
+            class="content"
+            in:currentTransition.transition={currentTransition.params}
+        >
+            {@render children()}
         </div>
-    </main>
-</div>
+    {/key}
+</main>
 
 <style>
-    /* Allow us to do CSS trnansforms without transition jitter */
-    .content-wrapper {
+    .content {
+        padding: clamp(3rem, 6vw, 8rem) 0 0;
         position: fixed;
         inset: 0;
-    }
-
-    .layout {
-        min-height: 100svh;
-    }
-
-    .padded-content {
-        padding: clamp(3rem, 6vw, 8rem) 0 0;
     }
 
     main {

@@ -5,17 +5,17 @@
     import { onMount } from "svelte";
 
     const { links } = $props();
+    const isHome = $derived($page.url.pathname === "/");
 
     onMount(() => {
-        if ($page.url.pathname !== "/") {
-            waveState.set(true);
-        }
+        if (!isHome) waveState.set(true);
     });
 
     async function handleNavigation(href) {
-        if ($page.url.pathname === href) return;
-        waveState.set(true);
-        await goto(href);
+        if ($page.url.pathname !== href) {
+            waveState.set(true);
+            await goto(href);
+        }
     }
 </script>
 
@@ -24,7 +24,7 @@
         <a
             href={link.href}
             class:active={$page.url.pathname === link.href}
-            class:home={$page.url.pathname === "/"}
+            class:home={isHome}
             onclick={(e) => {
                 e.preventDefault();
                 handleNavigation(link.href);
@@ -68,6 +68,10 @@
         color: #ad6600;
     }
 
+    a.home .background {
+        background-color: #ad66001a;
+    }
+
     .text {
         position: relative;
     }
@@ -84,14 +88,7 @@
         background-color: #cde8e51a;
     }
 
-    a.home .background {
-        background-color: #ad66001a;
-    }
-
-    a:hover .background {
-        transform: translate(-50%, -50%) scale(1);
-    }
-
+    a:hover .background,
     a.active .background {
         transform: translate(-50%, -50%) scale(1);
     }
