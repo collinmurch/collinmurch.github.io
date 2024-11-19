@@ -1,7 +1,6 @@
 <script>
     import { formatDate } from "$lib/utils";
 
-    /** @type {import('./$types').PageData} */
     let { data } = $props();
 </script>
 

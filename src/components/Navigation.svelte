@@ -1,20 +1,16 @@
 <script>
+    import { onMount } from "svelte";
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
     import { waveState } from "$lib/stores/wave";
-    import { onMount } from "svelte";
+    import { setBackgroundColor } from "$lib/animations/colors";
 
     const { links } = $props();
+
     const isHome = $derived($page.url.pathname === "/");
 
-    const defaultColor = "#1f3746";
-    const routeColors = {
-        "/": "#e6f4f1",
-    };
-
     $effect(() => {
-        document.body.style.backgroundColor =
-            routeColors[$page.url.pathname] || defaultColor;
+        setBackgroundColor($page.url.pathname);
     });
 
     onMount(() => {

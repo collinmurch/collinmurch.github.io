@@ -1,12 +1,10 @@
 <script>
-    import "../app.css";
-
     import { page } from "$app/stores";
-    import { getTransition } from "$lib/animations/transitions";
-    import { headerLinks } from "$lib/data/navigation";
-
     import Navigation from "$components/Navigation.svelte";
     import WaveCanvas from "../components/WaveCanvas.svelte";
+    import { getTransition } from "$lib/animations/transitions";
+    import { headerLinks } from "$lib/data/navigation";
+    import "../app.css";
 
     const { children } = $props();
 

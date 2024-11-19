@@ -1,13 +1,13 @@
 <script>
     import { onMount } from "svelte";
-    import vertexShaderSource from "$lib/webgl/vertex.glsl?raw";
-    import fragmentShaderSource from "$lib/webgl/fragment.glsl?raw";
     import { waveState } from "$lib/stores/wave";
     import {
         initializeWebGL,
         resizeCanvasToDisplaySize,
         setupEventListeners,
     } from "$lib/webgl/utils";
+    import vertexShaderSource from "$lib/webgl/vertex.glsl?raw";
+    import fragmentShaderSource from "$lib/webgl/fragment.glsl?raw";
 
     let canvas = $state();
     let glContext = $state();
