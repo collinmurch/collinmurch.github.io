@@ -45,7 +45,6 @@
         flex-direction: column;
         justify-content: flex-start;
         color: #ad6600;
-        font-family: "Josefin Sans", sans-serif;
         top: 40dvh;
         left: 30dvw;
         transform: translate(-50%, -50%);
@@ -54,14 +53,14 @@
     }
 
     .name {
-        font-size: clamp(3em, 8vmin, 9em);
-        filter: drop-shadow(0.33vw 0.33vmin 0.25vmin #000000a0);
-        margin-bottom: 2dvh;
+        font-size: clamp(3em, 9vmin, 9em);
+        margin-bottom: 0;
     }
 
     .about {
         font-weight: lighter;
-        font-size: clamp(1em, 4vmin, 3em);
+        font-style: italic;
+        font-size: clamp(1em, 3vmin, 3em);
     }
 
     :global(.social) {
@@ -76,7 +75,7 @@
         }
 
         .intro {
-            top: max(55dvh, calc(15dvh + 40vmin + 5dvh));
+            top: max(55dvh, calc(10dvh + 40vmin + 5dvh));
             left: 50dvw;
             width: 90dvw;
         }
