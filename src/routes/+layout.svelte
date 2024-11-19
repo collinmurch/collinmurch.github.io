@@ -34,7 +34,9 @@
     .content {
         inset: 0;
         position: fixed;
-        padding: clamp(2rem, 8vh, 10rem) 0 0;
+        overflow-y: auto;
+        margin-top: clamp(3rem, 6vh, 10rem);
+        padding-right: 1rem;
     }
 
     main {

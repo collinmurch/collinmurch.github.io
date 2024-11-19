@@ -12,10 +12,11 @@
 
 <style>
     .container {
-        max-width: 80ch;
         margin: 0 auto;
-        padding-left: max(1rem, env(safe-area-inset-left));
-        padding-right: max(1rem, env(safe-area-inset-right));
+        max-width: 80ch;
+        padding: 1rem max(1rem, env(safe-area-inset-right)) 2rem
+            max(1rem, env(safe-area-inset-left));
+        flex: 1;
     }
 
     .container :global(time) {

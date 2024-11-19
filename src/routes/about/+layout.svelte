@@ -2,13 +2,13 @@
     const { children } = $props();
 </script>
 
-<div class="container">
-    {@render children()}
-</div>
-
 <svelte:head>
     <title>About</title>
 </svelte:head>
+
+<div class="container">
+    {@render children()}
+</div>
 
 <style>
     .container {

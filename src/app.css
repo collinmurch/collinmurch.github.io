@@ -2,12 +2,18 @@ html,
 body {
     background-color: #1f3746;
     transition: background-color 250ms ease-out 50ms;
-    height: 100dvh;
-    width: 100dvw;
+    min-height: 100dvh;
+    min-width: 100dvw;
     margin: 0;
     inset: 0;
     font-family: georgia, serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: -webkit-fill-available;
+}
+
+body > div {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }

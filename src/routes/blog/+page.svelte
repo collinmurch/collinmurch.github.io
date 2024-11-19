@@ -37,7 +37,15 @@
 
     article {
         padding-bottom: 0.5rem;
-        border-bottom: 1px solid #eee;
+        background-image: linear-gradient(
+            to right,
+            #eee 10%,
+            rgba(255, 255, 255, 0) 0%
+        );
+        background-position: bottom;
+        background-size: 6px 1px; /* adjust this value to change dot spacing */
+        background-repeat: repeat-x;
+        padding-bottom: 0.5rem;
     }
 
     h2 {
