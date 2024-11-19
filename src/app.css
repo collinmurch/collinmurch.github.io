@@ -11,9 +11,3 @@ body {
     -moz-osx-font-smoothing: grayscale;
     min-height: -webkit-fill-available;
 }
-
-body > div {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}

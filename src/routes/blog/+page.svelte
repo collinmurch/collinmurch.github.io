@@ -18,10 +18,6 @@
 </div>
 
 <style>
-    h1 {
-        padding-bottom: 1.5rem;
-    }
-
     a:link {
         color: #e6f4f1;
     }

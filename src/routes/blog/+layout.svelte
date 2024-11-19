@@ -14,9 +14,9 @@
     .container {
         margin: 0 auto;
         max-width: 80ch;
-        padding: 1rem max(1rem, env(safe-area-inset-right)) 2rem
-            max(1rem, env(safe-area-inset-left));
         flex: 1;
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
     }
 
     .container :global(time) {

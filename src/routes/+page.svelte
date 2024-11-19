@@ -28,7 +28,7 @@
     }
 
     .logo {
-        top: 40vh;
+        top: 30vh;
         position: absolute;
         height: clamp(10em, 30vmin, 35em);
         border-radius: 4vmin;
@@ -45,7 +45,7 @@
         flex-direction: column;
         justify-content: flex-start;
         color: #ad6600;
-        top: 40dvh;
+        top: 30dvh;
         left: 30dvw;
         transform: translate(-50%, -50%);
         width: 50dvw;

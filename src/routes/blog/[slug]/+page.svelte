@@ -27,11 +27,16 @@
         color: #cde8e5;
     }
 
-    .content :global(code) {
-        font-size: 0.9rem;
-    }
-
     article {
         margin-top: 1rem;
+    }
+
+    /* Override outrageous PrismJS code size */
+    .content :global(pre[class*="language-"]) {
+        font-size: clamp(0.6rem, 2vmin, 0.9rem);
+    }
+
+    .content :global(code[class*="language-"]) {
+        font-size: clamp(0.6rem, 2vmin, 0.9rem);
     }
 </style>
