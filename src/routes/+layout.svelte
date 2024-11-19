@@ -34,7 +34,7 @@
     .content {
         inset: 0;
         position: fixed;
-        padding: clamp(3rem, 6vw, 8rem) 0 0;
+        padding: clamp(2rem, 8vh, 10rem) 0 0;
     }
 
     main {

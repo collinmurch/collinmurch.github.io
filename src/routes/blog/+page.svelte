@@ -4,11 +4,7 @@
     let { data } = $props();
 </script>
 
-<svelte:head>
-    <title>Blog Posts</title>
-</svelte:head>
-
-<h1>Blog Posts</h1>
+<h1>Posts</h1>
 
 <div class="posts">
     {#each data.posts as post}
