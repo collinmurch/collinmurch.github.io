@@ -19,6 +19,10 @@
         margin-bottom: 0.5rem;
     }
 
+    article {
+        margin-top: 1rem;
+    }
+
     .content :global(a:link) {
         color: #e6f4f1;
     }
@@ -27,12 +31,8 @@
         color: #cde8e5;
     }
 
-    article {
-        margin-top: 1rem;
-    }
-
     .content :global(pre),
     .content :global(code) {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 </style>
