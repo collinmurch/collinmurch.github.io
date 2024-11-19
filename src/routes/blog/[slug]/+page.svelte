@@ -31,11 +31,6 @@
         font-size: 0.9rem;
     }
 
-    time {
-        font-size: 0.9rem;
-        font-style: italic;
-    }
-
     article {
         padding-top: 1rem;
     }

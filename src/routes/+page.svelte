@@ -1,6 +1,6 @@
 <script>
     import Socials from "$components/Socials.svelte";
-    import { headerLinks, footerLinks } from "$lib/data/navigation";
+    import { headerLinks, socialsImages } from "$lib/data/navigation";
     import { waveState } from "$lib/stores/wave";
     import { onMount } from "svelte";
 
@@ -17,17 +17,18 @@
 
     <img src="/images/profile.jpeg" class="logo" alt="profile" />
 
-    <Socials links={footerLinks} />
+    <Socials links={socialsImages} />
 </div>
 
 <style>
     .Home {
-        text-align: center;
-        position: fixed;
         inset: 0;
+        text-align: center;
+        overflow: hidden;
     }
 
     .logo {
+        top: 40vh;
         position: absolute;
         height: clamp(10em, 30vmin, 35em);
         border-radius: 4vmin;
@@ -35,7 +36,6 @@
         filter: drop-shadow(0.33vw 0.33vmin 0.25vmin #000000a0);
         pointer-events: none;
         right: calc(10dvw + 30vmin);
-        top: 40vh;
         transform: translateX(50%) translateY(-50%);
     }
 
@@ -56,14 +56,12 @@
     .name {
         font-size: clamp(3em, 8vmin, 9em);
         filter: drop-shadow(0.33vw 0.33vmin 0.25vmin #000000a0);
-        white-space: nowrap;
         margin-bottom: 2dvh;
     }
 
     .about {
         font-weight: lighter;
         font-size: clamp(1em, 4vmin, 3em);
-        margin-top: 0;
     }
 
     :global(.social) {
@@ -72,14 +70,13 @@
 
     @media (max-aspect-ratio: 1.33/1) {
         .logo {
-            transform: none;
-            top: 15dvh;
+            top: min(15dvh, calc(55dvh - 45vmin));
             left: 50dvw;
             transform: translateX(-50%);
         }
 
         .intro {
-            top: 60dvh;
+            top: max(55dvh, calc(15dvh + 40vmin + 5dvh));
             left: 50dvw;
             width: 90dvw;
         }

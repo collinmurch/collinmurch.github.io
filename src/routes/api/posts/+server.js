@@ -1,6 +1,8 @@
 import { fetchMarkdownPosts } from "$lib/data/posts";
 import { json, error } from "@sveltejs/kit";
 
+// Really we could do this just by calling the function this endpoint serves
+// But I want to see how servers work and ensure they work in a static site :)
 export const GET = async () => {
     try {
         const allPosts = await fetchMarkdownPosts();

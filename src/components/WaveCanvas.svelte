@@ -7,7 +7,7 @@
         initializeWebGL,
         resizeCanvasToDisplaySize,
         setupEventListeners,
-    } from "$lib/webgl/webgl";
+    } from "$lib/webgl/utils";
 
     let canvas = $state();
     let glContext = $state();
