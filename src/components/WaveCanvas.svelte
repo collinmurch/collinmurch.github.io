@@ -35,7 +35,7 @@
         gl.clearColor(0, 0, 0, 0);
 
         const resizeCanvas = () => {
-            const height = resizeCanvasToDisplaySize(canvas);
+            resizeCanvasToDisplaySize(canvas);
             gl.viewport(0, 0, canvas.width, canvas.height);
         };
         resizeCanvas();
@@ -100,24 +100,11 @@
     });
 </script>
 
-<div class="canvas-container">
-    <canvas bind:this={canvas}></canvas>
-</div>
+<canvas bind:this={canvas}></canvas>
 
 <style>
-    .canvas-container {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        padding-top: env(safe-area-inset-top);
-    }
-
     canvas {
-        position: absolute; /* Add position absolute */
-        inset: 0;
         height: 100dvh;
         width: 100dvw;
-        padding-top: env(safe-area-inset-top);
     }
 </style>

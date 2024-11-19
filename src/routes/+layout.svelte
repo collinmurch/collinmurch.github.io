@@ -35,14 +35,13 @@
 
 <style>
     .content {
-        position: fixed;
         inset: 0;
+        position: fixed;
         padding: clamp(3rem, 6vw, 8rem) 0 0;
     }
 
     main {
         position: fixed;
-        inset: 0;
         color: #e6f4f1;
     }
 </style>

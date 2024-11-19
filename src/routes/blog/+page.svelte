@@ -48,9 +48,4 @@
     h2 {
         margin: 0;
     }
-
-    time {
-        font-size: 0.85rem;
-        font-style: italic;
-    }
 </style>
