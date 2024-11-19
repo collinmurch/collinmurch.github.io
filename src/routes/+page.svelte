@@ -12,7 +12,7 @@
 <div class="Home">
     <div class="intro">
         <h1 class="name">Collin Murch</h1>
-        <p class="about">Full stack software engineer.</p>
+        <p class="about">Full stack software engineer</p>
     </div>
 
     <img src="/images/profile.jpeg" class="logo" alt="profile" />
@@ -28,7 +28,7 @@
     }
 
     .logo {
-        top: 30vh;
+        top: 30dvh;
         position: absolute;
         height: clamp(10em, 30vmin, 35em);
         border-radius: 4vmin;
