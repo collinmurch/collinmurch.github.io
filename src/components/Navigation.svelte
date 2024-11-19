@@ -7,6 +7,16 @@
     const { links } = $props();
     const isHome = $derived($page.url.pathname === "/");
 
+    const defaultColor = "#1f3746";
+    const routeColors = {
+        "/": "#e6f4f1",
+    };
+
+    $effect(() => {
+        document.body.style.backgroundColor =
+            routeColors[$page.url.pathname] || defaultColor;
+    });
+
     onMount(() => {
         if (!isHome) waveState.set(true);
     });
