@@ -1,5 +1,6 @@
 <script>
     import { page } from "$app/stores";
+    import { beforeNavigate } from "$app/navigation";
     import Navigation from "$components/Navigation.svelte";
     import WaveCanvas from "../components/WaveCanvas.svelte";
     import { getTransition } from "$lib/animations/transitions";
@@ -8,12 +9,10 @@
 
     const { children } = $props();
 
-    let previousPath = $state("/");
     let currentTransition = $state(getTransition("/", $page.url.pathname));
 
-    $effect(() => {
-        currentTransition = getTransition(previousPath, $page.url.pathname);
-        previousPath = $page.url.pathname;
+    beforeNavigate(({ from, to }) => {
+        currentTransition = getTransition(from?.route.id, to?.route.id);
     });
 </script>
 
