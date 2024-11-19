@@ -53,8 +53,10 @@
     }
 
     .name {
+        font-weight: lighter;
         font-size: clamp(3em, 9vmin, 9em);
         margin-bottom: 0;
+        text-shadow: 1px 1px 1px #ad6600;
     }
 
     .about {
