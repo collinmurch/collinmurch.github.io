@@ -23,14 +23,6 @@
         margin-top: 1rem;
     }
 
-    .content :global(a:link) {
-        color: #e6f4f1;
-    }
-
-    .content :global(a:visited) {
-        color: #cde8e5;
-    }
-
     .content :global(pre),
     .content :global(code) {
         font-size: 0.85rem;
