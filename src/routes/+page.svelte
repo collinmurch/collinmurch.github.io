@@ -32,7 +32,7 @@
         height: clamp(10em, 30vmin, 35em);
         border-radius: 4vmin;
         border: 0.75vmin solid #1f3746;
-        filter: drop-shadow(0.33vw 0.33vmin 0.25vmin #000000a0);
+        filter: drop-shadow(0.25rem 0.25rem 0.15rem #000000a0);
         pointer-events: none;
         right: calc(10dvw + 30vmin);
         transform: translateX(50%) translateY(-50%);

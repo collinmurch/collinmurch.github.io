@@ -37,7 +37,7 @@ or <a href="https://linkedin.com/in/collinmurch">LinkedIn</a> if you'd like to c
         height: clamp(10em, 30vmin, 35em);
         border-radius: 4vmin;
         border: 0.75vmin solid #cde8e5;
-        filter: drop-shadow(0.33vw 0.33vmin 0.25vmin #000000a0);
+        filter: drop-shadow(0.25rem 0.25rem 0.15rem #000000a0);
         pointer-events: none;
     }
 </style>
