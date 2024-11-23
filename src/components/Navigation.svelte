@@ -5,7 +5,11 @@
     import { waveState } from "$lib/stores/wave";
     import { setBackgroundColor } from "$lib/animations/colors";
 
-    const { links } = $props();
+    const links = [
+        { href: "/about", text: "About" },
+        { href: "/", text: "Home" },
+        { href: "/blog", text: "Blog" },
+    ];
 
     const isHome = $derived($page.url.pathname === "/");
 

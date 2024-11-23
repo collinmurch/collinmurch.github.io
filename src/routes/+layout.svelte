@@ -4,7 +4,6 @@
     import Navigation from "$components/Navigation.svelte";
     import WaveCanvas from "../components/WaveCanvas.svelte";
     import { getTransition } from "$lib/animations/transitions";
-    import { headerLinks } from "$lib/data/navigation";
     import "../app.css";
 
     const { children } = $props();
@@ -17,7 +16,7 @@
 </script>
 
 <main>
-    <Navigation location="Header" links={headerLinks} />
+    <Navigation />
     <WaveCanvas />
 
     {#key $page.url.pathname}

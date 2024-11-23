@@ -1,7 +1,3 @@
-const getSlugFromPath = (path) => {
-    return path.slice("/src/posts/".length, -".md".length);
-};
-
 export const fetchMarkdownPosts = async () => {
     const allPostFiles = import.meta.glob("/src/posts/*.md");
     const iterablePostFiles = Object.entries(allPostFiles);
@@ -9,7 +5,7 @@ export const fetchMarkdownPosts = async () => {
     const allPosts = await Promise.all(
         iterablePostFiles.map(async ([path, resolver]) => {
             const { metadata } = await resolver();
-            const postPath = getSlugFromPath(path);
+            const postPath = path.slice("/src/posts/".length, -".md".length);
 
             return {
                 meta: metadata,

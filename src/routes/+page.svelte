@@ -1,7 +1,6 @@
 <script>
     import { onMount } from "svelte";
     import Socials from "$components/Socials.svelte";
-    import { headerLinks, socialsImages } from "$lib/data/navigation";
     import { waveState } from "$lib/stores/wave";
 
     onMount(() => {
@@ -17,7 +16,7 @@
 
     <img src="/images/profile.jpeg" class="logo" alt="profile" />
 
-    <Socials links={socialsImages} />
+    <Socials />
 </div>
 
 <style>
