@@ -4,11 +4,10 @@
 
 <nav class="Footer">
     {#each links as link}
-        <div class="link-container">
-            <a href={link.href}>
-                <img src={link.src} alt={link.alt} class="social" />
-            </a>
-        </div>
+        <a href={link.href}>
+            <img src={link.src} alt={link.alt} class="social" />
+            <span class="background"></span>
+        </a>
     {/each}
 </nav>
 
@@ -28,22 +27,33 @@
         bottom: 2dvh;
     }
 
-    .link-container {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-    }
-
     a {
-        display: inline-block;
         position: relative;
-        text-decoration: none;
-        color: #ffffff;
-        padding: 0.2em;
+        padding: 0.5em;
+        overflow: hidden;
+        border-radius: 50%;
+        display: inline-block;
     }
 
     .social {
         width: clamp(1em, 2vw, 3em);
+        display: block;
+    }
+
+    .background {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200%;
+        padding-bottom: 200%;
+        transform: translate(-50%, -50%) scale(0);
+        border-radius: 50%;
+        transition: transform 0.4s ease-out;
+        background-color: #ffffff1a;
+    }
+
+    a:hover .background {
+        transform: translate(-50%, -50%) scale(1);
     }
 
     @media (max-aspect-ratio: 1.33/1) {
