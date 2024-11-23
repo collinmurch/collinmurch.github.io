@@ -8,7 +8,7 @@ Hey! I'm Collin, a software engineer with over a
 <a href="https://github.com/collinmurch">decade of experience</a>
 building everything from iOS games to full stack web apps. I currently work at
 <a href="https://www.zillow.com/homeloans">Zillow Home Loans</a>
-where I help design and create the backend tools powering the mortgage lending process.
+where I help design and create backend tools powering the mortgage lending process.
 
 <br />
 <br />
