@@ -2,28 +2,31 @@
     <img src="/images/headshot.jpeg" class="headshot" alt="headshot" />
 </div>
 
-<h1>About Me</h1>
+<div class="container">
+    <h1>About Me</h1>
 
-Hey! I'm Collin, a software engineer with over a
-<a href="https://github.com/collinmurch">decade of experience</a>
-building everything from iOS games to full stack web apps. I currently work at
-<a href="https://www.zillow.com/homeloans">Zillow Home Loans</a>
-where I help design and create backend tools powering the mortgage lending process.
+    Hey! I'm Collin, a software engineer with over a
+    <a href="https://github.com/collinmurch">decade of experience</a>
+    building everything from iOS games to full stack web apps. I currently work at
+    <a href="https://www.zillow.com/homeloans">Zillow Home Loans</a>
+    where I help design and create backend tools powering the mortgage lending process.
 
-<br />
-<br />
+    <br />
+    <br />
 
-I'm deeply curious about service architecture, artificial intelligence, and
-information security. Outside of computers, I love card games (especially Texas
-Hold'em), tennis, finding new electronic music, and pretty much every water
-sport under the sun.
+    I'm deeply curious about service architecture, artificial intelligence, and
+    information security. Outside of computers, I love card games (especially
+    Texas Hold'em), tennis, finding new electronic music, and pretty much every
+    water sport under the sun.
 
-<br />
-<br />
+    <br />
+    <br />
 
-Feel free to reach out over
-<a href="https://x.com/collinmurch">X</a>
-or <a href="https://linkedin.com/in/collinmurch">LinkedIn</a> if you'd like to chat!
+    Feel free to reach out over
+    <a href="https://x.com/collinmurch">X</a>
+    or <a href="https://linkedin.com/in/collinmurch">LinkedIn</a> if you'd like to
+    chat!
+</div>
 
 <style>
     .image-container {
@@ -39,5 +42,9 @@ or <a href="https://linkedin.com/in/collinmurch">LinkedIn</a> if you'd like to c
         border: 0.75vmin solid #cde8e5;
         filter: drop-shadow(0.25rem 0.25rem 0.15rem #000000a0);
         pointer-events: none;
+    }
+
+    .container {
+        margin-bottom: 2.5rem;
     }
 </style>
