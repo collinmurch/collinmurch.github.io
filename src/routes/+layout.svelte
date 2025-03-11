@@ -1,10 +1,10 @@
 <script>
-    import { page } from "$app/stores";
     import { beforeNavigate } from "$app/navigation";
+    import { page } from "$app/stores";
     import Navigation from "$components/Navigation.svelte";
-    import WaveCanvas from "../components/WaveCanvas.svelte";
     import { getTransition } from "$lib/animations/transitions";
     import "../app.css";
+    import WaveCanvas from "../components/WaveCanvas.svelte";
 
     const { children } = $props();
 
@@ -41,5 +41,24 @@
     main {
         position: fixed;
         color: #e6f4f1;
+    }
+
+    :global(body) {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    @media screen and (orientation: portrait) {
+        :global(html) {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+    }
+
+    @media screen and (orientation: landscape) {
+        :global(html) {
+            font-size: 16px;
+        }
     }
 </style>
