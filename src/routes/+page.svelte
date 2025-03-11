@@ -1,7 +1,7 @@
 <script>
-    import { onMount } from "svelte";
     import Socials from "$components/Socials.svelte";
     import { waveState } from "$lib/stores/wave";
+    import { onMount } from "svelte";
 
     onMount(() => {
         waveState.set(false);
@@ -36,6 +36,9 @@
         pointer-events: none;
         right: calc(10dvw + 30vmin);
         transform: translateX(50%) translateY(-50%);
+        will-change: transform;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
     }
 
     .intro {
