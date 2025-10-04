@@ -3,7 +3,6 @@
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
     import { waveState } from "$lib/stores/wave";
-    import { setBackgroundColor } from "$lib/animations/colors";
 
     const links = [
         { href: "/about", text: "About" },
@@ -12,10 +11,6 @@
     ];
 
     const isHome = $derived($page.url.pathname === "/");
-
-    $effect(() => {
-        setBackgroundColor($page.url.pathname);
-    });
 
     onMount(() => {
         if (!isHome) waveState.set(true);

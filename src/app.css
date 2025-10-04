@@ -1,7 +1,6 @@
 html,
 body {
-    background-color: #1f3746;
-    transition: background-color 250ms ease-out 50ms;
+    background-color: #1f3746 !important;
     min-height: 100dvh;
     min-width: 100dvw;
     margin: 0;
