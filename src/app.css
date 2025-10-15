@@ -10,3 +10,29 @@ body {
     -moz-osx-font-smoothing: grayscale;
     min-height: -webkit-fill-available;
 }
+
+.content :global(p) {
+    margin: 0 0 1.25rem;
+    line-height: 1.65;
+}
+
+.content :global(a:link) {
+    color: #e6f4f1;
+    text-decoration-color: rgba(205, 232, 229, 0.6);
+}
+
+.content :global(a:visited) {
+    color: #cde8e5;
+    text-decoration-color: rgba(205, 232, 229, 0.4);
+}
+
+.content :global(pre) {
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+}
+
+.content :global(code) {
+    font-family: "Fira Code", "JetBrains Mono", Consolas, Monaco, "Andale Mono", "Ubuntu Mono",
+        monospace;
+}

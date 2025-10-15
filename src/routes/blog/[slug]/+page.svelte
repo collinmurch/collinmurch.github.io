@@ -1,5 +1,4 @@
 <script>
-import "$lib/styles/prism-poimandres.css";
 import { formatDate } from "$lib/utils";
 
 const { data } = $props();
