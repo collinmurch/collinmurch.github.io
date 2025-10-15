@@ -42,9 +42,11 @@ function normalizePath(pathname) {
     return pathname;
 }
 
-const meta = $derived(() => {
+let meta = $state(DEFAULT_META);
+
+$effect(() => {
     const path = normalizePath($page.url.pathname);
-    return META_BY_ROUTE[path] ?? DEFAULT_META;
+    meta = META_BY_ROUTE[path] ?? DEFAULT_META;
 });
 
 beforeNavigate(({ from, to }) => {

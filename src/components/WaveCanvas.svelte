@@ -1,24 +1,59 @@
 <script>
     import { onMount } from "svelte";
     import { waveState } from "$lib/stores/wave";
-    import {
-        initializeWebGL,
-        resizeCanvasToDisplaySize,
-        setupEventListeners,
-    } from "$lib/webgl/utils";
-    import vertexShaderSource from "$lib/webgl/vertex.glsl?raw";
-    import fragmentShaderSource from "$lib/webgl/fragment.glsl?raw";
 
     let canvas = $state();
     let glContext = $state();
 
     const TRANSITION_DURATION = 500;
 
-    onMount(() => {
+    onMount(async () => {
         const prefersReducedMotion = window.matchMedia(
             "(prefers-reduced-motion: reduce)",
         );
         let animationFrameId = 0;
+
+        const startWebGL = async () => {
+            const [
+                utilsModule,
+                vertexShaderSource,
+                fragmentShaderSource,
+            ] = await Promise.all([
+                import("$lib/webgl/utils"),
+                import("$lib/webgl/vertex.glsl?raw"),
+                import("$lib/webgl/fragment.glsl?raw"),
+            ]);
+
+            const {
+                initializeWebGL,
+                resizeCanvasToDisplaySize,
+                setupEventListeners,
+            } = utilsModule;
+
+            const context =
+                initializeWebGL(
+                    canvas,
+                    vertexShaderSource.default,
+                    fragmentShaderSource.default,
+                ) || {};
+
+            return {
+                ...context,
+                resizeCanvasToDisplaySize,
+                setupEventListeners,
+            };
+        };
+
+        const deferUntilIdle = () =>
+            new Promise((resolve) => {
+                if ("requestIdleCallback" in window) {
+                    window.requestIdleCallback(() => resolve());
+                } else {
+                    setTimeout(resolve, 0);
+                }
+            });
+
+        await deferUntilIdle();
 
         const {
             gl,
@@ -29,9 +64,9 @@
             mouseUniformLocation,
             positionBuffer,
             transitionUniformLocation,
-        } =
-            initializeWebGL(canvas, vertexShaderSource, fragmentShaderSource) ||
-            {};
+            resizeCanvasToDisplaySize,
+            setupEventListeners,
+        } = await startWebGL();
 
         if (!gl) return;
 
