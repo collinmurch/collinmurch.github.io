@@ -35,8 +35,7 @@
     .posts {
         display: grid;
         gap: 2rem;
-        max-width: calc(var(--reading-width) + var(--reading-gutter));
-        padding-right: var(--reading-gutter);
+        max-width: var(--reading-width);
     }
 
     article {

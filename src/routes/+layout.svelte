@@ -84,7 +84,8 @@ beforeNavigate(({ from, to }) => {
         position: fixed;
         overflow-y: auto;
         margin-top: clamp(3rem, 6vh, 10rem);
-        padding-right: 1rem;
+        padding-left: calc(var(--reading-gutter) + env(safe-area-inset-left));
+        padding-right: calc(var(--reading-gutter) + env(safe-area-inset-right));
     }
 
     main {
