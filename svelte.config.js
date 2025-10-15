@@ -13,6 +13,7 @@ export default {
     },
     compilerOptions: {
         runes: true,
+        warningFilter: (warning) => warning.code !== "script_context_deprecated",
     },
     extensions: [".svelte", ".md"], // Include .md files and the .svelte files from MDsveX
     preprocess: [
