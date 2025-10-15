@@ -34,10 +34,12 @@
     }
 
     .container :global(a:link) {
-        color: #e6f4f1;
+        color: var(--link-color);
+        text-decoration-color: var(--link-decoration-color);
     }
 
     .container :global(a:visited) {
-        color: #cde8e5;
+        color: var(--link-visited-color);
+        text-decoration-color: var(--link-decoration-visited-color);
     }
 </style>

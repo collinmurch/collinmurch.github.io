@@ -18,12 +18,18 @@
 </div>
 
 <style>
+    a {
+        transition: color 150ms ease, text-decoration-color 150ms ease;
+    }
+
     a:link {
-        color: #e6f4f1;
+        color: var(--link-color);
+        text-decoration-color: var(--link-decoration-color);
     }
 
     a:visited {
-        color: #cde8e5;
+        color: var(--link-visited-color);
+        text-decoration-color: var(--link-decoration-visited-color);
     }
 
     .posts {
