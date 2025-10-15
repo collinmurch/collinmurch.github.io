@@ -33,7 +33,7 @@ const description = $derived(() => {
 </svelte:head>
 
 <h1>{data?.post.title}</h1>
-<time>{formatDate(data?.post.date)}</time>
+<time class="post-date">{formatDate(data?.post.date)}</time>
 
 <article>
     <div class="content">
@@ -47,11 +47,25 @@ const description = $derived(() => {
     }
 
     article {
-        margin-top: 1rem;
+        margin: 1rem 0 0;
+        max-width: min(72ch, 80vw);
+    }
+
+    time.post-date {
+        display: block;
+        margin-bottom: 0.85rem;
     }
 
     .content :global(pre),
     .content :global(code) {
         font-size: 0.85rem;
+    }
+
+    @media screen and (min-width: 1120px) {
+        .content :global(p),
+        .content :global(li),
+        .content :global(blockquote) {
+            font-size: clamp(1.05rem, 1rem + 0.25vw, 1.26rem);
+        }
     }
 </style>

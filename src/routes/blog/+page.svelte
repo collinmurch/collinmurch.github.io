@@ -12,7 +12,7 @@
             <h2>
                 <a href="/blog/{post.path}">{post.meta?.title}</a>
             </h2>
-            <time>{formatDate(post.meta?.date)}</time>
+            <time class="post-date">{formatDate(post.meta?.date)}</time>
         </article>
     {/each}
 </div>
@@ -33,6 +33,8 @@
 
     article {
         padding-bottom: 0.5rem;
+        font-size: clamp(1.1rem, 1.04rem + 0.35vw, 1.35rem);
+        line-height: 1.6;
         background-image: linear-gradient(
             to right,
             #eee 10%,
@@ -46,5 +48,10 @@
 
     h2 {
         margin: 0;
+    }
+
+    .post-date {
+        display: block;
+        margin-bottom: 0.25rem;
     }
 </style>

@@ -19,28 +19,27 @@
 <div class="container">
     <h1>About Me</h1>
 
-    Hey! I'm Collin, a software engineer with over a
-    <a href="https://github.com/collinmurch">decade of experience</a>
-    building everything from iOS games to full stack web apps. I currently work at
-    <a href="https://www.zillow.com/homeloans">Zillow Home Loans</a>
-    where I help design and create backend tools that power the mortgage lending
-    process.
+    <p>
+        Hey! I'm Collin, a software engineer with over a
+        <a href="https://github.com/collinmurch">decade of experience</a>
+        building everything from iOS games to full stack web apps. I currently work
+        at <a href="https://www.zillow.com/homeloans">Zillow Home Loans</a> where I
+        help design and create backend tools that power the mortgage lending
+        process.
+    </p>
 
-    <br />
-    <br />
+    <p>
+        I'm deeply curious about service architecture, artificial intelligence, and
+        information security. Outside of computers, I love card games (especially
+        Texas Hold'em), tennis, finding new electronic music, and pretty much every
+        water sport under the sun.
+    </p>
 
-    I'm deeply curious about service architecture, artificial intelligence, and
-    information security. Outside of computers, I love card games (especially
-    Texas Hold'em), tennis, finding new electronic music, and pretty much every
-    water sport under the sun.
-
-    <br />
-    <br />
-
-    Feel free to reach out over
-    <a href="https://x.com/collinmurch">X</a>
-    or <a href="https://linkedin.com/in/collinmurch">LinkedIn</a> if you'd like to
-    chat!
+    <p>
+        Feel free to reach out over <a href="https://x.com/collinmurch">X</a> or
+        <a href="https://linkedin.com/in/collinmurch">LinkedIn</a> if you'd like to
+        chat!
+    </p>
 </div>
 
 <style>
@@ -69,6 +68,12 @@
     }
 
     .container {
-        margin-bottom: 2.5rem;
+        margin: 0 auto 2.5rem;
+        max-width: min(72ch, 78vw);
+    }
+
+    .container p {
+        font-size: clamp(1.0rem, 0.95rem + 0.35vw, 1.2rem);
+        line-height: 1.5;
     }
 </style>

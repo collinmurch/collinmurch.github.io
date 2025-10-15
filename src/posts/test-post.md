@@ -5,9 +5,7 @@ description: A quick markdown sample post for validating mdsvex rendering on the
 excerpt: A tiny sample article used to ensure the blog pipeline works end to end.
 ---
 
-# Test Post
-
-This is a test post to test markdown rendering with static sites.
+This is a post to test markdown rendering with static sites.
 
 Here's some **bold** text and some *italic* text.
 
