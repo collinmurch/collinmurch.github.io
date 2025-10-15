@@ -32,4 +32,3 @@
 - Page transitions depend on route IDs; if you add routes, update `transitionMappings` in `$lib/animations/transitions.js`.
 - Keep background / canvas tweaks inside `WaveCanvas` or the WebGL utilities; it’s tightly coupled to the layout.
 - When adjusting caching or headers, edit `static/_headers` so deployment picks up the changes.
-- Git history may contain both `bun.lockb` and `package-lock.json`; the active lockfile is `bun.lockb`.
