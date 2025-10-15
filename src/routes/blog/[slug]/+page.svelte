@@ -56,8 +56,7 @@ const description = $derived(() => {
         margin-bottom: 0.85rem;
     }
 
-    .content :global(pre),
-    .content :global(code) {
+    .content :global(pre) {
         font-size: 0.85rem;
     }
 
@@ -66,6 +65,16 @@ const description = $derived(() => {
         .content :global(li),
         .content :global(blockquote) {
             font-size: clamp(1.05rem, 1rem + 0.25vw, 1.26rem);
+        }
+    }
+
+    @media screen and (orientation: landscape) and (max-height: 600px) {
+        .content :global(pre) {
+            font-size: 0.5rem;
+        }
+
+        .content :global(pre code) {
+            font-size: inherit;
         }
     }
 </style>
