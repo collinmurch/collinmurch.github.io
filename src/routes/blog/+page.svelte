@@ -35,9 +35,12 @@
     .posts {
         display: grid;
         gap: 2rem;
+        max-width: calc(var(--reading-width) + var(--reading-gutter));
+        padding-right: var(--reading-gutter);
     }
 
     article {
+        max-width: var(--reading-width);
         padding-bottom: 0.5rem;
         font-size: clamp(1.1rem, 1.04rem + 0.35vw, 1.35rem);
         line-height: 1.6;

@@ -48,7 +48,8 @@ const description = $derived(() => {
 
     article {
         margin: 1rem 0 0;
-        max-width: min(72ch, 80vw);
+        max-width: calc(var(--reading-width) + var(--reading-gutter));
+        padding-right: var(--reading-gutter);
     }
 
     time.post-date {
@@ -59,6 +60,10 @@ const description = $derived(() => {
     .content :global(pre),
     .content :global(code) {
         font-size: 0.85rem;
+    }
+
+    article > .content {
+        max-width: var(--reading-width);
     }
 
     @media screen and (min-width: 1120px) {

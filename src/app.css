@@ -16,6 +16,8 @@ body {
     --link-visited-color: #cde8e5;
     --link-decoration-color: rgba(205, 232, 229, 0.6);
     --link-decoration-visited-color: rgba(205, 232, 229, 0.4);
+    --reading-width: 72ch;
+    --reading-gutter: clamp(1.5rem, 5vw, 4.5rem);
 }
 
 .content :global(p) {
