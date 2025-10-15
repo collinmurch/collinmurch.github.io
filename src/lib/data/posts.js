@@ -14,7 +14,13 @@ export const fetchMarkdownPosts = async () => {
         }),
     );
 
-    return allPosts;
+    return allPosts
+        .slice()
+        .sort((a, b) => {
+            const dateA = a.meta?.date ? new Date(a.meta.date) : 0;
+            const dateB = b.meta?.date ? new Date(b.meta.date) : 0;
+            return dateB - dateA;
+        });
 };
 
 export const fetchSinglePost = async (slug) => {

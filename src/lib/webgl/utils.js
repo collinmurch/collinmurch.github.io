@@ -131,20 +131,23 @@ export function setupEventListeners(pos, resizeCanvas) {
         pos[0] = event.clientX;
         pos[1] = event.clientY;
     };
-    window.addEventListener("mousemove", handleMouseMove);
+    const passiveMoveOptions = { passive: true };
+    window.addEventListener("mousemove", handleMouseMove, passiveMoveOptions);
 
     const handleTouchMove = (event) => {
         const touch = event.touches[0];
         pos[0] = touch.clientX;
         pos[1] = touch.clientY;
     };
-    window.addEventListener("touchmove", handleTouchMove);
-
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("touchmove", handleTouchMove, passiveMoveOptions);
+    const handleResize = () => {
+        window.requestAnimationFrame(resizeCanvas);
+    };
+    window.addEventListener("resize", handleResize);
 
     return () => {
-        window.removeEventListener("mousemove", handleMouseMove);
-        window.removeEventListener("touchmove", handleTouchMove);
-        window.removeEventListener("resize", resizeCanvas);
+        window.removeEventListener("mousemove", handleMouseMove, passiveMoveOptions);
+        window.removeEventListener("touchmove", handleTouchMove, passiveMoveOptions);
+        window.removeEventListener("resize", handleResize);
     };
 }

@@ -1,12 +1,30 @@
 <script>
-    import Socials from "$components/Socials.svelte";
-    import { waveState } from "$lib/stores/wave";
-    import { onMount } from "svelte";
+import Socials from "$components/Socials.svelte";
+import { waveState } from "$lib/stores/wave";
+import { onMount } from "svelte";
 
-    onMount(() => {
-        waveState.set(false);
-    });
+onMount(() => {
+    waveState.set(false);
+});
 </script>
+
+<svelte:head>
+    <title>Collin Murch | Software Engineer</title>
+    <meta
+        name="description"
+        content="Full stack engineer Collin Murch shares work, writing, and ways to connect."
+    />
+    <meta property="og:title" content="Collin Murch | Software Engineer" />
+    <meta
+        property="og:description"
+        content="Full stack engineer Collin Murch shares work, writing, and ways to connect."
+    />
+    <meta name="twitter:title" content="Collin Murch | Software Engineer" />
+    <meta
+        name="twitter:description"
+        content="Full stack engineer Collin Murch shares work, writing, and ways to connect."
+    />
+</svelte:head>
 
 <div class="Home">
     <div class="intro">
@@ -14,7 +32,22 @@
         <p class="about">Full stack software engineer</p>
     </div>
 
-    <img src="/images/profile.jpeg" class="logo" alt="profile" />
+    <picture class="logo">
+        <source srcset="/images/profile.avif" type="image/avif" />
+        <source srcset="/images/profile.webp" type="image/webp" />
+        <img
+            src="/images/profile.jpeg"
+            alt="Portrait of Collin Murch"
+            width="500"
+            height="500"
+            sizes="(max-width: 900px) 70vw, 30vw"
+            srcset="/images/profile.jpeg 1x"
+            fetchpriority="high"
+            decoding="async"
+            loading="eager"
+            class="logo-image"
+        />
+    </picture>
 
     <Socials />
 </div>
@@ -30,6 +63,7 @@
         top: 30dvh;
         position: absolute;
         height: clamp(10em, 30vmin, 35em);
+        width: clamp(10em, 30vmin, 35em);
         border-radius: 4vmin;
         border: 0.75vmin solid #1f3746;
         filter: drop-shadow(0.25rem 0.25rem 0.15rem #000000a0);
@@ -39,6 +73,15 @@
         will-change: transform;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
+        overflow: hidden;
+        display: block;
+    }
+
+    .logo-image {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
     }
 
     .intro {

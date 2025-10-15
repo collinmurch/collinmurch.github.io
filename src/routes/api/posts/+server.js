@@ -1,6 +1,8 @@
 import { fetchMarkdownPosts } from "$lib/data/posts";
 import { json, error } from "@sveltejs/kit";
 
+export const prerender = true;
+
 // Really we could do this just by calling the function this endpoint serves
 // But I want to see how servers work and ensure they work in a static site :)
 export const GET = async () => {
@@ -11,11 +13,7 @@ export const GET = async () => {
             throw new Error("Posts data is not in expected format");
         }
 
-        const sortedPosts = allPosts.sort((a, b) => {
-            return new Date(b.meta.date) - new Date(a.meta.date);
-        });
-
-        return json(sortedPosts);
+        return json(allPosts);
     } catch (err) {
         console.error("Error fetching posts:", err);
         throw error(500, {

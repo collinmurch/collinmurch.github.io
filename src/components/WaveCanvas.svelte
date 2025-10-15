@@ -15,6 +15,11 @@
     const TRANSITION_DURATION = 500;
 
     onMount(() => {
+        const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+        );
+        let animationFrameId = 0;
+
         const {
             gl,
             program,
@@ -29,6 +34,14 @@
             {};
 
         if (!gl) return;
+
+        if (prefersReducedMotion.matches) {
+            waveState.set(false);
+            return () => {
+                cleanup();
+                unsubscribe();
+            };
+        }
 
         glContext = gl;
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -88,14 +101,49 @@
             gl.uniform1f(transitionUniformLocation, currentTransition);
             gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-            requestAnimationFrame(render);
+            animationFrameId = requestAnimationFrame(render);
         };
 
-        render();
+        const stopRendering = () => {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = 0;
+            }
+        };
+
+        const handleVisibilityChange = () => {
+            if (document.hidden || prefersReducedMotion.matches) {
+                stopRendering();
+            } else {
+                startRendering();
+            }
+        };
+
+        const startRendering = () => {
+            stopRendering();
+            animationFrameId = requestAnimationFrame(render);
+        };
+
+        const handleMotionChange = (event) => {
+            if (event.matches) {
+                waveState.set(false);
+                stopRendering();
+            } else {
+                startRendering();
+            }
+        };
+
+        prefersReducedMotion.addEventListener("change", handleMotionChange);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        startRendering();
 
         return () => {
             cleanup();
             unsubscribe();
+            stopRendering();
+            prefersReducedMotion.removeEventListener("change", handleMotionChange);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
     });
 </script>

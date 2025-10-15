@@ -1,5 +1,19 @@
 <div class="image-container">
-    <img src="/images/headshot.jpeg" class="headshot" alt="headshot" />
+    <picture class="headshot">
+        <source srcset="/images/headshot.avif" type="image/avif" />
+        <source srcset="/images/headshot.webp" type="image/webp" />
+        <img
+            src="/images/headshot.jpeg"
+            alt="Headshot of Collin Murch"
+            width="500"
+            height="500"
+            sizes="(max-width: 900px) 70vw, 30vw"
+            srcset="/images/headshot.jpeg 1x"
+            decoding="async"
+            loading="lazy"
+            class="headshot-image"
+        />
+    </picture>
 </div>
 
 <div class="container">
@@ -39,10 +53,19 @@
 
     .headshot {
         height: clamp(10em, 30vmin, 35em);
+        width: clamp(10em, 30vmin, 35em);
         border-radius: 4vmin;
         border: 0.75vmin solid #cde8e5;
         filter: drop-shadow(0.25rem 0.25rem 0.15rem #000000a0);
         pointer-events: none;
+        overflow: hidden;
+        display: block;
+    }
+
+    .headshot-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .container {

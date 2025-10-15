@@ -15,6 +15,6 @@
     },
     "dependencies": {
         "@sveltejs/adapter-static": "^3.0.6",
-        "mdsvex": "^0.12.3"
+        "mdsvex": "^0.12.6"
     }
 }

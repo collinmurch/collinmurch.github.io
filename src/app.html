@@ -11,6 +11,13 @@
             name="viewport"
             content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0"
         />
+        <link
+            rel="preload"
+            as="image"
+            href="%sveltekit.assets%/images/profile.avif"
+            type="image/avif"
+            imagesizes="(max-width: 900px) 70vw, 30vw"
+        />
         %sveltekit.head%
     </head>
     <body data-sveltekit-preload-data="hover" style="background-color: #1f3746">

@@ -1,6 +1,7 @@
-export async function load({ fetch }) {
-    const response = await fetch("/api/posts");
-    const posts = await response.json();
+import { fetchMarkdownPosts } from "$lib/data/posts";
+
+export async function load() {
+    const posts = await fetchMarkdownPosts();
 
     return {
         posts,

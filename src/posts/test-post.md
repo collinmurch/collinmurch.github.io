@@ -1,6 +1,8 @@
 ---
 title: Test Post
 date: '2024-11-16'
+description: A quick markdown sample post for validating mdsvex rendering on the static site.
+excerpt: A tiny sample article used to ensure the blog pipeline works end to end.
 ---
 
 # Test Post
