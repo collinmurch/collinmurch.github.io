@@ -49,10 +49,10 @@
         flex-direction: row;
         justify-content: space-evenly;
         font-weight: regular;
-        width: 30dvw;
+        width: 29dvw;
         right: calc(10dvw + 30vmin);
         transform: translateX(50%);
-        font-size: clamp(1em, 2vw, 3em);
+        font-size: clamp(1em, 1.675vw, 2.4em);
         top: 1dvh;
         z-index: 1;
     }
@@ -64,7 +64,7 @@
         text-decoration: none;
         color: #cde8e5;
         text-align: center;
-        padding: 0.2em 0.8em;
+        padding: 0.175em 0.725em;
         overflow: hidden;
         border-radius: 0.5em;
     }
@@ -108,6 +108,17 @@
             width: 80dvw;
             right: 10dvw;
             font-size: clamp(1.5em, 2vw, 3em);
+        }
+    }
+
+    @media (min-width: 1440px) {
+        .Header {
+            font-size: clamp(0.97em, 1.2vw, 1.6em);
+            width: 27dvw;
+        }
+
+        a {
+            padding: 0.125em 0.6em;
         }
     }
 </style>
