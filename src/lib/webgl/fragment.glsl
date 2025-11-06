@@ -4,6 +4,24 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_transition;
 
+float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+
+    vec2 u = f * f * (3.0 - 2.0 * f);
+
+    return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+
 float wave(vec2 p, float frequency, float amplitude, float speed, float offset) {
     return sin(p.x * frequency + u_time * speed + offset + mix(-1.0, 1.0, smoothstep(0.4, 0.6, u_mouse.x / u_resolution.x))) * amplitude;
 }
@@ -25,7 +43,8 @@ void main() {
     float wave3 = wave(st, frequencyMultiplier * 0.5, amplitudeMultiplier * 0.1, 2.5, 2.0);
 
     // Combine the waves to create a more complex wave pattern
-    float wavePattern = st.y + wave1 + wave2 + wave3 + 0.75 - transitionOffset;
+    float waveHeight = wave1 + wave2 + wave3;
+    float waterSurface = st.y + waveHeight + 0.75 - transitionOffset;
 
     vec3 color;
     float gradientFactor;
@@ -33,18 +52,34 @@ void main() {
     float gradientStart = 0.95; // Start of the gradient section
     float gradientEnd = mediumSectionEnd; // End of the gradient section
 
-    if (wavePattern > 1.0) {
+    if (waterSurface > 1.0) {
         color = vec3(0.902, 0.957, 0.945); // #EEF7FF, lightest
-    } else if (wavePattern > mediumSectionEnd) {
+    } else if (waterSurface > mediumSectionEnd) {
         color = vec3(0.769, 0.867, 0.941); // #CDE8E5, medium
-    } else if (wavePattern > gradientStart) {
-        gradientFactor = (1.0 - (wavePattern - gradientStart) / (gradientEnd - gradientStart)); // Inverted gradient factor
+    } else if (waterSurface > gradientStart) {
+        gradientFactor = (1.0 - (waterSurface - gradientStart) / (gradientEnd - gradientStart)); // Inverted gradient factor
         vec3 middleColor = vec3(0.769, 0.867, 0.941); // #CDE8E5, medium
         vec3 darkestColor = vec3(0.122, 0.216, 0.275); // #7AB2B2, darkest
         color = mix(middleColor, darkestColor, gradientFactor); // Gradient from medium to darkest (top to bottom)
     } else {
         color = vec3(0.122, 0.216, 0.275); // #7AB2B2, darkest
     }
+
+    // Foam effect near wave crests
+    float crest = 1.0 - waterSurface;
+    float foamWidth = 0.035;
+    float foamBand = smoothstep(foamWidth, 0.0, crest);
+    foamBand = pow(foamBand, 1.8);
+
+    vec2 foamUv = vec2(st.x * (u_resolution.x / u_resolution.y) * 6.0, u_time * 0.45 + st.y * 3.5);
+    float foamNoise = 0.58 * noise(foamUv);
+    foamNoise += 0.28 * noise(foamUv * 2.3 + vec2(12.5, -4.2));
+    foamNoise += 0.14 * noise(foamUv * 4.7 + vec2(-8.3, 7.9));
+    float foamTexture = smoothstep(0.52, 0.78, foamNoise);
+
+    float foam = clamp(foamBand * foamTexture * 1.35, 0.0, 1.0);
+    vec3 foamColor = vec3(0.914, 0.969, 0.957); // Lightened version of existing palette
+    color = mix(color, foamColor, foam);
 
     gl_FragColor = vec4(color, 1.0);
 }
