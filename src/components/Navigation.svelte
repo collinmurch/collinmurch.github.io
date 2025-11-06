@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from "svelte";
+    import { onMount, tick } from "svelte";
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
     import { waveState } from "$lib/stores/wave";
@@ -12,127 +12,107 @@
         { href: "/blog", text: "Blog" },
     ];
 
-    const isHome = $derived($page.url.pathname === "/");
+    const pathname = $derived($page.url.pathname);
+    const isHome = $derived(pathname === "/");
 
-    let pathname = $state("");
     let navElement = null;
+    let navResizeObserver;
     let indicatorFrame = 0;
-    let slideResetFrame = 0;
+    let fadeResetFrame = 0;
     let indicator = $state({ width: 0, height: 0, left: 0, top: 0 });
     let indicatorVisible = $state(false);
     let disableSlide = $state(false);
-    const linkRefs = new Map();
 
-    $effect(() => {
-        pathname = $page.url.pathname;
-        scheduleIndicatorUpdate();
-    });
-
-    onMount(() => {
-        if (!isHome) waveState.set(true);
-
-        let resizeObserver;
-
-        if (navElement) {
-            resizeObserver = new ResizeObserver(() => scheduleIndicatorUpdate());
-            resizeObserver.observe(navElement);
-        }
-
-        scheduleIndicatorUpdate();
-
-        return () => {
-            resizeObserver?.disconnect();
-            if (indicatorFrame) {
-                cancelAnimationFrame(indicatorFrame);
-                indicatorFrame = 0;
-            }
-            if (slideResetFrame) {
-                cancelAnimationFrame(slideResetFrame);
-                slideResetFrame = 0;
-            }
-        };
-    });
-
-    function suppressSlideUntilNextFrame() {
-        if (typeof window === "undefined") return;
-
-        disableSlide = true;
-        if (slideResetFrame) cancelAnimationFrame(slideResetFrame);
-
-        slideResetFrame = requestAnimationFrame(() => {
-            slideResetFrame = 0;
-            disableSlide = false;
-        });
-    }
-
-    function scheduleIndicatorUpdate() {
+    function queueIndicatorMeasurement() {
         if (typeof window === "undefined") return;
 
         if (indicatorFrame) cancelAnimationFrame(indicatorFrame);
 
         indicatorFrame = requestAnimationFrame(() => {
             indicatorFrame = 0;
-            updateIndicator();
+            measureIndicator();
         });
     }
 
-    function updateIndicator() {
+    async function measureIndicator() {
         if (!navElement) return;
 
-        const activeLink = links.find((link) => pathname === link.href);
+        await tick();
 
-        if (!activeLink) {
+        const target = navElement.querySelector(`[data-route="${pathname}"]`);
+
+        if (!target) {
             indicatorVisible = false;
             return;
         }
 
-        const target = linkRefs.get(activeLink.href);
-        if (!target) return;
-
         const navRect = navElement.getBoundingClientRect();
-        const linkRect = target.getBoundingClientRect();
-
+        const targetRect = target.getBoundingClientRect();
         const shouldFadeIn = !indicatorVisible;
 
         indicator = {
-            width: linkRect.width,
-            height: linkRect.height,
-            left: linkRect.left - navRect.left,
-            top: linkRect.top - navRect.top,
+            width: targetRect.width,
+            height: targetRect.height,
+            left: targetRect.left - navRect.left,
+            top: targetRect.top - navRect.top,
         };
 
         indicatorVisible = true;
 
-        if (shouldFadeIn) suppressSlideUntilNextFrame();
+        if (shouldFadeIn) {
+            disableSlide = true;
+            if (fadeResetFrame) cancelAnimationFrame(fadeResetFrame);
+            fadeResetFrame = requestAnimationFrame(() => {
+                fadeResetFrame = 0;
+                disableSlide = false;
+            });
+        }
     }
 
-    function trackLink(node, href) {
-        if (!href) return;
+    function handleResize() {
+        queueIndicatorMeasurement();
+    }
 
-        linkRefs.set(href, node);
-        scheduleIndicatorUpdate();
+    $effect(() => {
+        pathname;
+        queueIndicatorMeasurement();
+    });
 
-        return {
-            update(newHref) {
-                if (newHref === href) return;
+    onMount(() => {
+        if (!isHome) waveState.set(true);
 
-                linkRefs.delete(href);
-                href = newHref;
+        if (typeof window !== "undefined") {
+            window.addEventListener("resize", handleResize);
+        }
 
-                if (href) linkRefs.set(href, node);
-                scheduleIndicatorUpdate();
-            },
-            destroy() {
-                linkRefs.delete(href);
-                scheduleIndicatorUpdate();
-            },
+        if (typeof ResizeObserver !== "undefined" && navElement) {
+            navResizeObserver = new ResizeObserver(() => queueIndicatorMeasurement());
+            navResizeObserver.observe(navElement);
+        }
+
+        queueIndicatorMeasurement();
+
+        return () => {
+            if (typeof window !== "undefined") {
+                window.removeEventListener("resize", handleResize);
+            }
+            navResizeObserver?.disconnect();
+            navResizeObserver = undefined;
+            if (indicatorFrame) {
+                cancelAnimationFrame(indicatorFrame);
+                indicatorFrame = 0;
+            }
+            if (fadeResetFrame) {
+                cancelAnimationFrame(fadeResetFrame);
+                fadeResetFrame = 0;
+            }
         };
-    }
+    });
 
     async function handleNavigation(event, href) {
         event?.preventDefault();
 
-        if ($page.url.pathname !== href) {
+        if (pathname !== href) {
             waveState.set(true);
             await goto(href);
         }
@@ -150,7 +130,7 @@
         style={`width:${indicator.width}px;height:${indicator.height}px;transform:translate3d(${indicator.left}px, ${indicator.top}px, 0);opacity:${indicatorVisible ? 1 : 0};`}
     ></span>
     {#each links as link}
-        {@const isActive = $page.url.pathname === link.href}
+        {@const isActive = pathname === link.href}
         <a
             href={link.href}
             aria-current={isActive ? "page" : undefined}
@@ -164,7 +144,7 @@
                     ? "pointer-events-none text-primary-foreground [&:hover]:text-primary-foreground [&:hover]:bg-transparent [&:hover]:shadow-none"
                     : "hover:text-primary/80",
             )}
-            use:trackLink={link.href}
+            data-route={link.href}
             onclick={(event) => handleNavigation(event, link.href)}
         >
             {link.text}
