@@ -59,7 +59,8 @@ void main() {
     float repelFalloff = exp(-(dist * dist) / (2.0 * sigma * sigma));
     float waterMask = 1.0 - smoothstep(0.45, 0.85, st.y);
     float repel = repelFalloff * waterMask;
-    vec2 waveUv = st - diff * (repel * 0.35);
+    float cursorInfluence = pow(repel, 0.8);
+    vec2 waveUv = st - diff * (cursorInfluence * 0.42);
 
     // Create multiple wave layers with different frequencies and amplitudes
     float wave1 = wave(waveUv, frequencyMultiplier, amplitudeMultiplier * 0.05, 1.5, 0.0);
@@ -69,9 +70,9 @@ void main() {
     // Combine the waves to create a more complex wave pattern
     float waveHeight = wave1 + wave2 + wave3;
 
-    float attenuation = mix(1.0, 0.05, clamp(repel, 0.0, 1.0));
+    float attenuation = mix(1.0, 0.03, cursorInfluence);
     float displacedWave = waveHeight * attenuation;
-    float waterSurface = st.y + displacedWave + 0.75 - transitionOffset - repel * 0.05;
+    float waterSurface = st.y + displacedWave + 0.75 - transitionOffset - cursorInfluence * 0.06;
 
     vec3 color;
     float gradientFactor;
