@@ -31,8 +31,9 @@ const html = highlighter.codeToHtml(code, {
 
     const styleEnhancements =
         "border-radius:0.9rem;border:1px solid rgba(137,221,255,0.25);"
-        + "box-shadow:0 10px 30px rgba(7,12,18,0.45);overflow:hidden;"
-        + "padding:1.25rem 1.5rem;";
+        + "box-shadow:0 10px 30px rgba(7,12,18,0.45);max-width:100%;"
+        + "overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;"
+        + "scrollbar-gutter:stable both-edges;padding:1.25rem 1.5rem;";
 
     let styled = cleaned.replace(
         /(<pre[^>]*style=")([^"]*)"/,

@@ -32,49 +32,15 @@ const description = $derived(() => {
     <meta name="twitter:description" content={description} />
 </svelte:head>
 
-<h1>{data?.post.title}</h1>
-<time class="post-date">{formatDate(data?.post.date)}</time>
+<div class="mx-auto max-w-[88ch]">
+    <h1 class="text-4xl font-semibold md:text-5xl">{data?.post.title}</h1>
+    <time
+        class="mb-6 block text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground"
+    >
+        {formatDate(data?.post.date)}
+    </time>
 
-<article>
-    <div class="content">
+    <article class="prose-rich space-y-8">
         {@render data?.post.content()}
-    </div>
-</article>
-
-<style>
-    h1 {
-        margin-bottom: 0.5rem;
-    }
-
-    article {
-        margin: 1rem 0 0;
-        max-width: var(--reading-width);
-    }
-
-    time.post-date {
-        display: block;
-        margin-bottom: 0.85rem;
-    }
-
-    .content :global(pre) {
-        font-size: 0.85rem;
-    }
-
-    @media screen and (min-width: 1120px) {
-        .content :global(p),
-        .content :global(li),
-        .content :global(blockquote) {
-            font-size: clamp(1.05rem, 1rem + 0.25vw, 1.26rem);
-        }
-    }
-
-    @media screen and (orientation: landscape) and (max-height: 600px) {
-        .content :global(pre) {
-            font-size: 0.5rem;
-        }
-
-        .content :global(pre code) {
-            font-size: inherit;
-        }
-    }
-</style>
+    </article>
+</div>

@@ -3,6 +3,8 @@
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
     import { waveState } from "$lib/stores/wave";
+    import { cn } from "$lib/utils.js";
+    import { buttonVariants } from "$lib/components/ui/button";
 
     const links = [
         { href: "/about", text: "About" },
@@ -16,109 +18,34 @@
         if (!isHome) waveState.set(true);
     });
 
-    async function handleNavigation(href) {
-        if ($page.url.pathname !== href) {
-            waveState.set(true);
-            await goto(href);
-        }
+async function handleNavigation(event, href) {
+    event?.preventDefault();
+
+    if ($page.url.pathname !== href) {
+        waveState.set(true);
+        await goto(href);
     }
+}
 </script>
 
-<nav class="Header">
+<nav
+    class="pointer-events-auto fixed left-1/2 top-6 z-30 flex max-w-[calc(100vw-3rem)] -translate-x-1/2 items-center gap-2 rounded-full border border-border/70 bg-background/80 px-3 py-2 text-sm shadow-[0_15px_45px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-[transform,opacity] duration-200 md:max-w-lg md:text-base"
+>
     {#each links as link}
+        {@const isActive = $page.url.pathname === link.href}
         <a
             href={link.href}
-            class:active={$page.url.pathname === link.href}
-            class:home={isHome}
-            onclick={(e) => {
-                e.preventDefault();
-                handleNavigation(link.href);
-            }}
+            aria-current={isActive ? "page" : undefined}
+            class={cn(
+                buttonVariants({
+                    variant: isActive ? "default" : "ghost",
+                    size: "sm",
+                }),
+                "flex-1 rounded-full px-4 text-sm font-medium tracking-wide transition-colors duration-150 md:px-6 md:text-base"
+            )}
+            onclick={(event) => handleNavigation(event, link.href)}
         >
-            <span class="text">{link.text}</span>
-            <span class="background"></span>
+            {link.text}
         </a>
     {/each}
 </nav>
-
-<style>
-    .Header {
-        text-align: center;
-        position: absolute;
-        display: inline-flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        font-weight: regular;
-        width: 29dvw;
-        right: calc(10dvw + 30vmin);
-        transform: translateX(50%);
-        font-size: clamp(1em, 1.675vw, 2.4em);
-        top: 1dvh;
-        z-index: 1;
-    }
-
-    a {
-        flex: 1;
-        display: inline-block;
-        position: relative;
-        text-decoration: none;
-        color: #cde8e5;
-        text-align: center;
-        padding: 0.175em 0.725em;
-        overflow: hidden;
-        border-radius: 0.5em;
-    }
-
-    a.home {
-        color: #ad6600;
-    }
-
-    a.home .background {
-        background-color: #ad66001a;
-    }
-
-    .text {
-        position: relative;
-    }
-
-    .background {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 200%;
-        padding-bottom: 200%;
-        transform: translate(-50%, -50%) scale(0);
-        border-radius: 50%;
-        transition: transform 0.4s ease-out;
-        background-color: #cde8e51a;
-    }
-
-    a:hover .background,
-    a.active .background {
-        transform: translate(-50%, -50%) scale(1);
-    }
-
-    :global(body.transitioning) a {
-        opacity: 0;
-    }
-
-    @media (max-aspect-ratio: 1.33/1) {
-        .Header {
-            transform: none;
-            width: 80dvw;
-            right: 10dvw;
-            font-size: clamp(1.5em, 2vw, 3em);
-        }
-    }
-
-    @media (min-width: 1440px) {
-        .Header {
-            font-size: clamp(0.97em, 1.2vw, 1.6em);
-            width: 27dvw;
-        }
-
-        a {
-            padding: 0.125em 0.6em;
-        }
-    }
-</style>

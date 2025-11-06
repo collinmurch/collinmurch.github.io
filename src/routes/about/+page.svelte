@@ -1,5 +1,9 @@
-<div class="image-container">
-    <picture class="headshot">
+<section
+    class="mx-auto grid w-full max-w-[min(1200px,94vw)] gap-12 lg:grid-cols-2 lg:items-center lg:gap-24"
+>
+    <picture
+        class="relative mx-auto aspect-square w-[min(26rem,60vw)] max-w-xl overflow-hidden rounded-[18%] border-4 border-accent/55 shadow-[0_45px_95px_rgba(0,0,0,0.45)] lg:mx-0"
+    >
         <source srcset="/images/headshot.avif" type="image/avif" />
         <source srcset="/images/headshot.webp" type="image/webp" />
         <img
@@ -11,69 +15,35 @@
             srcset="/images/headshot.jpeg 1x"
             decoding="async"
             loading="lazy"
-            class="headshot-image"
+            class="h-full w-full object-cover"
         />
     </picture>
-</div>
 
-<div class="container">
-    <h1>About Me</h1>
+    <div class="flex flex-col items-center gap-6 text-center lg:items-start lg:text-left">
+        <h1 class="text-4xl font-semibold text-foreground md:text-5xl lg:text-6xl">
+            About Me
+        </h1>
 
-    <p>
-        Hey! I'm Collin, a software engineer with over a
-        <a href="https://github.com/collinmurch">decade of experience</a>
-        building everything from iOS games to full stack web apps. I currently work
-        at <a href="https://www.zillow.com/homeloans">Zillow Home Loans</a> where I
-        help design and create backend tools that power the mortgage lending
-        process.
-    </p>
+        <div class="prose-rich max-w-152 space-y-6 text-foreground/90">
+            <p>
+                Hey! I'm Collin, a software engineer with over a
+                <a href="https://github.com/collinmurch">decade of experience</a>
+                building everything from iOS games to full stack web apps. I currently work at
+                <a href="https://www.zillow.com/homeloans">Zillow Home Loans</a> where I help
+                design and create backend tools that power the mortgage lending process.
+            </p>
 
-    <p>
-        I'm deeply curious about service architecture, artificial intelligence, and
-        information security. Outside of computers, I love card games (especially
-        Texas Hold'em), tennis, finding new electronic music, and pretty much every
-        water sport under the sun.
-    </p>
+            <p>
+                I'm deeply curious about service architecture, artificial intelligence, and
+                information security. Outside of computers, I love card games (especially Texas
+                Hold'em), tennis, finding new electronic music, and pretty much every water sport
+                under the sun.
+            </p>
 
-    <p>
-        Feel free to reach out over <a href="https://x.com/collinmurch">X</a> or
-        <a href="https://linkedin.com/in/collinmurch">LinkedIn</a> if you'd like to
-        chat!
-    </p>
-</div>
-
-<style>
-    .image-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 2.5rem;
-        margin-bottom: 2.5rem;
-    }
-
-    .headshot {
-        height: clamp(10em, 30vmin, 35em);
-        width: clamp(10em, 30vmin, 35em);
-        border-radius: 4vmin;
-        border: 0.75vmin solid #cde8e5;
-        filter: drop-shadow(0.25rem 0.25rem 0.15rem #000000a0);
-        pointer-events: none;
-        overflow: hidden;
-        display: block;
-    }
-
-    .headshot-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .container {
-        margin: 0 auto 2.5rem;
-        max-width: min(calc(var(--reading-width) + 4ch), 82vw);
-    }
-
-    .container p {
-        font-size: clamp(1.0rem, 0.95rem + 0.35vw, 1.2rem);
-        line-height: 1.5;
-    }
-</style>
+            <p>
+                Feel free to reach out over <a href="https://x.com/collinmurch">X</a> or
+                <a href="https://linkedin.com/in/collinmurch">LinkedIn</a> if you'd like to chat!
+            </p>
+        </div>
+    </div>
+</section>

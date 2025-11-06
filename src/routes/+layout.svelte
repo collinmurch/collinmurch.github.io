@@ -2,6 +2,7 @@
 import { beforeNavigate } from "$app/navigation";
 import { page } from "$app/stores";
 import Navigation from "$components/Navigation.svelte";
+import Socials from "$components/Socials.svelte";
 import { getTransition } from "$lib/animations/transitions";
 import "../app.css";
 import WaveCanvas from "../components/WaveCanvas.svelte";
@@ -64,51 +65,25 @@ beforeNavigate(({ from, to }) => {
     <meta name="twitter:description" content={meta.description} />
 </svelte:head>
 
-<main>
-    <Navigation />
+<div class="relative isolate min-h-screen overflow-hidden text-foreground">
     <WaveCanvas />
 
-    {#key $page.url.pathname}
-        <div
-            class="content"
-            in:currentTransition.transition={currentTransition.params}
-        >
-            {@render children()}
-        </div>
-    {/key}
-</main>
+    <div class="fixed inset-0 z-20 flex flex-col">
+        <Navigation />
 
-<style>
-    .content {
-        inset: 0;
-        position: fixed;
-        overflow-y: auto;
-        margin-top: clamp(3rem, 6vh, 10rem);
-        padding-left: calc(var(--reading-gutter) + env(safe-area-inset-left));
-        padding-right: calc(var(--reading-gutter) + env(safe-area-inset-right));
-    }
+        <main class="flex-1 overflow-y-auto scrollbar-reserve">
+            {#key $page.url.pathname}
+                <section
+                    class="page-shell"
+                    in:currentTransition.transition={currentTransition.params}
+                >
+                    {@render children()}
+                </section>
+            {/key}
+        </main>
 
-    main {
-        position: fixed;
-        color: #e6f4f1;
-    }
-
-    :global(body) {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    @media screen and (orientation: portrait) {
-        :global(html) {
-            font-size: 16px;
-            -webkit-text-size-adjust: 100%;
-            text-size-adjust: 100%;
-        }
-    }
-
-    @media screen and (orientation: landscape) {
-        :global(html) {
-            font-size: 16px;
-        }
-    }
-</style>
+        {#if normalizePath($page.url.pathname) === "/"}
+            <Socials />
+        {/if}
+    </div>
+</div>

@@ -1,5 +1,4 @@
 <script>
-import Socials from "$components/Socials.svelte";
 import { waveState } from "$lib/stores/wave";
 import { onMount } from "svelte";
 
@@ -8,31 +7,12 @@ onMount(() => {
 });
 </script>
 
-<svelte:head>
-    <title>Collin Murch | Software Engineer</title>
-    <meta
-        name="description"
-        content="Full stack engineer Collin Murch shares work, writing, and ways to connect."
-    />
-    <meta property="og:title" content="Collin Murch | Software Engineer" />
-    <meta
-        property="og:description"
-        content="Full stack engineer Collin Murch shares work, writing, and ways to connect."
-    />
-    <meta name="twitter:title" content="Collin Murch | Software Engineer" />
-    <meta
-        name="twitter:description"
-        content="Full stack engineer Collin Murch shares work, writing, and ways to connect."
-    />
-</svelte:head>
-
-<div class="Home">
-    <div class="intro">
-        <h1 class="name">Collin Murch</h1>
-        <p class="about">Full stack software engineer</p>
-    </div>
-
-    <picture class="logo">
+<section
+    class="mx-auto grid w-full max-w-[min(1200px,94vw)] gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] lg:items-center lg:gap-24"
+>
+    <picture
+        class="relative mx-auto aspect-square w-[min(26rem,62vw)] max-w-xl overflow-hidden rounded-[18%] border-4 border-accent/55 shadow-[0_45px_95px_rgba(0,0,0,0.45)] lg:mx-0"
+    >
         <source srcset="/images/profile.avif" type="image/avif" />
         <source srcset="/images/profile.webp" type="image/webp" />
         <img
@@ -45,86 +25,16 @@ onMount(() => {
             fetchpriority="high"
             decoding="async"
             loading="eager"
-            class="logo-image"
+            class="h-full w-full object-cover"
         />
     </picture>
 
-    <Socials />
-</div>
-
-<style>
-    .Home {
-        inset: 0;
-        text-align: center;
-        overflow: hidden;
-    }
-
-    .logo {
-        top: 30dvh;
-        position: absolute;
-        height: clamp(10em, 30vmin, 35em);
-        width: clamp(10em, 30vmin, 35em);
-        border-radius: 4vmin;
-        border: 0.75vmin solid #1f3746;
-        filter: drop-shadow(0.25rem 0.25rem 0.15rem #000000a0);
-        pointer-events: none;
-        right: calc(10dvw + 30vmin);
-        transform: translateX(50%) translateY(-50%);
-        will-change: transform;
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-        overflow: hidden;
-        display: block;
-    }
-
-    .logo-image {
-        width: 100%;
-        height: 100%;
-        display: block;
-        object-fit: cover;
-    }
-
-    .intro {
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        color: #ad6600;
-        top: 30dvh;
-        left: 30dvw;
-        transform: translate(-50%, -50%);
-        width: 50dvw;
-        pointer-events: none;
-    }
-
-    .name {
-        font-weight: lighter;
-        font-size: clamp(3em, 9vmin, 9em);
-        margin-bottom: 0;
-        text-shadow: 1px 1px 1px #ad6600;
-    }
-
-    .about {
-        font-weight: lighter;
-        font-style: italic;
-        font-size: clamp(1em, 3vmin, 3em);
-    }
-
-    :global(.social) {
-        width: clamp(1em, 2vw, 3em);
-    }
-
-    @media (max-aspect-ratio: 1.33/1) {
-        .logo {
-            top: min(15dvh, calc(55dvh - 45vmin));
-            left: 50dvw;
-            transform: translateX(-50%);
-        }
-
-        .intro {
-            top: max(55dvh, calc(10dvh + 40vmin + 5dvh));
-            left: 50dvw;
-            width: 90dvw;
-        }
-    }
-</style>
+    <div class="flex flex-col items-center gap-4 text-primary lg:items-start lg:gap-6">
+        <h1 class="text-4xl font-light tracking-tight text-primary md:text-6xl lg:text-7xl xl:text-[5.4rem]">
+            Collin Murch
+        </h1>
+        <p class="text-lg font-light italic text-primary md:text-2xl lg:text-[1.65rem] xl:text-[1.7rem]">
+            Full stack software engineer
+        </p>
+    </div>
+</section>
