@@ -183,11 +183,7 @@
     });
 </script>
 
-<canvas bind:this={canvas}></canvas>
-
-<style>
-    canvas {
-        height: 100dvh;
-        width: 100dvw;
-    }
-</style>
+<canvas
+    bind:this={canvas}
+    class="pointer-events-none fixed inset-0 -z-10 h-dvh w-dvw"
+></canvas>

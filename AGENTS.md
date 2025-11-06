@@ -1,7 +1,9 @@
 # CollinMurch.com Agent Notes
 
 ## TL;DR
-- **Stack:** Svelte 5 + SvelteKit (adapter-static) with mdsvex; syntax highlighting handled by Shiki using the bundled poimandres theme.
+- **Stack:** Svelte 5 + SvelteKit (adapter-static) with mdsvex; Tailwind v4 + shadcn-svelte; syntax highlighting handled by Shiki using the bundled poimandres theme.
+- **Svelte 5:** Prefer native DOM event attributes (e.g. `onclick={() => ...}`) instead of legacy `on:click` directives.
+- **Tailwind v4:** Always use the v4 pipeline and keep shadcn’s defaults (no `style` key) so the CLI stays on the supported track.
 - **Tooling:** Use `bun` for everything (`bun install`, `bun run dev|build|preview`). Avoid npm/yarn.
 - **Output:** Static site; production artifacts land in `build/` (plus `static/_headers` for cache rules).
 - **Deployment:** Built assets are pushed through the existing GitLab workflow (see project CI/CD) to publish the static bundle.

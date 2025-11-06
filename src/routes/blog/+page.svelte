@@ -4,62 +4,28 @@
     const { data } = $props();
 </script>
 
-<h1>Posts</h1>
+<div class="mx-auto max-w-[88ch] space-y-10">
+    <h1 class="text-4xl font-semibold md:text-5xl">Posts</h1>
 
-<div class="posts">
-    {#each data.posts as post}
-        <article>
-            <h2>
-                <a href="/blog/{post.path}">{post.meta?.title}</a>
-            </h2>
-            <time class="post-date">{formatDate(post.meta?.date)}</time>
-        </article>
-    {/each}
+    <div class="space-y-8">
+        {#each data.posts as post}
+            <article
+                class="space-y-3 border-b border-dashed border-border/60 pb-6 last:border-none last:pb-0"
+            >
+                <h2 class="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+                    <a
+                        class="inline-flex items-center gap-2 text-accent transition duration-150 hover:text-primary"
+                        href="/blog/{post.path}"
+                    >
+                        {post.meta?.title}
+                    </a>
+                </h2>
+                <time
+                    class="block text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground"
+                >
+                    {formatDate(post.meta?.date)}
+                </time>
+            </article>
+        {/each}
+    </div>
 </div>
-
-<style>
-    a {
-        transition: color 150ms ease, text-decoration-color 150ms ease;
-    }
-
-    a:link {
-        color: var(--link-color);
-        text-decoration-color: var(--link-decoration-color);
-    }
-
-    a:visited {
-        color: var(--link-visited-color);
-        text-decoration-color: var(--link-decoration-visited-color);
-    }
-
-    .posts {
-        display: grid;
-        gap: 2rem;
-        max-width: var(--reading-width);
-    }
-
-    article {
-        max-width: var(--reading-width);
-        padding-bottom: 0.5rem;
-        font-size: clamp(1.1rem, 1.04rem + 0.35vw, 1.35rem);
-        line-height: 1.6;
-        background-image: linear-gradient(
-            to right,
-            #eee 10%,
-            rgba(255, 255, 255, 0) 0%
-        );
-        background-position: bottom;
-        background-size: 6px 1px; /* adjust this value to change dot spacing */
-        background-repeat: repeat-x;
-        padding-bottom: 0.5rem;
-    }
-
-    h2 {
-        margin: 0;
-    }
-
-    .post-date {
-        display: block;
-        margin-bottom: 0.25rem;
-    }
-</style>
