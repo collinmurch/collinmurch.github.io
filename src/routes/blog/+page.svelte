@@ -12,7 +12,9 @@
             <article
                 class="space-y-3 border-b border-dashed border-border/60 pb-6 last:border-none last:pb-0"
             >
-                <h2 class="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+                <h2
+                    class="text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
+                >
                     <a
                         class="inline-flex items-center gap-2 text-accent transition duration-150 hover:text-primary"
                         href="/blog/{post.path}"

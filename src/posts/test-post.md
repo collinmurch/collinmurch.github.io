@@ -1,12 +1,12 @@
 ---
 title: Test Post
-date: '2024-11-16'
+date: "2024-11-16"
 description: A quick markdown sample post for validating mdsvex rendering on the static site.
 excerpt: A tiny sample article used to ensure the blog pipeline works end to end.
 ---
 
 This is a post to test markdown rendering with static sites.
-Here's some **bold** text and some *italic* text.
+Here's some **bold** text and some _italic_ text.
 
 This is a new paragraph with a link to [svelte.dev](https://svelte.dev).
 

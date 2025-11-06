@@ -1,17 +1,17 @@
 <script>
-import { waveState } from "$lib/stores/wave";
-import { onMount } from "svelte";
+    import { waveState } from "$lib/stores/wave";
+    import { onMount } from "svelte";
 
-onMount(() => {
-    waveState.set(false);
-});
+    onMount(() => {
+        waveState.set(false);
+    });
 </script>
 
 <section
-    class="mx-auto grid w-full max-w-[min(1200px,94vw)] gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] lg:items-center lg:gap-24"
+    class="mx-auto grid w-full max-w-[min(1200px,94vw)] gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] lg:items-center lg:gap-24 max-lg:landscape:max-w-[min(960px,90vw)] max-lg:landscape:grid-cols-[minmax(0,0.78fr)_minmax(0,1fr)] max-lg:landscape:items-center max-lg:landscape:gap-8"
 >
     <picture
-        class="relative mx-auto aspect-square w-[min(26rem,62vw)] max-w-xl overflow-hidden rounded-[18%] border-4 border-accent/55 shadow-[0_45px_95px_rgba(0,0,0,0.45)] lg:mx-0"
+        class="relative mx-auto aspect-square w-[min(26rem,62vw)] max-w-xl overflow-hidden rounded-[18%] border-4 border-accent/55 shadow-[0_45px_95px_rgba(0,0,0,0.45)] max-lg:landscape:mx-0 max-lg:landscape:w-[clamp(11rem,26vw,13.5rem)] max-lg:landscape:max-w-none max-lg:landscape:border-[3px] max-lg:landscape:shadow-[0_26px_55px_rgba(0,0,0,0.3)]"
     >
         <source srcset="/images/profile.avif" type="image/avif" />
         <source srcset="/images/profile.webp" type="image/webp" />
@@ -29,11 +29,17 @@ onMount(() => {
         />
     </picture>
 
-    <div class="flex flex-col items-center gap-4 text-primary lg:items-start lg:gap-6">
-        <h1 class="text-4xl font-light tracking-tight text-primary md:text-6xl lg:text-7xl xl:text-[5.4rem]">
+    <div
+        class="flex flex-col items-center gap-4 text-primary lg:items-start lg:gap-6 max-lg:landscape:items-start max-lg:landscape:text-left max-lg:landscape:gap-5 max-lg:landscape:max-w-[min(26rem,50vw)]"
+    >
+        <h1
+            class="text-4xl font-light tracking-tight text-primary md:text-6xl lg:text-7xl xl:text-[5.4rem] max-lg:landscape:text-[2.6rem]"
+        >
             Collin Murch
         </h1>
-        <p class="text-lg font-light italic text-primary md:text-2xl lg:text-[1.65rem] xl:text-[1.7rem]">
+        <p
+            class="text-lg font-light italic text-primary md:text-2xl lg:text-[1.65rem] xl:text-[1.7rem] max-lg:landscape:text-base max-lg:landscape:leading-snug"
+        >
             Full stack software engineer
         </p>
     </div>
