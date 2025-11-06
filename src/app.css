@@ -20,6 +20,18 @@ body {
     --reading-gutter: clamp(1rem, 5vw, 4.5rem);
 }
 
+@media (min-width: 1200px) {
+    :root {
+        --reading-width: 82ch;
+    }
+}
+
+@media (min-width: 1600px) {
+    :root {
+        --reading-width: 90ch;
+    }
+}
+
 .content :global(p) {
     margin: 0 0 1.25rem;
     line-height: 1.5;

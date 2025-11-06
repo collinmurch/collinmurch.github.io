@@ -80,8 +80,12 @@ void main() {
     float gradientEnd = mediumSectionEnd; // End of the gradient section
 
     if (waterSurface > 1.0) {
-        vec3 skyBase = vec3(0.902, 0.957, 0.945); // #EEF7FF, lightest
+        vec3 skyBottom = vec3(0.769, 0.867, 0.941); // #CDE8E5
+        vec3 skyTop = vec3(0.902, 0.957, 0.945); // #EEF7FF
         vec3 cloudHighlight = vec3(0.952, 0.978, 0.971);
+
+        float skyBlend = smoothstep(0.28, 0.95, st.y);
+        vec3 skyBase = mix(skyBottom, skyTop, skyBlend);
 
         vec2 skyUv = st;
         skyUv.x *= u_resolution.x / u_resolution.y;
@@ -93,8 +97,8 @@ void main() {
         float clouds = clamp(cloudMacro * 0.65 + cloudDetail * 0.35, 0.0, 1.0);
 
         float cloudStructure = smoothstep(0.4, 0.8, clouds);
-        float topFade = smoothstep(0.55, 0.72, st.y);
-        float horizonFade = smoothstep(1.0, 1.18, waterSurface);
+        float topFade = smoothstep(0.58, 0.78, st.y);
+        float horizonFade = smoothstep(1.02, 1.2, waterSurface);
         float cloudAmount = cloudStructure * topFade * horizonFade;
 
         vec3 cloudColor = mix(skyBase, cloudHighlight, cloudAmount);

@@ -69,7 +69,7 @@
 
     .container {
         margin: 0 auto 2.5rem;
-        max-width: min(72ch, 78vw);
+        max-width: min(calc(var(--reading-width) + 4ch), 82vw);
     }
 
     .container p {
