@@ -3,7 +3,6 @@
     import { waveState } from "$lib/stores/wave";
 
     let canvas = $state();
-    let glContext = $state();
 
     const TRANSITION_DURATION = 500;
 
@@ -72,7 +71,6 @@
             };
         }
 
-        glContext = gl;
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.clearColor(0, 0, 0, 0);
 

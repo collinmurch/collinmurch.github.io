@@ -20,21 +20,8 @@
     />
 </svelte:head>
 
-<div class="container">
+<div
+    class="mx-auto flex-1 max-w-[80ch] pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]"
+>
     {@render children()}
 </div>
-
-<style>
-    .container {
-        margin: 0 auto;
-        max-width: 80ch;
-        flex: 1;
-        padding-left: max(1rem, env(safe-area-inset-left));
-        padding-right: max(1rem, env(safe-area-inset-right));
-    }
-
-    .container :global(time) {
-        font-size: 0.85rem;
-        font-style: italic;
-    }
-</style>

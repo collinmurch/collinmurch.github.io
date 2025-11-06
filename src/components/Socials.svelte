@@ -31,7 +31,7 @@
             href={link.href}
             class="group relative flex size-10 items-center justify-center overflow-hidden rounded-full border border-transparent text-muted-foreground transition duration-200 hover:border-primary/60 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:size-11 max-lg:landscape:size-9"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
         >
             <img
                 src={link.src}

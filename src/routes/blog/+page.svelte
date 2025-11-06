@@ -17,7 +17,7 @@
                 >
                     <a
                         class="inline-flex items-center gap-2 text-accent transition duration-150 hover:text-primary"
-                        href="/blog/{post.path}"
+                        href={`/blog/${post.path}`}
                     >
                         {post.meta?.title}
                     </a>
