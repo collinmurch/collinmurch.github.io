@@ -23,7 +23,7 @@ float noise(vec2 p) {
 }
 
 float wave(vec2 p, float frequency, float amplitude, float speed, float offset) {
-    return sin(p.x * frequency + u_time * speed + offset + mix(-1.0, 1.0, smoothstep(0.4, 0.6, u_mouse.x / u_resolution.x))) * amplitude;
+    return sin(p.x * frequency + u_time * speed + offset) * amplitude;
 }
 
 void main() {
@@ -33,9 +33,9 @@ void main() {
     // For bringing up the wave on transition
     float transitionOffset = u_transition * 0.9;
 
-    // Adjust wave properties based on mouse position
-    float frequencyMultiplier = mix(1.0, 15.0, pow(abs(0.5 - (u_mouse.x / u_resolution.x)), 2.0) * 10.0);
-    float amplitudeMultiplier = mix(0.25, 0.05, u_mouse.y / u_resolution.y) * 1.2;
+    // Fixed baseline wave intensity (75% of previous interactive range)
+    float frequencyMultiplier = mix(1.0, 15.0, 0.75);
+    float amplitudeMultiplier = mix(0.25, 0.05, 0.75) * 1.2;
 
     // Create multiple wave layers with different frequencies and amplitudes
     float wave1 = wave(st, frequencyMultiplier, amplitudeMultiplier * 0.05, 1.5, 0.0);
@@ -44,7 +44,19 @@ void main() {
 
     // Combine the waves to create a more complex wave pattern
     float waveHeight = wave1 + wave2 + wave3;
-    float waterSurface = st.y + waveHeight + 0.75 - transitionOffset;
+
+    // Mouse repels the surface softly instead of driving intensity
+    vec2 mouse = vec2(u_mouse.x / u_resolution.x, 1.0 - (u_mouse.y / u_resolution.y));
+    mouse.x *= u_resolution.x / u_resolution.y;
+    vec2 diff = st - mouse;
+    float dist = length(diff);
+    float sigma = 0.18;
+    float repel = exp(-(dist * dist) / (2.0 * sigma * sigma));
+    float waterMask = 1.0 - smoothstep(0.45, 0.85, st.y);
+    repel *= waterMask;
+    float attenuation = mix(1.0, 0.25, clamp(repel, 0.0, 1.0));
+    waveHeight *= attenuation;
+    float waterSurface = st.y + waveHeight + 0.75 - transitionOffset - repel * 0.08;
 
     vec3 color;
     float gradientFactor;
