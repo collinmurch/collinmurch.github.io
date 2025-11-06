@@ -14,21 +14,15 @@
         let animationFrameId = 0;
 
         const startWebGL = async () => {
-            const [
-                utilsModule,
-                vertexShaderSource,
-                fragmentShaderSource,
-            ] = await Promise.all([
-                import("$lib/webgl/utils"),
-                import("$lib/webgl/vertex.glsl?raw"),
-                import("$lib/webgl/fragment.glsl?raw"),
-            ]);
+            const [utilsModule, vertexShaderSource, fragmentShaderSource] =
+                await Promise.all([
+                    import("$lib/webgl/utils"),
+                    import("$lib/webgl/vertex.glsl?raw"),
+                    import("$lib/webgl/fragment.glsl?raw"),
+                ]);
 
-            const {
-                initializeWebGL,
-                resizeCanvasToDisplaySize,
-                setupEventListeners,
-            } = utilsModule;
+            const { initializeWebGL, resizeCanvasToDisplaySize, setupEventListeners } =
+                utilsModule;
 
             const context =
                 initializeWebGL(
@@ -118,20 +112,9 @@
             gl.useProgram(program);
             gl.enableVertexAttribArray(positionAttributeLocation);
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            gl.vertexAttribPointer(
-                positionAttributeLocation,
-                2,
-                gl.FLOAT,
-                false,
-                0,
-                0,
-            );
+            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
             gl.uniform1f(timeUniformLocation, currentTime);
-            gl.uniform2f(
-                resolutionUniformLocation,
-                gl.canvas.width,
-                gl.canvas.height,
-            );
+            gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
             gl.uniform2f(mouseUniformLocation, pos[0], pos[1]);
             gl.uniform1f(transitionUniformLocation, currentTransition);
             gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -183,7 +166,5 @@
     });
 </script>
 
-<canvas
-    bind:this={canvas}
-    class="pointer-events-none fixed inset-0 -z-10 h-dvh w-dvw"
+<canvas bind:this={canvas} class="pointer-events-none fixed inset-0 -z-10 h-dvh w-dvw"
 ></canvas>

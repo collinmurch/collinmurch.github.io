@@ -1,24 +1,24 @@
 <script>
-import { formatDate } from "$lib/utils";
+    import { formatDate } from "$lib/utils";
 
-const { data } = $props();
+    const { data } = $props();
 
-const pageTitle = $derived(() => {
-    if (!data?.post?.title) return "Blog Post | Collin Murch";
-    return `${data.post.title} | Collin Murch`;
-});
+    const pageTitle = $derived(() => {
+        if (!data?.post?.title) return "Blog Post | Collin Murch";
+        return `${data.post.title} | Collin Murch`;
+    });
 
-const description = $derived(() => {
-    if (data?.post?.description) return data.post.description;
-    if (data?.post?.excerpt) return data.post.excerpt;
-    if (data?.post?.title) {
-        const published = data.post.date
-            ? `Published ${formatDate(data.post.date)}.`
-            : "";
-        return `${data.post.title} – A post from Collin Murch. ${published}`.trim();
-    }
-    return "Article by Collin Murch.";
-});
+    const description = $derived(() => {
+        if (data?.post?.description) return data.post.description;
+        if (data?.post?.excerpt) return data.post.excerpt;
+        if (data?.post?.title) {
+            const published = data.post.date
+                ? `Published ${formatDate(data.post.date)}.`
+                : "";
+            return `${data.post.title} – A post from Collin Murch. ${published}`.trim();
+        }
+        return "Article by Collin Murch.";
+    });
 </script>
 
 <svelte:head>

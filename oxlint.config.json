@@ -1,0 +1,8 @@
+{
+    "$schema": "https://oxlint.com/schema.json",
+    "rules": {
+        "recommended": "error",
+        "style": "warn"
+    },
+    "ignorePatterns": ["build", ".svelte-kit", "node_modules"]
+}
