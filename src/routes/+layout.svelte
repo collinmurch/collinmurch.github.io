@@ -65,7 +65,7 @@ beforeNavigate(({ from, to }) => {
     <meta name="twitter:description" content={meta.description} />
 </svelte:head>
 
-<div class="relative isolate min-h-screen overflow-hidden text-foreground">
+<div class="relative isolate min-h-dvh overflow-hidden text-foreground">
     <WaveCanvas />
 
     <div class="fixed inset-0 z-20 flex flex-col">
