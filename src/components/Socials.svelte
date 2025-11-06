@@ -35,24 +35,24 @@
         flex-direction: row;
         justify-content: space-evenly;
         font-weight: regular;
-        width: 30dvw;
+        width: 29dvw;
         right: calc(10dvw + 30vmin);
         transform: translateX(50%);
-        font-size: clamp(1em, 2vw, 3em);
+        font-size: clamp(1em, 1.6vw, 2.3em);
         z-index: 1;
         bottom: 2dvh;
     }
 
     a {
         position: relative;
-        padding: 0.5em;
+        padding: 0.475em;
         overflow: hidden;
         border-radius: 50%;
         display: inline-block;
     }
 
     .social {
-        width: clamp(1em, 2vw, 3em);
+        width: clamp(1em, 1.6vw, 2.4em);
         display: block;
     }
 
@@ -78,6 +78,21 @@
             width: 80dvw;
             right: 10dvw;
             font-size: clamp(1.5em, 2vw, 3em);
+        }
+    }
+
+    @media (min-width: 1440px) {
+        .Footer {
+            font-size: clamp(0.97em, 1.05vw, 1.5em);
+            width: 27dvw;
+        }
+
+        a {
+            padding: 0.4em;
+        }
+
+        .social {
+            width: clamp(0.98em, 1.05vw, 1.8em);
         }
     }
 </style>
