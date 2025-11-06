@@ -33,7 +33,7 @@
         class="flex flex-col items-center gap-4 text-primary lg:items-start lg:gap-6 max-lg:landscape:items-start max-lg:landscape:text-left max-lg:landscape:gap-5 max-lg:landscape:max-w-[min(26rem,50vw)]"
     >
         <h1
-            class="text-4xl font-light tracking-tight text-primary md:text-6xl lg:text-7xl xl:text-[5.4rem] max-lg:landscape:text-[2.6rem]"
+            class="text-5xl font-light tracking-tight text-primary md:text-7xl lg:text-[5rem] xl:text-[5.8rem] max-lg:landscape:text-[3rem]"
         >
             Collin Murch
         </h1>
