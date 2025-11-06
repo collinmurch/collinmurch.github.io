@@ -4,6 +4,8 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_transition;
 
+const mat2 FBM_ROT = mat2(0.8, -0.6, 0.6, 0.8);
+
 float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
 }
@@ -22,6 +24,17 @@ float noise(vec2 p) {
     return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
 
+float fbm(vec2 p) {
+    float value = 0.0;
+    float amplitude = 0.5;
+    for (int i = 0; i < 5; i++) {
+        value += (noise(p) - 0.5) * amplitude;
+        p = FBM_ROT * p * 1.9 + vec2(0.37, -0.21);
+        amplitude *= 0.5;
+    }
+    return clamp(0.5 + value, 0.0, 1.0);
+}
+
 float wave(vec2 p, float frequency, float amplitude, float speed, float offset) {
     return sin(p.x * frequency + u_time * speed + offset) * amplitude;
 }
@@ -37,26 +50,28 @@ void main() {
     float frequencyMultiplier = mix(1.0, 15.0, 0.75);
     float amplitudeMultiplier = mix(0.25, 0.05, 0.75) * 1.2;
 
-    // Create multiple wave layers with different frequencies and amplitudes
-    float wave1 = wave(st, frequencyMultiplier, amplitudeMultiplier * 0.05, 1.5, 0.0);
-    float wave2 = wave(st, frequencyMultiplier * 0.7, amplitudeMultiplier * 0.07, 2.0, 1.0);
-    float wave3 = wave(st, frequencyMultiplier * 0.5, amplitudeMultiplier * 0.1, 2.5, 2.0);
-
-    // Combine the waves to create a more complex wave pattern
-    float waveHeight = wave1 + wave2 + wave3;
-
-    // Mouse repels the surface softly instead of driving intensity
+    // Mouse-driven displacement field to push waves away rather than amplify
     vec2 mouse = vec2(u_mouse.x / u_resolution.x, 1.0 - (u_mouse.y / u_resolution.y));
     mouse.x *= u_resolution.x / u_resolution.y;
     vec2 diff = st - mouse;
     float dist = length(diff);
     float sigma = 0.18;
-    float repel = exp(-(dist * dist) / (2.0 * sigma * sigma));
+    float repelFalloff = exp(-(dist * dist) / (2.0 * sigma * sigma));
     float waterMask = 1.0 - smoothstep(0.45, 0.85, st.y);
-    repel *= waterMask;
-    float attenuation = mix(1.0, 0.25, clamp(repel, 0.0, 1.0));
-    waveHeight *= attenuation;
-    float waterSurface = st.y + waveHeight + 0.75 - transitionOffset - repel * 0.08;
+    float repel = repelFalloff * waterMask;
+    vec2 waveUv = st - diff * (repel * 0.35);
+
+    // Create multiple wave layers with different frequencies and amplitudes
+    float wave1 = wave(waveUv, frequencyMultiplier, amplitudeMultiplier * 0.05, 1.5, 0.0);
+    float wave2 = wave(waveUv, frequencyMultiplier * 0.7, amplitudeMultiplier * 0.07, 2.0, 1.0);
+    float wave3 = wave(waveUv, frequencyMultiplier * 0.5, amplitudeMultiplier * 0.1, 2.5, 2.0);
+
+    // Combine the waves to create a more complex wave pattern
+    float waveHeight = wave1 + wave2 + wave3;
+
+    float attenuation = mix(1.0, 0.05, clamp(repel, 0.0, 1.0));
+    float displacedWave = waveHeight * attenuation;
+    float waterSurface = st.y + displacedWave + 0.75 - transitionOffset - repel * 0.05;
 
     vec3 color;
     float gradientFactor;
@@ -78,20 +93,28 @@ void main() {
     }
 
     // Foam effect near wave crests
-    float crest = 1.0 - waterSurface;
-    float foamWidth = 0.035;
+    float crest = max(0.0, 1.0 - waterSurface);
+    float foamWidth = 0.04;
     float foamBand = smoothstep(foamWidth, 0.0, crest);
-    foamBand = pow(foamBand, 1.8);
+    foamBand = pow(foamBand, 1.65);
 
-    vec2 foamUv = vec2(st.x * (u_resolution.x / u_resolution.y) * 6.0, u_time * 0.45 + st.y * 3.5);
-    float foamNoise = 0.58 * noise(foamUv);
-    foamNoise += 0.28 * noise(foamUv * 2.3 + vec2(12.5, -4.2));
-    foamNoise += 0.14 * noise(foamUv * 4.7 + vec2(-8.3, 7.9));
-    float foamTexture = smoothstep(0.52, 0.78, foamNoise);
+    vec2 foamFlow = vec2(st.x * (u_resolution.x / u_resolution.y) * 3.8, st.y * 7.2);
+    foamFlow += vec2(u_time * 0.12, u_time * 0.18);
+    foamFlow += displacedWave * 2.4;
 
-    float foam = clamp(foamBand * foamTexture * 1.35, 0.0, 1.0);
-    vec3 foamColor = vec3(0.914, 0.969, 0.957); // Lightened version of existing palette
-    color = mix(color, foamColor, foam);
+    float foamField = fbm(foamFlow);
+    float foamSoft = smoothstep(0.32, 0.68, foamField);
+    float foamIslands = smoothstep(0.55, 0.83, foamField);
+    float foamCrests = clamp((foamIslands - foamSoft) * 1.9, 0.0, 1.0);
+
+    float foamBody = clamp(foamBand * foamSoft * 1.25, 0.0, 1.0);
+    float foamHighlight = clamp(foamBand * (foamCrests + 0.25 * foamIslands), 0.0, 1.0);
+
+    vec3 foamMidColor = vec3(0.769, 0.867, 0.941); // medium palette tone
+    vec3 foamHighlightColor = vec3(0.914, 0.969, 0.957); // lightest foam
+
+    color = mix(color, foamMidColor, foamBody * 0.6);
+    color = mix(color, foamHighlightColor, foamHighlight);
 
     gl_FragColor = vec4(color, 1.0);
 }
