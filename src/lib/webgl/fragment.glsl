@@ -75,8 +75,8 @@ void main() {
 
     vec3 color;
     float gradientFactor;
-    float mediumSectionEnd = 0.995; // Border of solid medium section between gradient and sky
-    float gradientStart = 0.95; // Start of the gradient section
+    float mediumSectionEnd = 0.9935; // Border of solid medium section between gradient and sky
+    float gradientStart = 0.915; // Start of the gradient section
     float gradientEnd = mediumSectionEnd; // End of the gradient section
 
     if (waterSurface > 1.0) {
