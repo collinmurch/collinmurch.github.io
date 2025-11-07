@@ -40,6 +40,8 @@
 
     --layout-gutter: clamp(1.5rem, 5vw, 4.5rem);
     --layout-width-default: min(1280px, 94vw);
+    --layout-width-lg: min(1400px, 88vw);
+    --layout-width-xl: min(1560px, 84vw);
 }
 
 :root {

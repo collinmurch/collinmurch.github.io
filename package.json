@@ -6,8 +6,8 @@
         "dev": "vite dev",
         "build": "vite build",
         "preview": "vite preview",
-        "lint": "oxlint",
-        "lint:fix": "oxlint --fix",
+        "lint": "oxlint --max-warnings=0",
+        "lint:fix": "oxlint --fix --max-warnings=0",
         "format": "prettier --check .",
         "format:write": "prettier --write .",
         "prepare": "husky",
@@ -38,7 +38,7 @@
     },
     "lint-staged": {
         "*.{js,ts,cjs,mjs,jsx,tsx}": [
-            "oxlint --fix"
+            "oxlint --fix --max-warnings=0"
         ],
         "*.{js,ts,cjs,mjs,jsx,tsx,svelte,md,json,css,html}": [
             "prettier --write --ignore-unknown"

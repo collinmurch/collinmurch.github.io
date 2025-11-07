@@ -1,24 +1,25 @@
 <script>
-    import { formatDate } from "$lib/utils";
+    import { formatDate, toISODate } from "$lib/utils";
 
     const { data } = $props();
 
-    const pageTitle = $derived(() => {
-        if (!data?.post?.title) return "Blog Post | Collin Murch";
-        return `${data.post.title} | Collin Murch`;
-    });
+    function buildDescription(post) {
+        if (!post) return "Article by Collin Murch.";
+        if (post.description) return post.description;
+        if (post.excerpt) return post.excerpt;
+        const published = post.date ? ` Published ${formatDate(post.date)}.` : "";
+        return `${post.title ?? "Article"} – A post from Collin Murch.${published}`.trim();
+    }
 
-    const description = $derived(() => {
-        if (data?.post?.description) return data.post.description;
-        if (data?.post?.excerpt) return data.post.excerpt;
-        if (data?.post?.title) {
-            const published = data.post.date
-                ? `Published ${formatDate(data.post.date)}.`
-                : "";
-            return `${data.post.title} – A post from Collin Murch. ${published}`.trim();
-        }
-        return "Article by Collin Murch.";
-    });
+    const pageTitle = $derived(
+        data?.post?.title
+            ? `${data.post.title} | Collin Murch`
+            : "Blog Post | Collin Murch",
+    );
+
+    const description = $derived(buildDescription(data?.post));
+
+    const publishedISO = $derived(toISODate(data?.post?.date));
 </script>
 
 <svelte:head>
@@ -35,9 +36,10 @@
 <div class="mx-auto max-w-[88ch]">
     <h1 class="text-4xl font-semibold md:text-5xl">{data?.post.title}</h1>
     <time
+        datetime={publishedISO ?? undefined}
         class="mb-6 block text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground"
     >
-        {formatDate(data?.post.date)}
+        {publishedISO ? formatDate(publishedISO) : "Coming soon"}
     </time>
 
     <article class="prose-rich space-y-8">

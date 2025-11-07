@@ -17,3 +17,11 @@ export function formatDate(date) {
         day: "numeric",
     });
 }
+
+export function toISODate(date) {
+    if (!date) return null;
+    const dateObj = date instanceof Date ? date : new Date(date);
+    const time = dateObj.getTime();
+    if (!Number.isFinite(time)) return null;
+    return new Date(time).toISOString();
+}

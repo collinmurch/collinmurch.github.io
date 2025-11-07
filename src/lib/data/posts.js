@@ -1,39 +1,64 @@
-export const fetchMarkdownPosts = async () => {
-    const allPostFiles = import.meta.glob("/src/posts/*.md");
-    const iterablePostFiles = Object.entries(allPostFiles);
+const postFiles = import.meta.glob("/src/posts/*.md");
+const moduleCache = new Map();
 
-    const allPosts = await Promise.all(
-        iterablePostFiles.map(async ([path, resolver]) => {
-            const { metadata } = await resolver();
-            const postPath = path.slice("/src/posts/".length, -".md".length);
+const POSTS_DIR_PREFIX = "/src/posts/";
+const POSTS_SUFFIX = ".md";
+
+function normalizeDateValue(value) {
+    if (!value) return 0;
+    const dateObj = value instanceof Date ? value : new Date(value);
+    const timestamp = dateObj.getTime();
+    return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
+function toSlug(path) {
+    if (!path.startsWith(POSTS_DIR_PREFIX)) return path;
+    return path.slice(POSTS_DIR_PREFIX.length, -POSTS_SUFFIX.length);
+}
+
+function getPostResolver(path) {
+    const resolver = postFiles[path];
+    if (!resolver) throw new Error(`Post not found: ${path}`);
+    return resolver;
+}
+
+async function loadPostModule(path) {
+    if (!moduleCache.has(path)) {
+        const resolver = getPostResolver(path);
+        moduleCache.set(path, resolver());
+    }
+
+    return moduleCache.get(path);
+}
+
+export const fetchMarkdownPosts = async () => {
+    const entries = Object.keys(postFiles);
+
+    const posts = await Promise.all(
+        entries.map(async (path) => {
+            const module = await loadPostModule(path);
+            const meta = module?.metadata ?? {};
 
             return {
-                meta: metadata,
-                path: postPath,
+                meta,
+                path: toSlug(path),
+                sortTime: normalizeDateValue(meta.date),
             };
         }),
     );
 
-    return allPosts.slice().sort((a, b) => {
-        const dateA = a.meta?.date ? new Date(a.meta.date) : 0;
-        const dateB = b.meta?.date ? new Date(b.meta.date) : 0;
-        return dateB - dateA;
-    });
+    return posts
+        .sort((a, b) => b.sortTime - a.sortTime)
+        .map(({ meta, path }) => ({ meta, path }));
 };
 
 export const fetchSinglePost = async (slug) => {
-    const allPostFiles = import.meta.glob("/src/posts/*.md");
-    const matchingPost = allPostFiles[`/src/posts/${slug}.md`];
-
-    if (!matchingPost) {
-        throw new Error(`Post not found: ${slug}`);
-    }
-
-    const post = await matchingPost();
+    const path = `${POSTS_DIR_PREFIX}${slug}${POSTS_SUFFIX}`;
+    const module = await loadPostModule(path);
 
     return {
         slug,
-        ...post.metadata,
-        content: post.default,
+        ...module.metadata,
+        content: module.default,
     };
 };
