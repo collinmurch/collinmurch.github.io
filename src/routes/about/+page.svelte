@@ -34,7 +34,7 @@
             <p>
                 Hey! I'm Collin, a software engineer with over a
                 <a href="https://github.com/collinmurch">decade of experience</a>
-                building everything from iOS games AI model training pipelines to full stack
+                building everything from iOS games to AI training pipelines to full stack
                 web apps. I currently work at
                 <a href="https://www.zillow.com/homeloans">Zillow Home Loans</a> where I
                 help design and create backend tools that power the mortgage lending process.
