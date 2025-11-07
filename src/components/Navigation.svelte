@@ -74,8 +74,7 @@
     }
 
     $effect(() => {
-        pathname;
-        queueIndicatorMeasurement();
+        queueIndicatorMeasurement(pathname);
     });
 
     onMount(() => {
