@@ -9,11 +9,11 @@ const mat2 FBM_ROT = mat2(0.8, -0.6, 0.6, 0.8);
 
 const vec3 SKY_BOTTOM = vec3(0.769, 0.867, 0.941); // #CDE8E5
 const vec3 SKY_TOP = vec3(0.902, 0.957, 0.945); // #EEF7FF
-const vec3 SKY_HIGHLIGHT = vec3(0.952, 0.978, 0.971);
-const vec3 WATER_MEDIUM = vec3(0.769, 0.867, 0.941);
-const vec3 WATER_DARK = vec3(0.122, 0.216, 0.275);
-const vec3 FOAM_MID = vec3(0.769, 0.867, 0.941);
-const vec3 FOAM_HIGHLIGHT = vec3(0.914, 0.969, 0.957);
+const vec3 SKY_HIGHLIGHT = vec3(0.952, 0.978, 0.971); // ~#F3F9F7
+const vec3 WATER_MEDIUM = vec3(0.769, 0.867, 0.941); // #CDE8E5
+const vec3 WATER_DARK = vec3(0.122, 0.216, 0.275); // #1F3746
+const vec3 FOAM_MID = vec3(0.769, 0.867, 0.941); // #CDE8E5
+const vec3 FOAM_HIGHLIGHT = vec3(0.914, 0.969, 0.957); // ~#E9F7F4
 
 const float TRANSITION_SCALE = 0.9;
 const float WATER_BASELINE = 0.75;

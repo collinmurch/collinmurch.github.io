@@ -22,8 +22,7 @@
 </script>
 
 <nav
-    in:fly={{ y: -56, duration: 260, easing: cubicOut }}
-    out:fly={{ y: -56, duration: 220, easing: cubicOut }}
+    transition:fly={{ y: -56, duration: 240, easing: cubicOut }}
     class="pointer-events-auto fixed bottom-6 left-1/2 z-30 flex max-w-[calc(100vw-3rem)] -translate-x-1/2 items-center justify-center gap-3 rounded-full border border-border/60 bg-background/75 px-3 py-2 text-sm shadow-[0_12px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl md:max-w-md md:text-base max-lg:landscape:bottom-4 max-lg:landscape:max-w-[calc(100vw-2rem)] max-lg:landscape:gap-2 max-lg:landscape:px-2 max-lg:landscape:py-1 max-lg:landscape:text-xs"
 >
     {#each links as link}

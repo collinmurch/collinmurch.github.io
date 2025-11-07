@@ -1,5 +1,5 @@
 <script>
-    import { formatDate } from "$lib/utils";
+    import { formatDate, toISODate } from "$lib/utils";
 
     const { data } = $props();
 
@@ -19,6 +19,8 @@
         }
         return "Article by Collin Murch.";
     });
+
+    const publishedISO = $derived(() => toISODate(data?.post?.date));
 </script>
 
 <svelte:head>
@@ -35,9 +37,10 @@
 <div class="mx-auto max-w-[88ch]">
     <h1 class="text-4xl font-semibold md:text-5xl">{data?.post.title}</h1>
     <time
+        datetime={publishedISO ?? undefined}
         class="mb-6 block text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground"
     >
-        {formatDate(data?.post.date)}
+        {publishedISO ? formatDate(publishedISO) : "Coming soon"}
     </time>
 
     <article class="prose-rich space-y-8">

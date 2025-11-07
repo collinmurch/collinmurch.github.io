@@ -1,5 +1,5 @@
 <script>
-    import { formatDate } from "$lib/utils";
+    import { formatDate, toISODate } from "$lib/utils";
 
     const { data } = $props();
 </script>
@@ -9,6 +9,7 @@
 
     <div class="space-y-8">
         {#each data.posts as post}
+            {@const publishedISO = toISODate(post.meta?.date)}
             <article
                 class="space-y-3 border-b border-dashed border-border/60 pb-6 last:border-none last:pb-0"
             >
@@ -23,9 +24,10 @@
                     </a>
                 </h2>
                 <time
+                    datetime={publishedISO ?? undefined}
                     class="block text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground"
                 >
-                    {formatDate(post.meta?.date)}
+                    {publishedISO ? formatDate(publishedISO) : "Coming soon"}
                 </time>
             </article>
         {/each}
