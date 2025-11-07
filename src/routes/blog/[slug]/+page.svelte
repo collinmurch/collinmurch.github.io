@@ -3,24 +3,23 @@
 
     const { data } = $props();
 
-    const pageTitle = $derived(() => {
-        if (!data?.post?.title) return "Blog Post | Collin Murch";
-        return `${data.post.title} | Collin Murch`;
-    });
+    function buildDescription(post) {
+        if (!post) return "Article by Collin Murch.";
+        if (post.description) return post.description;
+        if (post.excerpt) return post.excerpt;
+        const published = post.date ? ` Published ${formatDate(post.date)}.` : "";
+        return `${post.title ?? "Article"} – A post from Collin Murch.${published}`.trim();
+    }
 
-    const description = $derived(() => {
-        if (data?.post?.description) return data.post.description;
-        if (data?.post?.excerpt) return data.post.excerpt;
-        if (data?.post?.title) {
-            const published = data.post.date
-                ? `Published ${formatDate(data.post.date)}.`
-                : "";
-            return `${data.post.title} – A post from Collin Murch. ${published}`.trim();
-        }
-        return "Article by Collin Murch.";
-    });
+    const pageTitle = $derived(
+        data?.post?.title
+            ? `${data.post.title} | Collin Murch`
+            : "Blog Post | Collin Murch",
+    );
 
-    const publishedISO = $derived(() => toISODate(data?.post?.date));
+    const description = $derived(buildDescription(data?.post));
+
+    const publishedISO = $derived(toISODate(data?.post?.date));
 </script>
 
 <svelte:head>

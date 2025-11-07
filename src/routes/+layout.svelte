@@ -12,8 +12,8 @@
 
     let currentTransition = $state(getTransition("/", $page.url.pathname));
 
-    const normalizedPath = $derived(() => normalizeRoute($page.url.pathname));
-    const meta = $derived(() => getRouteMeta(normalizedPath));
+    const normalizedPath = $derived(normalizeRoute($page.url.pathname));
+    const meta = $derived(getRouteMeta(normalizedPath));
 
     beforeNavigate(({ from, to }) => {
         currentTransition = getTransition(from?.route.id, to?.route.id);
