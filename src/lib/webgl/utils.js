@@ -88,17 +88,21 @@ export function resizeCanvasToDisplaySize(canvas) {
 }
 
 export function setupEventListeners(pos, resizeCanvas) {
+    const updatePosition = (clientX, clientY) => {
+        const ratio = window.devicePixelRatio || 1;
+        pos[0] = clientX * ratio;
+        pos[1] = clientY * ratio;
+    };
+
     const handleMouseMove = (event) => {
-        pos[0] = event.clientX;
-        pos[1] = event.clientY;
+        updatePosition(event.clientX, event.clientY);
     };
     const passiveMoveOptions = { passive: true };
     window.addEventListener("mousemove", handleMouseMove, passiveMoveOptions);
 
     const handleTouchMove = (event) => {
         const touch = event.touches[0];
-        pos[0] = touch.clientX;
-        pos[1] = touch.clientY;
+        if (touch) updatePosition(touch.clientX, touch.clientY);
     };
     window.addEventListener("touchmove", handleTouchMove, passiveMoveOptions);
     const handleResize = () => {
