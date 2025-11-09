@@ -46,6 +46,19 @@
 
 :root {
     color-scheme: dark;
+    --page-shell-viewport-unit: 1vh;
+}
+
+@supports (height: 100dvh) {
+    :root {
+        --page-shell-viewport-unit: 1dvh;
+    }
+}
+
+@supports (height: 100svh) {
+    :root {
+        --page-shell-viewport-unit: 1svh;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -143,6 +156,21 @@
         padding-top: clamp(3.5rem, 12vh, 8rem);
         width: 100%;
         max-width: var(--layout-width, var(--layout-width-default));
+    }
+
+    @media (max-width: 1024px) and (orientation: portrait) {
+        .page-shell {
+            padding-top: clamp(
+                3.25rem,
+                calc(7 * var(--page-shell-viewport-unit)),
+                4.5rem
+            );
+            padding-bottom: clamp(
+                2rem,
+                calc(7 * var(--page-shell-viewport-unit)),
+                3.75rem
+            );
+        }
     }
 
     .scrollbar-reserve {
