@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
 /* Tailwind v4 theme block — safe to ignore css-unknown-at-rules warnings */
 @theme {

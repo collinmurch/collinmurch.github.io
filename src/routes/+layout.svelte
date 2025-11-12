@@ -30,13 +30,17 @@
     <meta name="twitter:description" content={meta.description} />
 </svelte:head>
 
-<div class="relative isolate min-h-dvh overflow-hidden text-foreground">
+<div class="relative isolate min-h-screen overflow-hidden text-foreground">
     <WaveCanvas />
 
-    <div class="fixed inset-0 z-20 flex flex-col">
-        <Navigation />
+    <div class="relative z-20 flex min-h-screen flex-col">
+        <header
+            class="pointer-events-none sticky top-4 z-30 flex justify-center px-4 pt-2"
+        >
+            <Navigation />
+        </header>
 
-        <main class="flex-1 overflow-y-auto scrollbar-reserve">
+        <main class="flex-1 scrollbar-reserve">
             {#key $page.url.pathname}
                 <section
                     class="page-shell max-lg:landscape:pb-12 max-lg:landscape:pt-16 md:pb-16"

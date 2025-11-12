@@ -1,3 +1,14 @@
+<svelte:head>
+    <link
+        rel="preload"
+        as="image"
+        href="/images/headshot.avif"
+        type="image/avif"
+        imagesizes="(max-width: 900px) 70vw, 30vw"
+        fetchpriority="high"
+    />
+</svelte:head>
+
 <section
     class="mx-auto grid w-full max-w-[min(1200px,94vw)] gap-12 lg:grid-cols-2 lg:items-center lg:gap-24 max-lg:landscape:max-w-[min(960px,90vw)] max-lg:landscape:grid-cols-[minmax(0,0.82fr)_minmax(0,1fr)] max-lg:landscape:items-start max-lg:landscape:gap-8"
 >

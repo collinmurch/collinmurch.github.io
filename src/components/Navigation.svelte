@@ -13,7 +13,17 @@
     ];
 
     const pathname = $derived($page.url.pathname);
-    const isHome = $derived(pathname === "/");
+
+    function normalizeRoute(path) {
+        if (!path) return "/";
+        if (path !== "/" && path.endsWith("/")) {
+            return path.slice(0, -1);
+        }
+        return path;
+    }
+
+    const activeRoute = $derived(normalizeRoute(pathname));
+    const isHome = $derived(activeRoute === "/");
 
     let navElement = null;
     let navResizeObserver;
@@ -39,7 +49,7 @@
 
         await tick();
 
-        const target = navElement.querySelector(`[data-route="${pathname}"]`);
+        const target = navElement.querySelector(`[data-route="${activeRoute}"]`);
 
         if (!target) {
             indicatorVisible = false;
@@ -74,7 +84,7 @@
     }
 
     $effect(() => {
-        queueIndicatorMeasurement(pathname);
+        queueIndicatorMeasurement(activeRoute);
     });
 
     onMount(() => {
@@ -127,11 +137,13 @@
             await goto(href);
         }
     }
+
+    const isLinkActive = (href) => activeRoute === href;
 </script>
 
 <nav
     bind:this={navElement}
-    class="pointer-events-auto relative left-1/2 top-6 z-30 flex max-w-[calc(100vw-3rem)] -translate-x-1/2 items-center gap-2 rounded-full border border-border/70 bg-background/80 px-3 py-2 text-sm shadow-[0_15px_45px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-[transform,opacity] duration-200 md:max-w-lg md:text-base max-lg:landscape:top-4 max-lg:landscape:max-w-[calc(100vw-2rem)] max-lg:landscape:gap-1 max-lg:landscape:px-2 max-lg:landscape:py-1 max-lg:landscape:text-xs overflow-hidden"
+    class="pointer-events-auto relative z-30 mx-auto flex w-full max-w-[calc(100vw-3rem)] items-center gap-2 rounded-full border border-border/70 bg-background/80 px-3 py-2 text-sm shadow-[0_15px_45px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-opacity duration-200 md:max-w-lg md:text-base max-lg:landscape:max-w-[calc(100vw-2rem)] max-lg:landscape:gap-1 max-lg:landscape:px-2 max-lg:landscape:py-1 max-lg:landscape:text-xs overflow-hidden"
 >
     <span
         aria-hidden="true"
@@ -140,7 +152,7 @@
         style={`width:${indicator.width}px;height:${indicator.height}px;transform:translate3d(${indicator.left}px, ${indicator.top}px, 0);opacity:${indicatorVisible ? 1 : 0};`}
     ></span>
     {#each links as link}
-        {@const isActive = pathname === link.href}
+        {@const isActive = isLinkActive(link.href)}
         <a
             href={link.href}
             aria-current={isActive ? "page" : undefined}
