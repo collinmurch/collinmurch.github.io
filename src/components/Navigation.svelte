@@ -22,7 +22,15 @@
         return path;
     }
 
-    const activeRoute = $derived(normalizeRoute(pathname));
+    function getNavSection(path) {
+        const normalized = normalizeRoute(path);
+        if (normalized === "/blog" || normalized.startsWith("/blog/")) {
+            return "/blog";
+        }
+        return normalized;
+    }
+
+    const activeRoute = $derived(getNavSection(pathname));
     const isHome = $derived(activeRoute === "/");
 
     let navElement = null;
@@ -133,7 +141,12 @@
         event?.preventDefault();
 
         if (pathname !== href) {
-            waveState.set(true);
+            const isBlogSection = (route) => getNavSection(route) === "/blog";
+            const stayingWithinBlog = isBlogSection(pathname) && isBlogSection(href);
+
+            if (!stayingWithinBlog) {
+                waveState.set(true);
+            }
             await goto(href);
         }
     }
@@ -161,9 +174,9 @@
                     variant: "ghost",
                     size: "sm",
                 }),
-                "relative z-10 flex-1 rounded-full px-4 text-sm font-medium tracking-wide transition-colors duration-150 md:px-6 md:text-base max-lg:landscape:px-3 max-lg:landscape:py-1 max-lg:landscape:text-xs text-foreground/80 hover:bg-transparent focus-visible:bg-transparent active:bg-transparent",
+                "relative z-10 flex-1 rounded-full px-4 text-sm font-medium tracking-wide transition-colors duration-150 md:px-6 md:text-base max-lg:landscape:px-3 max-lg:landscape:py-1 max-lg:landscape:text-xs text-foreground/80 hover:bg-transparent focus-visible:bg-transparent active:bg-transparent cursor-pointer",
                 isActive
-                    ? "pointer-events-none text-primary-foreground [&:hover]:text-primary-foreground [&:hover]:bg-transparent [&:hover]:shadow-none"
+                    ? "text-primary-foreground hover:text-primary-foreground/90"
                     : "hover:text-primary/80",
             )}
             data-route={link.href}
