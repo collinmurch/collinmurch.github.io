@@ -50,9 +50,9 @@
 		</main>
 
 		{#if normalizedPath === "/"}
-			 <div class="pointer-events-none fixed inset-x-0 bottom-4 z-30 flex justify-center px-4">
-			 <Socials class="pointer-events-auto" />
+			<div class="pointer-events-none fixed inset-x-0 bottom-4 z-30 flex justify-center px-4">
+				<Socials class="pointer-events-auto" />
 			</div>
-  {/if}
+		{/if}
 	</div>
 </div>
