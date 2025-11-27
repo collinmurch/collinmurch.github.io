@@ -33,12 +33,12 @@
 <div class="relative isolate min-h-screen overflow-hidden text-foreground">
 	<WaveCanvas />
 
-	<div class="relative z-20 flex min-h-screen flex-col">
+	<div class="relative z-20 flex min-h-[100dvh] flex-col">
 		<header class="pointer-events-none sticky top-4 z-30 flex justify-center px-4 pt-2">
 			<Navigation />
 		</header>
 
-		<main class="flex-1 scrollbar-reserve">
+		<main class="flex-1 min-h-0 scrollbar-reserve">
 			{#key $page.url.pathname}
 				<section
 					class="page-shell max-lg:landscape:pb-12 max-lg:landscape:pt-16 md:pb-16"
@@ -49,10 +49,10 @@
 			{/key}
 		</main>
 
-			{#if normalizedPath === "/"}
-			  <div class="pointer-events-none fixed inset-x-0 bottom-4 z-30 flex justify-center px-4">
-			    <Socials class="pointer-events-auto" />
-			  </div>
-  	{/if}
+		{#if normalizedPath === "/"}
+			 <div class="pointer-events-none fixed inset-x-0 bottom-4 z-30 flex justify-center px-4">
+			 <Socials class="pointer-events-auto" />
+			</div>
+  {/if}
 	</div>
 </div>
