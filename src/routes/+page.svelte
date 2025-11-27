@@ -1,6 +1,7 @@
 <script>
 	import { waveState } from "$lib/stores/wave";
 	import { onMount } from "svelte";
+	import Socials from "$components/Socials.svelte";
 
 	onMount(() => {
 		waveState.set(false);
@@ -44,3 +45,5 @@
 		</p>
 	</div>
 </section>
+
+<Socials />

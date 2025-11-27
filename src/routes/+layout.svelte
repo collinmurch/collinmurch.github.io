@@ -2,7 +2,6 @@
 	import { beforeNavigate } from "$app/navigation";
 	import { page } from "$app/stores";
 	import Navigation from "$components/Navigation.svelte";
-	import Socials from "$components/Socials.svelte";
 	import { getTransition } from "$lib/animations/transitions";
 	import { getRouteMeta, normalizeRoute } from "$lib/seo/meta";
 	import "../app.css";
@@ -30,15 +29,21 @@
 	<meta name="twitter:description" content={meta.description} />
 </svelte:head>
 
-<div class="relative isolate min-h-screen overflow-hidden text-foreground">
+<div
+	class="relative isolate min-h-[calc(100*var(--page-shell-viewport-unit))] overflow-hidden text-foreground"
+>
 	<WaveCanvas />
 
-	<div class="relative z-20 flex min-h-[100dvh] flex-col">
-		<header class="pointer-events-none sticky top-4 z-30 flex justify-center px-4 pt-2">
+	<div
+		class="relative z-20 flex min-h-[calc(100*var(--page-shell-viewport-unit))] flex-col"
+	>
+		<header
+			class="pointer-events-none fixed inset-x-0 top-4 z-30 flex justify-center px-4 pt-2"
+		>
 			<Navigation />
 		</header>
 
-		<main class="flex-1 min-h-0 scrollbar-reserve">
+		<main class="flex-1 min-h-0 scrollbar-reserve pt-4 md:pt-6">
 			{#key $page.url.pathname}
 				<section
 					class="page-shell max-lg:landscape:pb-12 max-lg:landscape:pt-16 md:pb-16"
@@ -48,9 +53,5 @@
 				</section>
 			{/key}
 		</main>
-
-		{#if normalizedPath === "/"}
-			<Socials />
-		{/if}
 	</div>
 </div>
