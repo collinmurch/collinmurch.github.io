@@ -2,6 +2,7 @@
 	import { beforeNavigate } from "$app/navigation";
 	import { page } from "$app/stores";
 	import Navigation from "$components/Navigation.svelte";
+	import Socials from "$components/Socials.svelte";
 	import { getTransition } from "$lib/animations/transitions";
 	import { getRouteMeta, normalizeRoute } from "$lib/seo/meta";
 	import "../app.css";
@@ -12,6 +13,7 @@
 	let currentTransition = $state(getTransition("/", $page.url.pathname));
 
 	const normalizedPath = $derived(normalizeRoute($page.url.pathname));
+	const isHome = $derived(normalizedPath === "/");
 	const meta = $derived(getRouteMeta(normalizedPath));
 
 	beforeNavigate(({ from, to }) => {
@@ -53,5 +55,9 @@
 				</section>
 			{/key}
 		</main>
+
+		{#if isHome}
+			<Socials />
+		{/if}
 	</div>
 </div>
