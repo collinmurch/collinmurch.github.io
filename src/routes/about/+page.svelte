@@ -34,7 +34,7 @@
         class="flex flex-col items-start gap-6 text-left lg:items-start lg:text-left max-lg:landscape:items-start max-lg:landscape:text-left max-lg:landscape:gap-5 max-lg:landscape:max-w-[min(26rem,50vw)]"
     >
         <h1
-            class="flex flex-col items-start gap-6 text-left lg:items-start lg:text-left max-lg:landscape:items-start max-lg:landscape:text-left max-lg:landscape:gap-5 max-lg:landscape:max-w-[min(26rem,50vw)]"
+            class="text-4xl font-semibold text-foreground md:text-5xl lg:text-6xl max-lg:landscape:text-[2.6rem]"
         >
             About Me
         </h1>
