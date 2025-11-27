@@ -43,7 +43,7 @@
 			<Navigation />
 		</header>
 
-		<main class="flex-1 min-h-0 scrollbar-reserve pt-7 md:pt-11">
+		<main class="flex-1 min-h-0 scrollbar-reserve pt-12 md:pt-20">
 			{#key $page.url.pathname}
 				<section
 					class="page-shell max-lg:landscape:pb-12 max-lg:landscape:pt-16 md:pb-16"
