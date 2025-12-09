@@ -95,6 +95,11 @@
 
 	beforeNavigate(({ from, to }) => {
 		currentTransition = getTransition(from?.route.id, to?.route.id);
+
+		if (browser) {
+			const nextPath = normalizeRoute(to?.url?.pathname ?? normalizedPath);
+			waveState.set(nextPath === "/" ? 0 : 1);
+		}
 	});
 </script>
 
