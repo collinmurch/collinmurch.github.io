@@ -31,10 +31,10 @@
 	</picture>
 
 	<div
-		class="flex flex-col items-start gap-6 text-left lg:items-start lg:text-left max-lg:landscape:items-start max-lg:landscape:text-left max-lg:landscape:gap-5 max-lg:landscape:max-w-[min(26rem,50vw)]"
+		class="flex flex-col items-start gap-4 text-left lg:items-start lg:text-left max-lg:landscape:items-start max-lg:landscape:text-left max-lg:landscape:gap-4 max-lg:landscape:max-w-[min(26rem,50vw)]"
 	>
 		<h1
-			class="text-3xl font-semibold text-foreground md:text-4xl max-lg:landscape:text-[2.4rem]"
+			class="text-3xl font-semibold text-foreground md:text-4xl max-lg:landscape:text-[2.4rem] mb-2 md:mb-3"
 		>
 			About Me
 		</h1>
