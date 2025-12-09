@@ -1,11 +1,13 @@
 <script>
 	import { beforeNavigate } from "$app/navigation";
+	import { browser } from "$app/environment";
 	import { page } from "$app/stores";
 	import { onMount } from "svelte";
 	import Navigation from "$components/Navigation.svelte";
 	import Socials from "$components/Socials.svelte";
 	import { getTransition } from "$lib/animations/transitions";
 	import { getRouteMeta, normalizeRoute } from "$lib/seo/meta";
+	import { waveState } from "$lib/stores/wave";
 	import "../app.css";
 	import WaveCanvas from "../components/WaveCanvas.svelte";
 
@@ -16,6 +18,11 @@
 	const normalizedPath = $derived(normalizeRoute($page.url.pathname));
 	const isHome = $derived(normalizedPath === "/");
 	const meta = $derived(getRouteMeta(normalizedPath));
+
+	$effect(() => {
+		if (!browser) return;
+		waveState.set(normalizedPath === "/" ? 0 : 1);
+	});
 
 	onMount(() => {
 		const legacyCopy = (text) => {

@@ -1,12 +1,3 @@
-<script>
-	import { waveState } from "$lib/stores/wave";
-	import { onMount } from "svelte";
-
-	onMount(() => {
-		waveState.set(false);
-	});
-</script>
-
 <section
 	class="mx-auto grid w-full max-w-[min(1200px,94vw)] gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] lg:items-center lg:gap-24 max-lg:landscape:max-w-[min(960px,90vw)] max-lg:landscape:grid-cols-[minmax(0,0.78fr)_minmax(0,1fr)] max-lg:landscape:items-center max-lg:landscape:gap-8"
 >
