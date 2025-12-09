@@ -1,45 +1,44 @@
 {
-    "name": "collinmurch",
-    "version": "0.0.1",
-    "type": "module",
-    "scripts": {
-        "dev": "vite dev",
-        "build": "vite build",
-        "preview": "vite preview",
-        "lint": "oxlint --max-warnings=0",
-        "lint:fix": "oxlint --fix --max-warnings=0",
-        "format": "prettier --check .",
-        "format:write": "prettier --write .",
-        "prepare": "husky",
-        "lint-staged": "lint-staged"
-    },
-    "devDependencies": {
-        "@sveltejs/adapter-auto": "^6.1.1",
-        "@sveltejs/kit": "^2.46.5",
-        "@tailwindcss/vite": "^4.1.16",
-        "husky": "^9.1.7",
-        "lint-staged": "^16.2.6",
-        "oxlint": "^1.26.0",
-        "prettier": "^3.6.2",
-        "prettier-plugin-svelte": "^3.4.0",
-        "shiki": "^3.13.0",
-        "svelte": "^5.40.0",
-        "tailwindcss": "^4.1.16",
-        "vite": "^5.4.11"
-    },
-    "dependencies": {
-        "@sveltejs/adapter-static": "^3.0.10",
-        "clsx": "^2.1.1",
-        "mdsvex": "^0.12.6",
-        "tailwind-merge": "^3.3.1",
-        "tailwind-variants": "^3.1.1"
-    },
-    "lint-staged": {
-        "*.{js,ts,cjs,mjs,jsx,tsx}": [
-            "oxlint --fix --max-warnings=0"
-        ],
-        "*.{js,ts,cjs,mjs,jsx,tsx,svelte,md,json,css,html}": [
-            "prettier --write --ignore-unknown"
-        ]
-    }
+	"name": "collinmurch",
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"lint": "oxlint --max-warnings=0",
+		"lint:fix": "oxlint --fix --max-warnings=0",
+		"format": "prettier --check .",
+		"format:write": "prettier --write .",
+		"prepare": "husky",
+		"lint-staged": "lint-staged"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^6.1.1",
+		"@sveltejs/kit": "^2.46.5",
+		"@tailwindcss/vite": "^4.1.16",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.2.6",
+		"oxlint": "^1.26.0",
+		"prettier": "^3.6.2",
+		"prettier-plugin-svelte": "^3.4.0",
+		"shiki": "^3.13.0",
+		"svelte": "^5.40.0",
+		"tailwindcss": "^4.1.16",
+		"vite": "^5.4.11"
+	},
+	"dependencies": {
+		"@sveltejs/adapter-static": "^3.0.10",
+		"clsx": "^2.1.1",
+		"mdsvex": "^0.12.6",
+		"tailwind-merge": "^3.3.1"
+	},
+	"lint-staged": {
+		"*.{js,ts,cjs,mjs,jsx,tsx}": [
+			"oxlint --fix --max-warnings=0"
+		],
+		"*.{js,ts,cjs,mjs,jsx,tsx,svelte,md,json,css,html}": [
+			"prettier --write --ignore-unknown"
+		]
+	}
 }

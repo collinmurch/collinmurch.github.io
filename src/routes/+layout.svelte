@@ -92,13 +92,15 @@
 </script>
 
 <svelte:head>
-	<title>{meta.title}</title>
-	<meta name="description" content={meta.description} />
-	<meta property="og:title" content={meta.title} />
-	<meta property="og:description" content={meta.description} />
-	<meta name="twitter:card" content="summary" />
-	<meta name="twitter:title" content={meta.title} />
-	<meta name="twitter:description" content={meta.description} />
+	{#if meta}
+		<title>{meta.title}</title>
+		<meta name="description" content={meta.description} />
+		<meta property="og:title" content={meta.title} />
+		<meta property="og:description" content={meta.description} />
+		<meta name="twitter:card" content={meta.twitterCard ?? "summary"} />
+		<meta name="twitter:title" content={meta.title} />
+		<meta name="twitter:description" content={meta.description} />
+	{/if}
 </svelte:head>
 
 <div
