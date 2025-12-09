@@ -1,6 +1,7 @@
 <script>
 	import { beforeNavigate } from "$app/navigation";
 	import { page } from "$app/stores";
+	import { onMount } from "svelte";
 	import Navigation from "$components/Navigation.svelte";
 	import Socials from "$components/Socials.svelte";
 	import { getTransition } from "$lib/animations/transitions";
@@ -15,6 +16,72 @@
 	const normalizedPath = $derived(normalizeRoute($page.url.pathname));
 	const isHome = $derived(normalizedPath === "/");
 	const meta = $derived(getRouteMeta(normalizedPath));
+
+	onMount(() => {
+		const legacyCopy = (text) => {
+			const textarea = document.createElement("textarea");
+			textarea.value = text;
+			textarea.setAttribute("readonly", "");
+			textarea.style.position = "fixed";
+			textarea.style.opacity = "0";
+			document.body.appendChild(textarea);
+			textarea.select();
+			const ok = document.execCommand("copy");
+			document.body.removeChild(textarea);
+			return ok;
+		};
+
+		const handleCopyClick = async (event) => {
+			const button = event.target.closest("[data-copy-btn]");
+			if (!(button instanceof HTMLElement)) return;
+
+			const wrapper = button.closest(".code-block");
+			const codeEl = wrapper?.querySelector("pre code");
+			const text = codeEl?.innerText ?? codeEl?.textContent ?? "";
+
+			if (!text) return;
+
+			const defaultLabel = button.dataset?.defaultLabel ?? "Copy";
+			const successLabel = button.dataset?.successLabel ?? "Copied!";
+			const errorLabel = button.dataset?.errorLabel ?? "Copy failed";
+			const announceEl = button.querySelector(".copy-announce");
+
+			const setState = (state, label) => {
+				button.dataset.state = state;
+				button.setAttribute("aria-label", label);
+				if (announceEl) {
+					announceEl.textContent = label;
+				}
+			};
+
+			const resetState = () => {
+				setState("", defaultLabel);
+			};
+
+			try {
+				if (navigator?.clipboard?.writeText) {
+					await navigator.clipboard.writeText(text);
+				} else {
+					const fallbackWorked = legacyCopy(text);
+					if (!fallbackWorked) throw new Error("execCommand copy failed");
+				}
+
+				setState("copied", successLabel);
+				button.blur();
+				setTimeout(resetState, 1500);
+			} catch (error) {
+				console.error("Unable to copy code block", error);
+				setState("error", errorLabel);
+				setTimeout(resetState, 1600);
+			}
+		};
+
+		document.addEventListener("click", handleCopyClick);
+
+		return () => {
+			document.removeEventListener("click", handleCopyClick);
+		};
+	});
 
 	beforeNavigate(({ from, to }) => {
 		currentTransition = getTransition(from?.route.id, to?.route.id);
