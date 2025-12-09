@@ -32,7 +32,10 @@
 		};
 
 		const handleCopyClick = async (event) => {
-			const button = event.target.closest("[data-copy-btn]");
+			const target = event?.target;
+			if (!(target instanceof Element)) return;
+
+			const button = target.closest("[data-copy-btn]");
 			if (!(button instanceof HTMLElement)) return;
 
 			const wrapper = button.closest(".code-block");
