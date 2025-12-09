@@ -34,10 +34,10 @@
 </svelte:head>
 
 <div class="mx-auto max-w-[88ch]">
-	<h1 class="text-3xl font-semibold md:text-4xl">{data?.post.title}</h1>
+	<h1 class="text-3xl font-semibold md:text-4xl mb-2">{data?.post.title}</h1>
 	<time
 		datetime={publishedISO ?? undefined}
-		class="mb-6 block text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground"
+		class="mb-8 block text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground"
 	>
 		{publishedISO ? formatDate(publishedISO) : "Coming soon"}
 	</time>
