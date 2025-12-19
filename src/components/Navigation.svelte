@@ -139,7 +139,7 @@
 
 <nav
 	bind:this={navElement}
-	class="pointer-events-auto relative z-30 mx-auto flex w-full max-w-[calc(100vw-3rem)] items-center gap-2 rounded-full border border-border/70 bg-background/80 px-3 py-2 text-sm shadow-[0_15px_45px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-opacity duration-200 md:max-w-lg md:text-base max-lg:landscape:max-w-[calc(100vw-2rem)] max-lg:landscape:gap-1 max-lg:landscape:px-2 max-lg:landscape:py-1 max-lg:landscape:text-xs overflow-hidden"
+	class="pointer-events-auto relative z-30 mx-auto flex w-full max-w-[min(26rem,100%)] items-center gap-2 rounded-full border border-border/70 bg-background/80 px-3 py-2 text-sm shadow-[0_15px_45px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-opacity duration-200 sm:max-w-[min(30rem,100%)] md:max-w-lg md:text-base max-lg:landscape:max-w-[min(22rem,100%)] max-lg:landscape:h-10 max-lg:landscape:gap-1 max-lg:landscape:px-2 max-lg:landscape:py-0 max-lg:landscape:text-xs overflow-hidden"
 >
 	<span
 		aria-hidden="true"
@@ -157,7 +157,7 @@
 					variant: "ghost",
 					size: "sm",
 				}),
-				"relative z-10 flex-1 rounded-full px-4 text-sm font-medium tracking-wide transition-colors duration-150 md:px-6 md:text-base max-lg:landscape:px-3 max-lg:landscape:py-1 max-lg:landscape:text-xs text-foreground/80 hover:bg-transparent! focus-visible:bg-transparent active:bg-transparent! hover:text-current! cursor-pointer",
+				"relative z-10 flex-1 rounded-full px-4 text-sm font-medium tracking-wide transition-colors duration-150 md:px-6 md:text-base max-lg:landscape:h-[24px] max-lg:landscape:px-3 max-lg:landscape:py-0.5 max-lg:landscape:text-xs text-foreground/80 hover:bg-transparent! focus-visible:bg-transparent active:bg-transparent! hover:text-current! cursor-pointer",
 				isActive ? "text-primary-foreground" : "",
 			)}
 			data-route={link.href}

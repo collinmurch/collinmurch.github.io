@@ -130,7 +130,7 @@
 		class="relative z-20 flex min-h-[calc(100*var(--page-shell-viewport-unit))] flex-col"
 	>
 		<header
-			class="pointer-events-none fixed inset-x-0 top-4 z-30 flex justify-center px-4 pt-2"
+			class="pointer-events-none fixed inset-x-0 top-4 z-30 flex justify-center pt-2 pl-[calc(1rem+env(safe-area-inset-left))] pr-[calc(1rem+env(safe-area-inset-right))]"
 		>
 			<Navigation />
 		</header>
