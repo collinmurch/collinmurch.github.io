@@ -2,8 +2,6 @@
 	const { children } = $props();
 </script>
 
-<div
-	class="mx-auto flex-1 max-w-[80ch] pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]"
->
+<div class="mx-auto w-full flex-1">
 	{@render children()}
 </div>
