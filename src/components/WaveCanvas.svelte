@@ -83,6 +83,7 @@
 				timeUniformLocation,
 				resolutionUniformLocation,
 				mouseUniformLocation,
+				pointerUniformLocation,
 				positionBuffer,
 				transitionUniformLocation,
 				resizeCanvasToDisplaySize,
@@ -99,7 +100,8 @@
 			resizeCanvas();
 
 			const pos = [0, 0];
-			cleanupPointers = setupEventListeners(pos, resizeCanvas);
+			const pointerState = { target: 0, value: 0 };
+			cleanupPointers = setupEventListeners(pos, resizeCanvas, pointerState);
 
 			let startTime = performance.now();
 			let currentTransition = 0;
@@ -126,7 +128,10 @@
 				gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 				gl.uniform1f(timeUniformLocation, currentTime);
 				gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+				pointerState.value =
+					pointerState.value + (pointerState.target - pointerState.value) * 0.08;
 				gl.uniform2f(mouseUniformLocation, pos[0], pos[1]);
+				gl.uniform1f(pointerUniformLocation, pointerState.value);
 				gl.uniform1f(transitionUniformLocation, currentTransition);
 				gl.drawArrays(gl.TRIANGLES, 0, 6);
 
