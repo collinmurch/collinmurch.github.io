@@ -113,10 +113,10 @@ vec3 paintSky(vec2 st, float waterSurface, float aspect) {
 
     float cloudStructure = smoothstep(0.26, 0.68, clouds);
     cloudStructure = pow(cloudStructure, 1.05);
-    cloudStructure = clamp(cloudStructure * (1.15 + cloudInfluence * CLOUD_DENSITY_BOOST), 0.0, 1.0);
+    cloudStructure = clamp(cloudStructure * (1.7 + cloudInfluence * CLOUD_DENSITY_BOOST), 0.0, 1.0);
     float topFade = smoothstep(0.45, 0.78, st.y);
     float horizonFade = smoothstep(1.02, 1.2, waterSurface);
-    float cloudAmount = clamp(cloudStructure * topFade * horizonFade * 1.6, 0.0, 1.0);
+    float cloudAmount = clamp(cloudStructure * topFade * horizonFade * 3.2, 0.0, 1.0);
 
     float cursorDetail = fbm(cloudFlow * 5.1 + vec2(4.7, -13.2));
     float cursorHighlight = max(0.0, cursorDetail - 0.5);
@@ -130,9 +130,9 @@ vec3 paintSky(vec2 st, float waterSurface, float aspect) {
     cloudVeil = pow(cloudVeil, 1.05);
     cloudVeil = clamp(cloudVeil + cursorContrast * 0.65, 0.0, 1.0);
     float veilAmount =
-        clamp(cloudVeil * topFade * horizonFade * 0.5 + cloudInfluence * 0.18, 0.0, 0.72);
+        clamp(cloudVeil * topFade * horizonFade * 1.15 + cloudInfluence * 0.26, 0.0, 0.92);
 
-    float cloudShadow = smoothstep(0.12, 0.55, clouds) * 0.28;
+    float cloudShadow = smoothstep(0.12, 0.55, clouds) * 0.55;
     vec3 cloudBase = skyBase * (1.0 - cloudShadow);
     vec3 cloudColor = mix(cloudBase, SKY_HIGHLIGHT, clamp(cloudStructure * 1.25, 0.0, 1.0));
     vec3 veilColor = mix(skyBase, SKY_HIGHLIGHT, 0.55);
