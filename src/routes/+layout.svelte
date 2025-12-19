@@ -1,5 +1,5 @@
 <script>
-	import { beforeNavigate } from "$app/navigation";
+	import { beforeNavigate, preloadCode, preloadData } from "$app/navigation";
 	import { browser } from "$app/environment";
 	import { page } from "$app/stores";
 	import { onMount } from "svelte";
@@ -25,6 +25,12 @@
 	});
 
 	onMount(() => {
+		const preloadRoutes = ["/", "/about", "/blog"];
+		for (const route of preloadRoutes) {
+			preloadCode(route);
+			preloadData(route);
+		}
+
 		const legacyCopy = (text) => {
 			const textarea = document.createElement("textarea");
 			textarea.value = text;

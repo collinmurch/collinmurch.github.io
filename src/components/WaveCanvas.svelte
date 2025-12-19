@@ -46,15 +46,6 @@
 			};
 		};
 
-		const deferUntilIdle = () =>
-			new Promise((resolve) => {
-				if ("requestIdleCallback" in window) {
-					window.requestIdleCallback(() => resolve());
-				} else {
-					setTimeout(resolve, 0);
-				}
-			});
-
 		const stopRendering = () => {
 			if (animationFrameId) {
 				cancelAnimationFrame(animationFrameId);
@@ -78,7 +69,6 @@
 			if (isInitializing || prefersReducedMotion.matches) return;
 			isInitializing = true;
 
-			await deferUntilIdle();
 			const context = await startWebGL();
 			isInitializing = false;
 
