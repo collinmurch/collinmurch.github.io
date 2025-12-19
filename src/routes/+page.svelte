@@ -24,12 +24,12 @@
 		class="flex flex-col items-center gap-4 text-primary lg:items-start lg:gap-6 max-lg:landscape:items-start max-lg:landscape:text-left max-lg:landscape:gap-5 max-lg:landscape:max-w-[min(26rem,50vw)]"
 	>
 		<h1
-			class="text-5xl font-light tracking-tight text-primary md:text-7xl lg:text-[5rem] xl:text-[5.8rem] max-lg:landscape:text-[3rem]"
+			class="text-shadow-soft text-6xl font-light tracking-tight text-primary md:text-7xl lg:text-[5.2rem] xl:text-[6rem] max-lg:landscape:text-[3.2rem]"
 		>
 			Collin Murch
 		</h1>
 		<p
-			class="text-lg font-light italic text-primary md:text-2xl lg:text-[1.65rem] xl:text-[1.7rem] max-lg:landscape:text-base max-lg:landscape:leading-snug"
+			class="text-shadow-soft text-xl font-light italic text-primary md:text-[1.6rem] lg:text-[1.8rem] xl:text-[1.9rem] max-lg:landscape:text-lg max-lg:landscape:leading-snug"
 		>
 			Full stack software engineer
 		</p>

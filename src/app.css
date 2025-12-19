@@ -308,4 +308,10 @@
 		white-space: nowrap;
 		border: 0;
 	}
+
+	.text-shadow-soft {
+		text-shadow:
+			0 1px 3px rgba(0, 0, 0, 0.28),
+			0 1px 0 rgba(255, 247, 236, 0.18);
+	}
 }
