@@ -21,7 +21,7 @@
 	</picture>
 
 	<div
-		class="flex flex-col items-center gap-4 text-primary lg:items-start lg:gap-6 max-lg:landscape:items-start max-lg:landscape:text-left max-lg:landscape:gap-5 max-lg:landscape:max-w-[min(26rem,50vw)]"
+		class="-mt-2 flex flex-col items-center gap-4 text-primary lg:items-start lg:gap-6 max-lg:landscape:items-start max-lg:landscape:text-left max-lg:landscape:gap-5 max-lg:landscape:max-w-[min(26rem,50vw)]"
 	>
 		<h1
 			class="text-shadow-soft text-[3.4rem] font-light tracking-tight text-primary md:text-[4.1rem] lg:text-[5.1rem] xl:text-[5.8rem] max-lg:landscape:text-[3.1rem]"
