@@ -1,6 +1,3 @@
-const hot = import.meta.hot;
-const shouldCacheModules = !hot;
-
 const postMetadataFiles = import.meta.glob("/src/posts/*.md", {
 	eager: true,
 	import: "metadata",
@@ -8,14 +5,6 @@ const postMetadataFiles = import.meta.glob("/src/posts/*.md", {
 const postFiles = import.meta.glob("/src/posts/*.md");
 const moduleCache = new Map();
 let postsCache = null;
-
-if (hot) {
-	hot.accept();
-	hot.dispose(() => {
-		moduleCache.clear();
-		postsCache = null;
-	});
-}
 
 const POSTS_DIR_PREFIX = "/src/posts/";
 const POSTS_SUFFIX = ".md";
@@ -39,11 +28,6 @@ function getPostResolver(path) {
 }
 
 async function loadPostModule(path) {
-	if (!shouldCacheModules) {
-		const resolver = getPostResolver(path);
-		return resolver();
-	}
-
 	if (!moduleCache.has(path)) {
 		const resolver = getPostResolver(path);
 		moduleCache.set(path, resolver());
