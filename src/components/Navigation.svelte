@@ -157,7 +157,7 @@
 					variant: "ghost",
 					size: "sm",
 				}),
-				"relative z-10 flex-1 rounded-full px-4 text-sm font-medium tracking-wide transition-colors duration-150 md:px-6 md:text-base max-lg:landscape:px-3 max-lg:landscape:py-1 max-lg:landscape:text-xs text-foreground/80 hover:!bg-transparent focus-visible:!bg-transparent active:!bg-transparent hover:!text-current cursor-pointer",
+				"relative z-10 flex-1 rounded-full px-4 text-sm font-medium tracking-wide transition-colors duration-150 md:px-6 md:text-base max-lg:landscape:px-3 max-lg:landscape:py-1 max-lg:landscape:text-xs text-foreground/80 hover:bg-transparent! focus-visible:bg-transparent active:bg-transparent! hover:text-current! cursor-pointer",
 				isActive ? "text-primary-foreground" : "",
 			)}
 			data-route={link.href}

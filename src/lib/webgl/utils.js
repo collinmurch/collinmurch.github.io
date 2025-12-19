@@ -1,118 +1,148 @@
 export function createShader(gl, type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
+	const shader = gl.createShader(type);
+	gl.shaderSource(shader, source);
+	gl.compileShader(shader);
 
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error(gl.getShaderInfoLog(shader));
-        gl.deleteShader(shader);
-        return null;
-    }
-    return shader;
+	if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+		console.error(gl.getShaderInfoLog(shader));
+		gl.deleteShader(shader);
+		return null;
+	}
+	return shader;
 }
 
 export function createProgram(gl, vertexShader, fragmentShader) {
-    const program = gl.createProgram();
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
+	const program = gl.createProgram();
+	gl.attachShader(program, vertexShader);
+	gl.attachShader(program, fragmentShader);
+	gl.linkProgram(program);
 
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error(gl.getProgramInfoLog(program));
-        gl.deleteProgram(program);
-        return null;
-    }
-    return program;
+	if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+		console.error(gl.getProgramInfoLog(program));
+		gl.deleteProgram(program);
+		return null;
+	}
+	return program;
 }
 
 export function setupWebGL(canvas) {
-    const gl = canvas.getContext("webgl");
-    if (!gl) throw new Error("WebGL not supported");
+	const gl = canvas.getContext("webgl");
+	if (!gl) throw new Error("WebGL not supported");
 
-    return {
-        gl,
-        render: function () {},
-    };
+	return {
+		gl,
+		render: function () {},
+	};
 }
 
 export function initializeWebGL(canvas, vertexShaderSource, fragmentShaderSource) {
-    const gl = canvas.getContext("webgl2");
-    if (!gl) {
-        console.error("WebGL not supported");
-        return null;
-    }
+	const gl = canvas.getContext("webgl2");
+	if (!gl) {
+		console.error("WebGL not supported");
+		return null;
+	}
 
-    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-    const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-    if (!vertexShader || !fragmentShader) return null;
+	const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+	const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+	if (!vertexShader || !fragmentShader) return null;
 
-    const program = createProgram(gl, vertexShader, fragmentShader);
-    if (!program) return null;
+	const program = createProgram(gl, vertexShader, fragmentShader);
+	if (!program) return null;
 
-    const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
-    const timeUniformLocation = gl.getUniformLocation(program, "u_time");
-    const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
-    const mouseUniformLocation = gl.getUniformLocation(program, "u_mouse");
+	const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+	const timeUniformLocation = gl.getUniformLocation(program, "u_time");
+	const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
+	const mouseUniformLocation = gl.getUniformLocation(program, "u_mouse");
+	const pointerUniformLocation = gl.getUniformLocation(program, "u_pointer");
 
-    const positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    const positions = [-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1];
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+	const positionBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	const positions = [-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1];
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-    const transitionUniformLocation = gl.getUniformLocation(program, "u_transition");
+	const transitionUniformLocation = gl.getUniformLocation(program, "u_transition");
 
-    return {
-        gl,
-        program,
-        positionAttributeLocation,
-        timeUniformLocation,
-        resolutionUniformLocation,
-        mouseUniformLocation,
-        positionBuffer,
-        transitionUniformLocation,
-    };
+	return {
+		gl,
+		program,
+		positionAttributeLocation,
+		timeUniformLocation,
+		resolutionUniformLocation,
+		mouseUniformLocation,
+		pointerUniformLocation,
+		positionBuffer,
+		transitionUniformLocation,
+	};
 }
 
 export function resizeCanvasToDisplaySize(canvas) {
-    const viewport = window.visualViewport;
-    const cssWidth = canvas.clientWidth || viewport?.width || window.innerWidth;
-    const cssHeight = canvas.clientHeight || viewport?.height || window.innerHeight;
-    const pixelRatio = window.devicePixelRatio || 1;
-    const displayWidth = Math.round(cssWidth * pixelRatio);
-    const displayHeight = Math.round(cssHeight * pixelRatio);
+	const viewport = window.visualViewport;
+	const cssWidth = canvas.clientWidth || viewport?.width || window.innerWidth;
+	const cssHeight = canvas.clientHeight || viewport?.height || window.innerHeight;
+	const pixelRatio = window.devicePixelRatio || 1;
+	const displayWidth = Math.round(cssWidth * pixelRatio);
+	const displayHeight = Math.round(cssHeight * pixelRatio);
 
-    if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
-        canvas.width = displayWidth;
-        canvas.height = displayHeight;
-    }
+	if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+		canvas.width = displayWidth;
+		canvas.height = displayHeight;
+	}
 }
 
-export function setupEventListeners(pos, resizeCanvas) {
-    const updatePosition = (clientX, clientY) => {
-        const ratio = window.devicePixelRatio || 1;
-        pos[0] = clientX * ratio;
-        pos[1] = clientY * ratio;
-    };
+export function setupEventListeners(pos, resizeCanvas, pointerState) {
+	const updatePosition = (clientX, clientY) => {
+		const ratio = window.devicePixelRatio || 1;
+		pos[0] = clientX * ratio;
+		pos[1] = clientY * ratio;
+	};
 
-    const handleMouseMove = (event) => {
-        updatePosition(event.clientX, event.clientY);
-    };
-    const passiveMoveOptions = { passive: true };
-    window.addEventListener("mousemove", handleMouseMove, passiveMoveOptions);
+	const setPointerTarget = (value) => {
+		if (pointerState) pointerState.target = value;
+	};
 
-    const handleTouchMove = (event) => {
-        const touch = event.touches[0];
-        if (touch) updatePosition(touch.clientX, touch.clientY);
-    };
-    window.addEventListener("touchmove", handleTouchMove, passiveMoveOptions);
-    const handleResize = () => {
-        window.requestAnimationFrame(resizeCanvas);
-    };
-    window.addEventListener("resize", handleResize);
+	const handleMouseMove = (event) => {
+		updatePosition(event.clientX, event.clientY);
+		setPointerTarget(1);
+	};
+	const passiveMoveOptions = { passive: true };
+	window.addEventListener("mousemove", handleMouseMove, passiveMoveOptions);
 
-    return () => {
-        window.removeEventListener("mousemove", handleMouseMove, passiveMoveOptions);
-        window.removeEventListener("touchmove", handleTouchMove, passiveMoveOptions);
-        window.removeEventListener("resize", handleResize);
-    };
+	const handleMouseLeave = () => {
+		setPointerTarget(0);
+	};
+	window.addEventListener("mouseleave", handleMouseLeave);
+	window.addEventListener("blur", handleMouseLeave);
+
+	const handleTouchMove = (event) => {
+		const touch = event.touches[0];
+		if (touch) updatePosition(touch.clientX, touch.clientY);
+		setPointerTarget(1);
+	};
+	window.addEventListener("touchmove", handleTouchMove, passiveMoveOptions);
+	const handleTouchStart = (event) => {
+		const touch = event.touches[0];
+		if (touch) updatePosition(touch.clientX, touch.clientY);
+		setPointerTarget(1);
+	};
+	window.addEventListener("touchstart", handleTouchStart, passiveMoveOptions);
+	const handleTouchEnd = () => {
+		setPointerTarget(0);
+	};
+	window.addEventListener("touchend", handleTouchEnd, passiveMoveOptions);
+	window.addEventListener("touchcancel", handleTouchEnd, passiveMoveOptions);
+	const handleResize = () => {
+		window.requestAnimationFrame(resizeCanvas);
+	};
+	window.addEventListener("resize", handleResize);
+
+	return () => {
+		window.removeEventListener("mousemove", handleMouseMove, passiveMoveOptions);
+		window.removeEventListener("mouseleave", handleMouseLeave);
+		window.removeEventListener("blur", handleMouseLeave);
+		window.removeEventListener("touchmove", handleTouchMove, passiveMoveOptions);
+		window.removeEventListener("touchstart", handleTouchStart, passiveMoveOptions);
+		window.removeEventListener("touchend", handleTouchEnd, passiveMoveOptions);
+		window.removeEventListener("touchcancel", handleTouchEnd, passiveMoveOptions);
+		window.removeEventListener("resize", handleResize);
+	};
 }
