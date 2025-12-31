@@ -53,7 +53,7 @@
 
 			<p>
 				I'm deeply curious about service architecture, artificial intelligence, and
-				information security. Outside of computers, I love cooking, card games (especially Texas
+				information security. Aside from computers I love cooking, card games (especially Texas
 				Hold'em), tennis, finding new electronic music, and pretty much every water
 				sport under the sun.
 			</p>
