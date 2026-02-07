@@ -48,7 +48,7 @@
 				building everything from iOS games to AI training pipelines to full stack web apps.
 				I currently work at
 				<a href="https://www.zillow.com/homeloans">Zillow Home Loans</a> where I help design
-				and create backend tools that power the mortgage lending process.
+				and create the tools that power the mortgage lending process.
 			</p>
 
 			<p>
