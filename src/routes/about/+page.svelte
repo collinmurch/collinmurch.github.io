@@ -4,6 +4,7 @@
 		as="image"
 		href="/images/headshot.avif"
 		type="image/avif"
+		imagesrcset="/images/headshot-256.avif 256w, /images/headshot-384.avif 384w, /images/headshot.avif 500w"
 		imagesizes="(max-width: 900px) 70vw, 30vw"
 		fetchpriority="high"
 	/>
@@ -15,8 +16,14 @@
 	<picture
 		class="relative mx-auto aspect-square w-[min(26rem,60vw)] max-w-xl overflow-hidden rounded-[18%] border-4 border-accent/55 shadow-[0_45px_95px_rgba(0,0,0,0.45)] lg:mx-0 max-lg:landscape:mx-0 max-lg:landscape:w-[clamp(11rem,26vw,13.5rem)] max-lg:landscape:max-w-none max-lg:landscape:border-[3px] max-lg:landscape:shadow-[0_26px_55px_rgba(0,0,0,0.3)]"
 	>
-		<source srcset="/images/headshot.avif" type="image/avif" />
-		<source srcset="/images/headshot.webp" type="image/webp" />
+		<source
+			srcset="/images/headshot-256.avif 256w, /images/headshot-384.avif 384w, /images/headshot.avif 500w"
+			type="image/avif"
+		/>
+		<source
+			srcset="/images/headshot-256.webp 256w, /images/headshot-384.webp 384w, /images/headshot.webp 500w"
+			type="image/webp"
+		/>
 		<img
 			src="/images/headshot.jpeg"
 			alt="Headshot of Collin Murch"
@@ -24,8 +31,9 @@
 			height="500"
 			sizes="(max-width: 900px) 70vw, 30vw"
 			srcset="/images/headshot.jpeg 1x"
+			fetchpriority="high"
 			decoding="async"
-			loading="lazy"
+			loading="eager"
 			class="h-full w-full object-cover"
 		/>
 	</picture>

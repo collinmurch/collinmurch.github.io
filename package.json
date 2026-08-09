@@ -8,8 +8,10 @@
 		"preview": "vite preview",
 		"lint": "oxlint --max-warnings=0",
 		"lint:fix": "oxlint --fix --max-warnings=0",
+		"test": "bun test",
 		"format": "prettier --check .",
 		"format:write": "prettier --write .",
+		"budget": "bun scripts/check-bundle-size.js",
 		"prepare": "husky",
 		"lint-staged": "lint-staged"
 	},

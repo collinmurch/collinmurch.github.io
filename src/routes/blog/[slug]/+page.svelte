@@ -1,5 +1,7 @@
 <script>
-	import { formatDate, toISODate } from "$lib/utils";
+	import { onMount } from "svelte";
+	import { setupCodeCopy } from "$lib/markdown/code-copy";
+	import { formatDate, toISODate } from "$lib/utils/dates";
 
 	const { data } = $props();
 
@@ -20,6 +22,8 @@
 	const description = $derived(buildDescription(data?.post));
 
 	const publishedISO = $derived(toISODate(data?.post?.date));
+
+	onMount(setupCodeCopy);
 </script>
 
 <svelte:head>

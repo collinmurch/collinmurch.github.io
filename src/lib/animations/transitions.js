@@ -2,57 +2,63 @@ import { fly } from "svelte/transition";
 import { cubicOut } from "svelte/easing";
 
 export const transitions = {
-    flyUp: {
-        transition: fly,
-        params: { y: 1000, duration: 300 },
-    },
-    flyDown: {
-        transition: fly,
-        params: { y: -1000, duration: 300 },
-    },
-    fadeScale: {
-        transition: () => {
-            return {
-                duration: 300,
-                css: (t) => {
-                    return `
+	instant: {
+		transition: () => ({ duration: 0 }),
+		params: {},
+	},
+	flyUp: {
+		transition: fly,
+		params: { y: 1000, duration: 300 },
+	},
+	flyDown: {
+		transition: fly,
+		params: { y: -1000, duration: 300 },
+	},
+	fadeScale: {
+		transition: () => {
+			return {
+				duration: 300,
+				css: (t) => {
+					return `
                             opacity: ${t};
                             transform: scale(${0.95 + 0.05 * t});
                         `;
-                },
-                easing: cubicOut,
-            };
-        },
-        params: {},
-    },
+				},
+				easing: cubicOut,
+			};
+		},
+		params: {},
+	},
 };
 
 export const transitionMappings = {
-    "/": {
-        "*": transitions.flyUp,
-    },
-    "*": {
-        "/": transitions.flyDown,
-    },
+	"/": {
+		"*": transitions.flyUp,
+	},
+	"*": {
+		"/": transitions.flyDown,
+	},
 };
 
 const defaultAnimation = transitions.fadeScale;
 
-export function getTransition(fromPath, toPath) {
-    const fromMapping = transitionMappings[fromPath];
-    if (fromMapping) {
-        const exactMatch = fromMapping[toPath];
-        if (exactMatch) return exactMatch;
+export function getTransition(fromPath, toPath, prefersReducedMotion = false) {
+	if (prefersReducedMotion) return transitions.instant;
 
-        const wildcardMatch = fromMapping["*"];
-        if (wildcardMatch) return wildcardMatch;
-    }
+	const fromMapping = transitionMappings[fromPath];
+	if (fromMapping) {
+		const exactMatch = fromMapping[toPath];
+		if (exactMatch) return exactMatch;
 
-    const wildcardMapping = transitionMappings["*"];
-    if (wildcardMapping) {
-        const wildcardMatch = wildcardMapping[toPath];
-        if (wildcardMatch) return wildcardMatch;
-    }
+		const wildcardMatch = fromMapping["*"];
+		if (wildcardMatch) return wildcardMatch;
+	}
 
-    return defaultAnimation;
+	const wildcardMapping = transitionMappings["*"];
+	if (wildcardMapping) {
+		const wildcardMatch = wildcardMapping[toPath];
+		if (wildcardMatch) return wildcardMatch;
+	}
+
+	return defaultAnimation;
 }

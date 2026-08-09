@@ -5,6 +5,7 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_transition;
 uniform float u_pointer;
+uniform float u_quality;
 
 const mat2 FBM_ROT = mat2(0.8, -0.6, 0.6, 0.8);
 
@@ -50,6 +51,12 @@ float fbm(vec2 p) {
     float value = 0.0;
     float amplitude = 0.5;
     for (int i = 0; i < 5; i++) {
+        if (i >= 2 && u_quality < -0.5) {
+            break;
+        }
+        if (i >= 3 && u_quality < 0.5) {
+            break;
+        }
         value += (noise(p) - 0.5) * amplitude;
         p = FBM_ROT * p * 1.9 + vec2(0.37, -0.21);
         amplitude *= 0.5;
@@ -108,7 +115,10 @@ vec3 paintSky(vec2 st, float waterSurface, float aspect) {
     cloudFlow -= vec2(cloudDiff.x * aspect, cloudDiff.y) * (CLOUD_ATTRACTION * cloudInfluence);
 
     float cloudMacro = fbm(cloudFlow * 0.85);
-    float cloudDetail = fbm(cloudFlow * 2.4 + vec2(12.7, -9.1));
+    float cloudDetail = cloudMacro;
+    if (u_quality > 0.5) {
+        cloudDetail = fbm(cloudFlow * 2.4 + vec2(12.7, -9.1));
+    }
     float clouds = clamp(cloudMacro * 0.8 + cloudDetail * 0.2 + cloudInfluence * 0.12, 0.0, 1.0);
 
     float cloudStructure = smoothstep(0.26, 0.68, clouds);
@@ -118,14 +128,20 @@ vec3 paintSky(vec2 st, float waterSurface, float aspect) {
     float horizonFade = smoothstep(1.02, 1.2, waterSurface);
     float cloudAmount = clamp(cloudStructure * topFade * horizonFade * 3.2, 0.0, 1.0);
 
-    float cursorDetail = fbm(cloudFlow * 5.1 + vec2(4.7, -13.2));
-    float cursorHighlight = max(0.0, cursorDetail - 0.5);
+    float cursorHighlight = 0.0;
+    if (cloudInfluence > 0.001 && u_quality > -0.5) {
+        float cursorDetail = fbm(cloudFlow * 5.1 + vec2(4.7, -13.2));
+        cursorHighlight = max(0.0, cursorDetail - 0.5);
+    }
     float cursorContrast = cursorHighlight * cloudInfluence * 0.9;
     float cursorShade = cursorHighlight * cloudInfluence * 1.0;
     cloudStructure = clamp(cloudStructure + cursorContrast, 0.0, 1.0);
     cloudAmount = clamp(cloudAmount + cloudInfluence * 0.08, 0.0, 1.0);
 
-    float veilNoise = fbm(cloudFlow * 3.6 + vec2(-6.4, 8.1));
+    float veilNoise = cloudMacro;
+    if (u_quality > -0.5) {
+        veilNoise = fbm(cloudFlow * 3.6 + vec2(-6.4, 8.1));
+    }
     float cloudVeil = smoothstep(0.18, 0.55, veilNoise);
     cloudVeil = pow(cloudVeil, 1.05);
     cloudVeil = clamp(cloudVeil + cursorContrast * 0.65, 0.0, 1.0);
@@ -160,6 +176,14 @@ vec3 applyFoam(vec3 color, vec2 st, float displacedWave, float waterSurface, flo
     float crest = max(0.0, 1.0 - waterSurface);
     float foamBand = smoothstep(FOAM_WIDTH, 0.0, crest);
     foamBand = pow(foamBand, 1.65);
+
+    if (foamBand < 0.001) {
+        return color;
+    }
+
+    if (u_quality < -0.5) {
+        return mix(color, FOAM_MID, foamBand * 0.45);
+    }
 
     vec2 foamFlow = vec2(st.x * aspect * 3.8, st.y * 7.2);
     foamFlow += vec2(u_time * 0.12, u_time * 0.18);

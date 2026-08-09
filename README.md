@@ -1,49 +1,81 @@
 # collinmurch.com
 
-Personal site & blog built with SvelteKit and deployed to GitHub Pages.
+Personal site and blog built with Svelte 5 and SvelteKit, prerendered for GitHub Pages.
 
-## Stack & Tooling
+## Stack
 
-- **Framework:** Svelte 5 + SvelteKit with the static adapter (pre-rendered output).
-- **Styling:** Tailwind CSS v4 + shadcn-svelte primitives; global tokens live in `src/app.css`.
-- **Markdown:** mdsvex + Shiki (poimandres theme) for syntax highlighting; padding/border tweaks happen in `svelte.config.js`.
-- **Runtime:** Bun (see `bun.lockb`); all scripts reference Bun’s `vite` binary.
-- **Effects:** `WaveCanvas` drives the background WebGL hero – keep shader/wave tweaks inside `src/components/WaveCanvas.svelte` and `$lib/webgl/*`.
+- Svelte 5 and SvelteKit with `adapter-static`
+- Tailwind CSS v4
+- mdsvex and Shiki using the poimandres theme
+- WebGL 2 for the animated wave background
+- Bun for dependencies, scripts, and tests
+
+## Project structure
+
+```text
+src/
+  components/          Application shell components
+  lib/
+    animations/        Route transition definitions
+    data/              Blog metadata and article loaders
+    markdown/          Shiki preprocessing and code-copy behavior
+    seo/               Route metadata
+    stores/            Shared wave state
+    utils/             Class and date utilities
+    webgl/             Shader sources and WebGL helpers
+  posts/               Markdown articles
+  routes/              SvelteKit pages and layouts
+  app.css              Theme, typography, and shared content styles
+static/                Images, icons, and host-specific header rules
+```
+
+Application-specific components live in `src/components`. shadcn-svelte primitives can be generated into `src/lib/components/ui` when needed; aliases are configured in `components.json`.
 
 ## Development
 
-1. Install deps: `bun install`
-2. Start dev server: `bun run dev`
-3. Production build: `bun run build` (runs `svelte-kit sync` automatically, outputs to `build/`)
-4. Preview build output locally: `bun run preview`
+```sh
+bun install
+bun run dev
+```
 
-### Quality gates
+Quality commands:
 
-- Lint JavaScript/Svelte: `bun run lint` (oxlint, `--max-warnings=0`)
-- Auto-fix lint issues: `bun run lint:fix`
-- Format: `bun run format:write`
+```sh
+bun run format
+bun run lint
+bun run test
+bun run build
+bun run budget
+```
 
-## Content authoring
+`format` checks formatting; use `bun run format:write` to update files. `budget` checks the existing production build, so run it after `build`.
 
-- Markdown lives in `src/posts/*.md`. Each post **must** define front matter:
-    ```yaml
-    ---
-    title: Example Post
-    date: "2024-11-16"
-    description: Optional long description for SEO.
-    excerpt: Optional shorter teaser used in meta tags.
-    ---
-    ```
-- Posts are globbed through `src/lib/data/posts.js`; the fetch helpers now skip caching in dev so edits show up without restarting.
-- Route transitions are defined in `$lib/animations/transitions.js`; add new route IDs there if you introduce additional top-level pages.
+## Blog authoring
+
+Posts live in `src/posts/*.md` and require front matter:
+
+```yaml
+---
+title: Example Post
+date: "2024-11-16"
+description: A description used for metadata.
+excerpt: An optional shorter teaser.
+---
+```
+
+The blog listing obtains metadata through `src/routes/blog/+page.server.js`. Article components are loaded separately through `src/lib/data/posts.js`, keeping article bodies out of the listing bundle.
+
+Markdown preprocessing and Shiki configuration live in `src/lib/markdown/highlighter.js`. Code-block presentation lives in `src/app.css`, and copy-button behavior is mounted only on article routes through `src/lib/markdown/code-copy.js`.
 
 ## Deployment
 
-- GitHub Actions workflow (`.github/workflows/main.yml`) builds on pushes/PRs and deploys to GitHub Pages.
-- Static artifacts land in `build/`; cache headers are managed via `static/_headers`.
-- Keep image assets in `static/images/` so they’re copied verbatim during `bun run build`.
+`.github/workflows/main.yml` formats, lints, tests, builds, checks bundle budgets, and deploys the static `build/` directory to GitHub Pages.
 
-## Misc tips
+`static/_headers` documents cache and security headers for hosts that support that file format. GitHub Pages does not apply it; equivalent rules for the production domain must be configured at the CDN or proxy.
 
-- Navigation + hero animations rely on route IDs. If you add routes, update `transitionMappings` and the nav link list before shipping.
-- `WaveCanvas` is globally mounted; avoid moving it out of the root layout so the pointer listeners and reduced-motion handling keep working.
+## Runtime notes
+
+- Route transitions are defined in `src/lib/animations/transitions.js`.
+- The WebGL background is globally mounted from `src/components/WaveCanvas.svelte`.
+- Canvas and shader changes belong in `WaveCanvas.svelte` or `src/lib/webgl`.
+- Responsive portraits use 256, 384, and 500 pixel AVIF/WebP sources in `static/images`.

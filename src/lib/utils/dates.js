@@ -1,10 +1,3 @@
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs) {
-	return twMerge(clsx(inputs));
-}
-
 const DATE_ONLY_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
 const READABLE_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
 	year: "numeric",

@@ -1,11 +1,29 @@
+<svelte:head>
+	<link
+		rel="preload"
+		as="image"
+		href="/images/profile.avif"
+		type="image/avif"
+		imagesrcset="/images/profile-256.avif 256w, /images/profile-384.avif 384w, /images/profile.avif 500w"
+		imagesizes="(max-width: 900px) 70vw, 30vw"
+		fetchpriority="high"
+	/>
+</svelte:head>
+
 <section
 	class="mx-auto grid w-full max-w-[min(1200px,94vw)] gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] lg:items-center lg:gap-24 max-lg:landscape:max-w-[min(960px,90vw)] max-lg:landscape:grid-cols-[minmax(0,0.78fr)_minmax(0,1fr)] max-lg:landscape:items-center max-lg:landscape:gap-8"
 >
 	<picture
 		class="relative mx-auto aspect-square w-[min(26rem,62vw)] max-w-xl overflow-hidden rounded-[18%] border-4 border-accent/55 shadow-[0_45px_95px_rgba(0,0,0,0.45)] max-lg:landscape:mx-0 max-lg:landscape:w-[clamp(11rem,26vw,13.5rem)] max-lg:landscape:max-w-none max-lg:landscape:border-[3px] max-lg:landscape:shadow-[0_26px_55px_rgba(0,0,0,0.3)]"
 	>
-		<source srcset="/images/profile.avif" type="image/avif" />
-		<source srcset="/images/profile.webp" type="image/webp" />
+		<source
+			srcset="/images/profile-256.avif 256w, /images/profile-384.avif 384w, /images/profile.avif 500w"
+			type="image/avif"
+		/>
+		<source
+			srcset="/images/profile-256.webp 256w, /images/profile-384.webp 384w, /images/profile.webp 500w"
+			type="image/webp"
+		/>
 		<img
 			src="/images/profile.jpeg"
 			alt="Portrait of Collin Murch"

@@ -1,5 +1,5 @@
 <script>
-	import { formatDate, toISODate } from "$lib/utils";
+	import { formatDate, toISODate } from "$lib/utils/dates";
 
 	const { data } = $props();
 </script>

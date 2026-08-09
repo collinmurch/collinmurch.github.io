@@ -2,39 +2,47 @@
 
 ## TL;DR
 
-- **Stack:** Svelte 5 + SvelteKit (adapter-static) with mdsvex; Tailwind v4 + shadcn-svelte; Shiki (poimandres) for code blocks.
-- **Events & styles:** Use native DOM event attributes (`onclick`, etc.) and Tailwind v4 classes—no inline `style` overrides for shadcn components.
-- **Tooling:** Bun only. Static output lives in `build/` with cache rules under `static/_headers`.
-- **Wave/hero:** All canvas + shader tweaks run through `src/components/WaveCanvas.svelte` and `$lib/webgl/*`.
+- **Stack:** Svelte 5 + SvelteKit with `adapter-static`; mdsvex and Shiki; Tailwind CSS v4.
+- **Events and styles:** Use native DOM event attributes and Tailwind v4 classes. Do not add inline style overrides to generated shadcn components.
+- **Tooling:** Use Bun only. Static output lives in `build/`.
+- **Wave background:** Keep canvas and shader changes in `src/components/WaveCanvas.svelte` and `src/lib/webgl`.
 
-## Project Layout
+## Project layout
 
-- `svelte.config.js` – mdsvex + Shiki configuration (custom highlighter tweaks); static adapter settings.
-- `vite.config.js` – minimal Vite setup; rarely touched.
-- `src/app.css` – global palette, typography, shared content styles.
-- `src/routes/`
-    - `+layout.svelte` – imports globals, manages navigation, transitions (`$lib/animations/transitions.js`), and wraps rendered pages.
-    - `/about`, `/blog`, `/blog/[slug]` – page components; blog list loads posts via `+page.js`, slug page renders compiled mdsvex content.
-    - Markdown posts live in `src/posts/*.md` and are automatically globbed by `src/lib/data/posts.js`.
-- `src/components/` – navigation, socials, and the WebGL hero canvas that reacts to pointer input.
-- `static/` – public assets (`images/`, `_headers` cache rules). Copied verbatim to the build output.
+- `svelte.config.js` contains SvelteKit, adapter, and Markdown preprocessor configuration.
+- `vite.config.js` contains Tailwind, SvelteKit, and the application-component alias.
+- `src/app.css` owns the palette, typography, content styling, and code-block presentation.
+- `src/components` contains application shell components: navigation, socials, and the wave canvas.
+- `src/lib/markdown` contains Shiki preprocessing and article code-copy behavior.
+- `src/lib/data` separates server-only blog metadata from dynamically loaded article modules.
+- `src/lib/utils` separates class composition from date handling.
+- `src/routes/blog/+page.server.js` supplies the blog listing metadata.
+- `src/routes/blog/[slug]` loads and renders compiled mdsvex articles.
+- `src/posts/*.md` contains Markdown posts.
+- `static/images` contains responsive image sources and social icons.
+- `static/_headers` applies only on hosts that support `_headers`; GitHub Pages does not.
 
-## Working With Markdown & Highlighting
+## Markdown and highlighting
 
-- mdsvex handles `.md` files; add front‑matter (`title`, `date`, `description`, `excerpt`) for blog metadata.
-- Syntax highlighting comes from Shiki’s poimandres theme; padding/border/rounding tweaks are injected in the custom highlighter inside `svelte.config.js`.
+- Posts require `title`, `date`, and `description` front matter; `excerpt` is optional.
+- `src/lib/markdown/highlighter.js` configures Shiki with the poimandres theme.
+- `src/app.css` controls code-block spacing, borders, scrolling, and copy-button presentation.
+- `src/lib/markdown/code-copy.js` is mounted only by article routes.
 
 ## Commands
 
-- `bun install` – sync dependencies with `bun.lockb`.
-- `bun run dev` – local dev server.
-- `bun run build` – production build.
-- `bun run preview` – serve the build locally.
-- `bun run lint` – oxlint with `--max-warnings=0`; fails on any warning.
-- `bun run format` – Prettier write.
+- `bun install` installs dependencies from `bun.lockb`.
+- `bun run dev` starts the development server.
+- `bun run build` creates the static production build.
+- `bun run preview` serves the existing production build.
+- `bun run lint` runs oxlint with zero warnings allowed.
+- `bun run format` checks formatting; `bun run format:write` updates it.
+- `bun run test` runs the Bun test suite.
+- `bun run budget` checks bundle sizes after a production build.
 
-## Tips & Gotchas
+## Tips and gotchas
 
-- Page transitions depend on route IDs; if you add routes, update `transitionMappings` in `$lib/animations/transitions.js`.
-- Keep background / canvas tweaks inside `WaveCanvas` or the WebGL utilities; it’s tightly coupled to the layout.
-- When adjusting caching or headers, edit `static/_headers` so deployment picks up the changes.
+- Update `transitionMappings` in `src/lib/animations/transitions.js` when route-transition behavior changes.
+- Keep blog metadata server-only so the listing does not import compiled article bodies.
+- Run build before bundle budgets.
+- Configure production cache headers at the CDN or proxy because GitHub Pages ignores `static/_headers`.
