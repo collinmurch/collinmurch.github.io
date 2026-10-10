@@ -69,6 +69,7 @@
 	--header-offset: clamp(0.75rem, 3svh, 1.5rem);
 	--nav-height: clamp(2.5rem, 6svh, 3.125rem);
 	--header-height: calc(var(--header-offset) + var(--nav-height));
+	--social-size: clamp(2.125rem, 5.25svh, 2.75rem);
 	--page-gap: clamp(1rem, 5svh, 3.5rem);
 	--sky: calc(var(--waterline) - var(--header-height) - 2 * var(--page-gap));
 
