@@ -37,8 +37,8 @@
 	<meta name="twitter:description" content={description} />
 </svelte:head>
 
-<div class="mx-auto max-w-[88ch]">
-	<h1 class="text-3xl font-semibold md:text-4xl mb-2">{data?.post.title}</h1>
+<div class="mx-auto max-w-measure">
+	<h1 class="mb-2">{data?.post.title}</h1>
 	<time
 		datetime={publishedISO ?? undefined}
 		class="mb-8 block text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground"

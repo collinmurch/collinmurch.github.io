@@ -66,24 +66,20 @@
 	{/if}
 </svelte:head>
 
-<div
-	class="relative isolate min-h-[calc(100*var(--page-shell-viewport-unit))] overflow-hidden text-foreground"
->
+<div class="relative isolate min-h-svh overflow-hidden text-foreground">
 	<WaveCanvas />
 
-	<div
-		class="relative z-20 flex min-h-[calc(100*var(--page-shell-viewport-unit))] flex-col"
-	>
+	<div class="relative z-20 flex min-h-svh flex-col">
 		<header
-			class="pointer-events-none fixed inset-x-0 top-4 z-30 flex justify-center pt-2 pl-[calc(1rem+env(safe-area-inset-left))] pr-[calc(1rem+env(safe-area-inset-right))]"
+			class="pointer-events-none fixed inset-x-0 top-(--header-offset) z-30 flex justify-center pl-[calc(1rem+env(safe-area-inset-left))] pr-[calc(1rem+env(safe-area-inset-right))]"
 		>
 			<Navigation />
 		</header>
 
-		<main class="flex-1 min-h-0 scrollbar-reserve pt-12 md:pt-20">
+		<main class="flex-1 min-h-0 scrollbar-reserve pt-(--header-height)">
 			{#key page.url.pathname}
 				<section
-					class="page-shell max-lg:landscape:pb-12 max-lg:landscape:pt-16 md:pb-16"
+					class="page-shell"
 					in:currentTransition.transition={currentTransition.params}
 				>
 					{@render children()}

@@ -1,55 +1,12 @@
-<svelte:head>
-	<link
-		rel="preload"
-		as="image"
-		href="/images/headshot.avif"
-		type="image/avif"
-		imagesrcset="/images/headshot-256.avif 256w, /images/headshot-384.avif 384w, /images/headshot.avif 500w"
-		imagesizes="(max-width: 900px) 70vw, 30vw"
-		fetchpriority="high"
-	/>
-</svelte:head>
+<script>
+	import Hero from "$components/Hero.svelte";
+</script>
 
-<section
-	class="mx-auto grid w-full max-w-[min(1200px,94vw)] gap-12 lg:grid-cols-2 lg:items-center lg:gap-24 max-lg:landscape:max-w-[min(960px,90vw)] max-lg:landscape:grid-cols-[minmax(0,0.82fr)_minmax(0,1fr)] max-lg:landscape:items-start max-lg:landscape:gap-8"
->
-	<picture
-		class="relative mx-auto aspect-square w-[min(26rem,60vw)] max-w-xl overflow-hidden rounded-[18%] border-4 border-accent/55 shadow-[0_45px_95px_rgba(0,0,0,0.45)] lg:mx-0 max-lg:landscape:mx-0 max-lg:landscape:w-[clamp(11rem,26vw,13.5rem)] max-lg:landscape:max-w-none max-lg:landscape:border-[3px] max-lg:landscape:shadow-[0_26px_55px_rgba(0,0,0,0.3)]"
-	>
-		<source
-			srcset="/images/headshot-256.avif 256w, /images/headshot-384.avif 384w, /images/headshot.avif 500w"
-			type="image/avif"
-		/>
-		<source
-			srcset="/images/headshot-256.webp 256w, /images/headshot-384.webp 384w, /images/headshot.webp 500w"
-			type="image/webp"
-		/>
-		<img
-			src="/images/headshot.jpeg"
-			alt="Headshot of Collin Murch"
-			width="500"
-			height="500"
-			sizes="(max-width: 900px) 70vw, 30vw"
-			srcset="/images/headshot.jpeg 1x"
-			fetchpriority="high"
-			decoding="async"
-			loading="eager"
-			class="h-full w-full object-cover"
-		/>
-	</picture>
+<Hero image="headshot" alt="Headshot of Collin Murch">
+	<div class="w-full max-w-152 landscape:flex-1">
+		<h1 class="mb-6 text-foreground">About Me</h1>
 
-	<div
-		class="flex flex-col items-start gap-4 text-left lg:items-start lg:text-left max-lg:landscape:items-start max-lg:landscape:text-left max-lg:landscape:gap-4 max-lg:landscape:max-w-[min(26rem,50vw)]"
-	>
-		<h1
-			class="text-3xl font-semibold text-foreground md:text-4xl max-lg:landscape:text-[2.4rem] mb-2 md:mb-3"
-		>
-			About Me
-		</h1>
-
-		<div
-			class="prose-rich max-w-152 space-y-6 text-foreground/90 max-lg:landscape:space-y-5"
-		>
+		<div class="prose-rich space-y-6 text-foreground/90">
 			<p>
 				Hey! I'm Collin, a software engineer with over a
 				<a href="https://github.com/collinmurch/astro-brawl">decade of experience</a>
@@ -61,9 +18,9 @@
 
 			<p>
 				I'm deeply curious about service architecture, artificial intelligence, and
-				information security. Aside from computers I love cooking, card games (especially Texas
-				Hold'em), tennis, finding new electronic music, and pretty much every water
-				sport under the sun.
+				information security. Aside from computers I love cooking, card games
+				(especially Texas Hold'em), tennis, finding new electronic music, and pretty
+				much every water sport under the sun.
 			</p>
 
 			<p>
@@ -72,4 +29,4 @@
 			</p>
 		</div>
 	</div>
-</section>
+</Hero>

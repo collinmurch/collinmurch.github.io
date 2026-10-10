@@ -21,7 +21,7 @@
 
 <nav
 	aria-label="Primary navigation"
-	class="pointer-events-auto relative z-30 mx-auto flex w-full max-w-[min(26rem,100%)] items-center gap-2 overflow-hidden rounded-full border border-border/70 bg-background/95 px-3 py-2 text-sm shadow-[0_15px_45px_rgba(0,0,0,0.35)] md:max-w-lg md:bg-background/80 md:text-base md:backdrop-blur-xl sm:max-w-[min(30rem,100%)] max-lg:landscape:h-10 max-lg:landscape:max-w-[min(22rem,100%)] max-lg:landscape:gap-1 max-lg:landscape:px-2 max-lg:landscape:py-0 max-lg:landscape:text-xs"
+	class="pointer-events-auto relative z-30 mx-auto flex h-(--nav-height) w-[calc(var(--nav-height)*10)] max-w-full items-center gap-2 overflow-hidden rounded-full border border-border/70 bg-background/95 p-1.5 text-[calc(var(--nav-height)*0.32)] shadow-[0_15px_45px_rgba(0,0,0,0.35)] md:bg-background/80 md:backdrop-blur-xl"
 >
 	{#each links as link}
 		{@const isActive = activeRoute === link.href}
@@ -32,7 +32,7 @@
 			class:bg-primary={isActive}
 			class:text-primary-foreground={isActive}
 			class:nav-active={isActive}
-			class="relative z-10 inline-flex h-8 flex-1 items-center justify-center whitespace-nowrap rounded-full px-4 text-sm font-medium tracking-wide text-foreground/80 outline-none transition-colors duration-150 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:px-6 md:text-base max-lg:landscape:h-6 max-lg:landscape:px-3 max-lg:landscape:py-0.5 max-lg:landscape:text-xs"
+			class="relative z-10 inline-flex h-full flex-1 items-center justify-center whitespace-nowrap rounded-full px-3 font-medium tracking-wide text-foreground/80 outline-none transition-colors duration-150 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 		>
 			{link.text}
 		</a>

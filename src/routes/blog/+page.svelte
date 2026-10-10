@@ -4,8 +4,8 @@
 	const { data } = $props();
 </script>
 
-<div class="mx-auto max-w-[88ch] space-y-10">
-	<h1 class="text-3xl font-semibold md:text-4xl">Posts</h1>
+<div class="mx-auto max-w-measure space-y-10">
+	<h1>Posts</h1>
 
 	<div class="space-y-8">
 		{#each data.posts as post}

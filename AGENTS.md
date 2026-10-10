@@ -1,48 +1,47 @@
-# CollinMurch.com Agent Notes
+# Working on collinmurch.com
 
-## TL;DR
+A personal site and blog. It is fully prerendered and deployed to GitHub Pages, so every page must be buildable as static HTML. Nothing runs on a server at request time.
 
-- **Stack:** Svelte 5 + SvelteKit with `adapter-static`; mdsvex and Shiki; Tailwind CSS v4.
-- **Events and styles:** Use native DOM event attributes and Tailwind v4 classes. Do not add inline style overrides to generated shadcn components.
-- **Tooling:** Use Bun only. Static output lives in `build/`.
-- **Wave background:** Keep canvas and shader changes in `src/components/WaveCanvas.svelte` and `src/lib/webgl`.
+## Svelte 5 only
 
-## Project layout
+Write current Svelte 5 code, even if older patterns would still compile:
 
-- `svelte.config.js` contains SvelteKit, adapter, and Markdown preprocessor configuration.
-- `vite.config.js` contains Tailwind, SvelteKit, and the application-component alias.
-- `src/app.css` owns the palette, typography, content styling, and code-block presentation.
-- `src/components` contains application shell components: navigation, socials, and the wave canvas.
-- `src/lib/markdown` contains Shiki preprocessing and article code-copy behavior.
-- `src/lib/data` separates server-only blog metadata from dynamically loaded article modules.
-- `src/lib/utils` separates class composition from date handling.
-- `src/routes/blog/+page.server.js` supplies the blog listing metadata.
-- `src/routes/blog/[slug]` loads and renders compiled mdsvex articles.
-- `src/posts/*.md` contains Markdown posts.
-- `static/images` contains responsive image sources and social icons.
-- `static/_headers` applies only on hosts that support `_headers`; GitHub Pages does not.
+- Use runes for state and props: `$props()`, `$state()`, `$derived()`, and `$effect()`. Do not use `export let` or `$:`.
+- Use plain event attributes such as `onclick={...}`, not `on:click`. Use callback props instead of `createEventDispatcher`.
+- Use snippets and `{@render children()}` instead of `<slot>`.
+- Use `$app/state`, not `$app/stores`.
 
-## Markdown and highlighting
+## Tooling
 
-- Posts require `title`, `date`, and `description` front matter; `excerpt` is optional.
-- `src/lib/markdown/highlighter.js` configures Shiki with the poimandres theme.
-- `src/app.css` controls code-block spacing, borders, scrolling, and copy-button presentation.
-- `src/lib/markdown/code-copy.js` is mounted only by article routes.
+- Use Bun for everything: installs, scripts, and tests. Do not use npm or yarn.
+- Before you finish, run `bun run lint`, `bun run format`, and `bun run test`, the same checks CI runs. Linting allows zero warnings.
+- Bundle budgets read the production build, so run `bun run build` before `bun run budget`.
 
-## Commands
+## Styling
 
-- `bun install` installs dependencies from `bun.lockb`.
-- `bun run dev` starts the development server.
-- `bun run build` creates the static production build.
-- `bun run preview` serves the existing production build.
-- `bun run lint` runs oxlint with zero warnings allowed.
-- `bun run format` checks formatting; `bun run format:write` updates it.
-- `bun run test` runs the Bun test suite.
-- `bun run budget` checks bundle sizes after a production build.
+- Use Tailwind v4 classes in markup. Shared tokens and prose styles live in `app.css`.
+- Do not use width breakpoints or per-device overrides to size things. Sizes come from a few fluid CSS tokens, and the only layout switch is portrait versus landscape orientation. If something looks wrong on one device, fix the token or the derivation, not that device.
+- The home page sits over the wave background, and its content must never overlap the water at any viewport size. The `--waterline` token describes where the highest wave crest reaches. If you change the water level or swell height in the shader, update `--waterline` to match.
+- The hero photo is the unit of scale for the hero. The name, tagline, spacing, and shadow are proportions of it. The home and about pages share the same hero, so their photos are always the same size.
+- Reading text and code scale fluidly with the viewport. Keep them comfortable on both phones and large monitors, and don't fix code at a small pixel size.
 
-## Tips and gotchas
+## The wave background
 
-- Update `transitionMappings` in `src/lib/animations/transitions.js` when route-transition behavior changes.
-- Keep blog metadata server-only so the listing does not import compiled article bodies.
-- Run build before bundle budgets.
-- Configure production cache headers at the CDN or proxy because GitHub Pages ignores `static/_headers`.
+- The ocean is a WebGL fragment shader. Some of its constants and its wave function are mirrored in JavaScript so pointer interaction can follow the drawn surface. A test fails if the two drift apart, so change both together.
+- The water rises to cover the screen on every page except home. Route transitions and the water state are driven from the root layout.
+- Keep the background cheap. It adapts its quality to the device's frame rate and stops entirely when the user prefers reduced motion.
+
+## Blog
+
+- Posts are Markdown files compiled by mdsvex. Each one needs `title`, `date`, and `description` front matter, and `excerpt` is optional.
+- The blog listing must only import post metadata, never compiled post bodies, so the listing page stays small.
+- Code blocks are highlighted at build time with Shiki, so they ship no highlighting JavaScript.
+
+## Verifying visual changes
+
+- Check layout changes at several sizes: small and large phones in both orientations, tablets in both orientations, a short laptop around 1280×720, and a large desktop. The short landscape cases break first.
+- Safari and Chromium differ on some intrinsic sizing, especially `aspect-ratio`. Prefer explicit sizes from tokens over sizes that depend on how the browser computes intrinsic dimensions.
+
+## Deployment
+
+GitHub Pages ignores `static/_headers`. Cache headers only take effect if a CDN or proxy in front of the site sets them.

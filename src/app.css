@@ -37,6 +37,20 @@
 	--radius-md: 0.95rem;
 	--radius-lg: 1.5rem;
 
+	--text-display: calc(var(--portrait) * 0.21);
+	--text-display--line-height: 1.1;
+	--text-tagline: max(1rem, calc(var(--portrait) * 0.07));
+	--text-tagline--line-height: 1.35;
+	--text-title: clamp(1.875rem, 1.6rem + 1vw, 2.5rem);
+	--text-title--line-height: 1.15;
+	--text-prose: clamp(1rem, 0.925rem + 0.3vw, 1.1875rem);
+	--text-prose--line-height: 1.65;
+
+	--shadow-portrait: 0 calc(var(--portrait) * 0.11) calc(var(--portrait) * 0.23)
+		rgb(0 0 0 / 0.45);
+
+	--container-measure: 42rem;
+
 	--layout-gutter: clamp(1.5rem, 5vw, 4.5rem);
 	--layout-width-default: min(1280px, 94vw);
 	--layout-width-lg: min(1400px, 88vw);
@@ -45,18 +59,25 @@
 
 :root {
 	color-scheme: dark;
-	--page-shell-viewport-unit: 1vh;
+
+	/* Highest wave crest: WATER_LEVEL plus the far ridge's reach in fragment.glsl. */
+	--waterline: 66svh;
+	--header-offset: clamp(0.75rem, 3svh, 1.5rem);
+	--nav-height: clamp(2.5rem, 6svh, 3.125rem);
+	--header-height: calc(var(--header-offset) + var(--nav-height));
+	--page-gap: clamp(1rem, 5svh, 3.5rem);
+	--sky: calc(var(--waterline) - var(--header-height) - 2 * var(--page-gap));
+
+	/*
+	 * The portrait is the hero's unit of scale. Stacked, the hero is about 1.5
+	 * portraits tall; side by side, the portrait alone must fit the sky.
+	 */
+	--portrait: clamp(6rem, min(var(--sky) / 1.5, 64vw), 26rem);
 }
 
-@supports (height: 100dvh) {
+@media (orientation: landscape) {
 	:root {
-		--page-shell-viewport-unit: 1dvh;
-	}
-}
-
-@supports (height: 100svh) {
-	:root {
-		--page-shell-viewport-unit: 1svh;
+		--portrait: clamp(6rem, min(var(--sky), 32vw), 26rem);
 	}
 }
 
@@ -115,8 +136,8 @@
 	}
 
 	h1 {
-		font-size: clamp(2.5rem, 2.1rem + 1.5vw, 3.75rem);
-		margin-bottom: 1.25rem;
+		font-size: var(--text-title);
+		line-height: var(--text-title--line-height);
 	}
 
 	h2 {
@@ -147,26 +168,18 @@
 	.page-shell {
 		margin-inline: auto;
 		padding-inline: clamp(1rem, 3.8vw, 3.25rem);
-		padding-bottom: clamp(2.25rem, 9vh, 5.5rem);
-		padding-top: clamp(3.5rem, 12vh, 8rem);
+		padding-block: var(--page-gap);
 		width: 100%;
 		max-width: var(--layout-width, var(--layout-width-default));
-	}
-
-	@media (max-width: 1024px) and (orientation: portrait) {
-		.page-shell {
-			padding-top: clamp(3.25rem, calc(7 * var(--page-shell-viewport-unit)), 4.5rem);
-			padding-bottom: clamp(2rem, calc(7 * var(--page-shell-viewport-unit)), 3.75rem);
-		}
 	}
 
 	.scrollbar-reserve {
 		scrollbar-gutter: stable both-edges;
 	}
 
-	.prose-rich :where(p, li, blockquote) {
-		font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.1rem);
-		line-height: 1.6;
+	.prose-rich {
+		font-size: var(--text-prose);
+		line-height: var(--text-prose--line-height);
 	}
 
 	.prose-rich :where(p:not(:last-child)) {
@@ -202,7 +215,7 @@
 
 	.prose-rich :where(code) {
 		font-family: var(--font-mono);
-		font-size: 0.8em;
+		font-size: 0.85em;
 	}
 
 	.prose-rich :where(code):not(:where(pre *)) {
