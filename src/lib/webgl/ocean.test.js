@@ -1,8 +1,16 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
-import { SHADER_CONSTANTS, swellHeight, swellIterations, waterLevel } from "./ocean";
+import {
+	SHADER_COLORS,
+	SHADER_CONSTANTS,
+	sceneEdgeColors,
+	swellHeight,
+	swellIterations,
+	waterLevel,
+} from "./ocean";
 
 const shaderSource = readFileSync(new URL("./fragment.glsl", import.meta.url), "utf8");
+const stylesheet = readFileSync(new URL("../../app.css", import.meta.url), "utf8");
 
 const shaderValue = (name) => {
 	const match =
@@ -15,6 +23,32 @@ describe("SHADER_CONSTANTS", () => {
 	for (const [name, value] of Object.entries(SHADER_CONSTANTS)) {
 		test(`matches ${name} in the fragment shader`, () => {
 			expect(shaderValue(name)).toBe(value);
+		});
+	}
+});
+
+const shaderColor = (name) => {
+	const match = shaderSource.match(
+		new RegExp(`const vec3 ${name} = vec3\\(([^)]+)\\);`),
+	);
+	return match ? match[1].split(",").map(Number) : undefined;
+};
+
+const cssColor = (name) =>
+	stylesheet.match(new RegExp(`--color-${name}: (#[0-9a-f]{6});`))?.[1];
+
+describe("SHADER_COLORS", () => {
+	for (const [name, value] of Object.entries(SHADER_COLORS)) {
+		test(`matches ${name} in the fragment shader`, () => {
+			expect(shaderColor(name)).toEqual(value);
+		});
+	}
+});
+
+describe("sceneEdgeColors", () => {
+	for (const [name, value] of Object.entries(sceneEdgeColors())) {
+		test(`matches --color-${name} in app.css`, () => {
+			expect(cssColor(name)).toBe(value);
 		});
 	}
 });

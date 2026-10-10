@@ -20,7 +20,6 @@ src/
     data/              Blog metadata and article loaders
     markdown/          Shiki preprocessing and code-copy behavior
     seo/               Route metadata
-    stores/            Shared wave state
     utils/             Class and date utilities
     webgl/             Shader sources and WebGL helpers
   posts/               Markdown articles

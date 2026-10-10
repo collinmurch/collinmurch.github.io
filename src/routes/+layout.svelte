@@ -1,14 +1,13 @@
 <script>
-	import { beforeNavigate } from "$app/navigation";
-	import { browser } from "$app/environment";
+	import { afterNavigate, beforeNavigate } from "$app/navigation";
 	import { page } from "$app/state";
 	import { onMount } from "svelte";
 	import Navigation from "$components/Navigation.svelte";
 	import Socials from "$components/Socials.svelte";
+	import ChromeTint from "$components/ChromeTint.svelte";
 	import WaveCanvas from "$components/WaveCanvas.svelte";
 	import { getTransition } from "$lib/animations/transitions";
 	import { getRouteMeta, normalizeRoute } from "$lib/seo/meta";
-	import { waveState } from "$lib/stores/wave";
 	import "../app.css";
 
 	const { children } = $props();
@@ -17,14 +16,15 @@
 	let hasNavigated = $state(false);
 	let prefersReducedMotion = $state(false);
 
+	const isSubmerged = (path) => normalizeRoute(path) !== "/";
+
 	const normalizedPath = $derived(normalizeRoute(page.url.pathname));
 	const isHome = $derived(normalizedPath === "/");
 	const meta = $derived(getRouteMeta(normalizedPath));
 
-	$effect(() => {
-		if (!browser) return;
-		waveState.set(normalizedPath === "/" ? 0 : 1);
-	});
+	// Every page but home is underwater. Set ahead of navigation so the water moves
+	// alongside the page transition, then settled to the page actually shown.
+	let submerged = $state(isSubmerged(page.url.pathname));
 
 	onMount(() => {
 		const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -47,10 +47,11 @@
 			prefersReducedMotion,
 		);
 
-		if (browser) {
-			const nextPath = normalizeRoute(to?.url?.pathname ?? normalizedPath);
-			waveState.set(nextPath === "/" ? 0 : 1);
-		}
+		if (to) submerged = isSubmerged(to.url.pathname);
+	});
+
+	afterNavigate(() => {
+		submerged = isSubmerged(page.url.pathname);
 	});
 </script>
 
@@ -67,7 +68,8 @@
 </svelte:head>
 
 <div class="relative isolate min-h-svh overflow-hidden text-foreground">
-	<WaveCanvas />
+	<WaveCanvas {submerged} />
+	<ChromeTint {submerged} />
 
 	<div class="relative z-20 flex min-h-svh flex-col">
 		<header

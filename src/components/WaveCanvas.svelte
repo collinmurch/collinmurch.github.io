@@ -1,8 +1,14 @@
 <script>
 	import { onMount } from "svelte";
-	import { waveState } from "$lib/stores/wave";
+
+	const { submerged = false } = $props();
 
 	let canvas = $state();
+	let renderer = $state.raw(null);
+
+	$effect(() => {
+		renderer?.setSubmerged(submerged);
+	});
 
 	const IDLE_TIMEOUT = 800;
 
@@ -29,17 +35,13 @@
 
 	onMount(() => {
 		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-		let renderer = null;
 		let generation = 0;
 		let destroyed = false;
 		let cancelScheduledCreation = () => {};
-		let unsubscribeWave = () => {};
 
 		const teardown = () => {
 			generation += 1;
 			cancelScheduledCreation();
-			unsubscribeWave();
-			unsubscribeWave = () => {};
 			renderer?.destroy();
 			renderer = null;
 		};
@@ -56,10 +58,6 @@
 				console.error("Unable to initialize the wave background", error);
 				return;
 			}
-			if (!renderer) return;
-			unsubscribeWave = waveState.subscribe((value) =>
-				renderer.setSubmerged(Boolean(value)),
-			);
 		};
 
 		const scheduleCreation = () => {
@@ -70,7 +68,6 @@
 
 		const handleMotionPreferenceChange = (event) => {
 			if (event.matches) {
-				waveState.set(false);
 				teardown();
 			} else {
 				scheduleCreation();
@@ -86,11 +83,7 @@
 		canvas.addEventListener("webglcontextrestored", scheduleCreation);
 		reducedMotion.addEventListener("change", handleMotionPreferenceChange);
 
-		if (reducedMotion.matches) {
-			waveState.set(false);
-		} else {
-			scheduleCreation();
-		}
+		scheduleCreation();
 
 		return () => {
 			destroyed = true;

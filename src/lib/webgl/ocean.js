@@ -15,6 +15,16 @@ export const SHADER_CONSTANTS = {
 	OCEAN_SPEED_GROWTH: 1.08,
 	OCEAN_DIRECTION_STEP: 1232.399963,
 	SWELL_AMPLITUDE: 0.15,
+	DEPTH_SHADE_START: 0.25,
+	DEPTH_SHADE_END: 1.3,
+	DEPTH_SHADE_STRENGTH: 0.75,
+};
+
+/** Colors shared with `fragment.glsl`, as RGB channels from 0 to 1. */
+export const SHADER_COLORS = {
+	SKY_ZENITH: [0.627, 0.745, 0.843],
+	WATER_DARK: [0.122, 0.216, 0.275],
+	WATER_DEEP: [0.071, 0.173, 0.239],
 };
 
 const {
@@ -29,11 +39,44 @@ const {
 	OCEAN_SPEED_GROWTH,
 	OCEAN_DIRECTION_STEP,
 	SWELL_AMPLITUDE,
+	DEPTH_SHADE_START,
+	DEPTH_SHADE_END,
+	DEPTH_SHADE_STRENGTH,
 } = SHADER_CONSTANTS;
+
+const smoothstep = (edge0, edge1, x) => {
+	const t = Math.min(Math.max((x - edge0) / (edge1 - edge0), 0), 1);
+	return t * t * (3 - 2 * t);
+};
+
+const toHex = (rgb) =>
+	`#${rgb
+		.map((channel) =>
+			Math.round(channel * 255)
+				.toString(16)
+				.padStart(2, "0"),
+		)
+		.join("")}`;
 
 /** Returns the resting water level for a page transition progress from 0 to 1. */
 export function waterLevel(transition) {
 	return WATER_LEVEL + transition * TRANSITION_SCALE;
+}
+
+/**
+ * Returns the flat colors the scene settles to at the top and bottom edges of
+ * the screen, where the shader fades its detail out. Browser chrome tinted to
+ * these colors continues the scene without a seam.
+ */
+export function sceneEdgeColors() {
+	const { SKY_ZENITH, WATER_DARK, WATER_DEEP } = SHADER_COLORS;
+	const shade =
+		smoothstep(DEPTH_SHADE_START, DEPTH_SHADE_END, waterLevel(1)) *
+		DEPTH_SHADE_STRENGTH;
+	const depths = WATER_DARK.map(
+		(channel, i) => channel + (WATER_DEEP[i] - channel) * shade,
+	);
+	return { sky: toHex(SKY_ZENITH), water: toHex(WATER_DARK), depths: toHex(depths) };
 }
 
 /** Returns how many wave octaves the shader sums at a given quality tier. */

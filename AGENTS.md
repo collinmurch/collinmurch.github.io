@@ -28,7 +28,9 @@ Write current Svelte 5 code, even if older patterns would still compile:
 ## The wave background
 
 - The ocean is a WebGL fragment shader. Some of its constants and its wave function are mirrored in JavaScript so pointer interaction can follow the drawn surface. A test fails if the two drift apart, so change both together.
-- The water rises to cover the screen on every page except home. Route transitions and the water state are driven from the root layout.
+- The water rises to cover the screen on every page except home, so new pages are underwater by default. The root layout decides this in one place and passes it to both the wave and the browser-bar tint.
+- iOS Safari 26 ignores `theme-color` and colors its status bar and toolbar from fixed elements at the screen edges. A dedicated tint component keeps both bars matching the scene; its header comment explains Safari's rules. Any new full-width fixed element touching the top or bottom edge, such as a sticky header or a modal backdrop, competes with it and changes the bar color.
+- The tint colors are the flat tones the shader settles to at the screen edges. A test derives them from the shader and fails if the CSS tokens drift, so change the scene's colors or depth shading and the tokens together.
 - Keep the background cheap. It adapts its quality to the device's frame rate and stops entirely when the user prefers reduced motion.
 
 ## Blog
@@ -40,6 +42,7 @@ Write current Svelte 5 code, even if older patterns would still compile:
 ## Verifying visual changes
 
 - Check layout changes at several sizes: small and large phones in both orientations, tablets in both orientations, a short laptop around 1280×720, and a large desktop. The short landscape cases break first.
+- Check client-side navigation between pages, not just fresh page loads. The water level and browser-bar tints change on navigation, and those paths break independently of first load.
 - Safari and Chromium differ on some intrinsic sizing, especially `aspect-ratio`. Prefer explicit sizes from tokens over sizes that depend on how the browser computes intrinsic dimensions.
 
 ## Deployment

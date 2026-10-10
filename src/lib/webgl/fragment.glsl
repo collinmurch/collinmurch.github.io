@@ -57,6 +57,10 @@ const float RIPPLE_SPEED = 0.32;
 const float DROPLET_GRAVITY = 2.4;
 
 const float CAUSTIC_SPEED = 0.07;
+const float DEPTH_SHADE_START = 0.25;
+const float DEPTH_SHADE_END = 1.3;
+const float DEPTH_SHADE_STRENGTH = 0.75;
+const float EDGE_FADE = 0.06;
 
 float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -74,6 +78,12 @@ float noise(vec2 p) {
     vec2 u = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
 
     return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+
+// Clears clouds and underwater light near the top and bottom of the screen, so
+// the flat colors iOS Safari paints under its bars continue the scene seamlessly.
+float edgeFade(float y) {
+    return smoothstep(0.0, EDGE_FADE, y) * smoothstep(0.0, EDGE_FADE, 1.0 - y);
 }
 
 float byQuality(float high, float medium, float low) {
@@ -269,7 +279,7 @@ vec3 paintSky(vec2 st, float heightAboveWater, float aspect) {
         density -= dispersal * CLOUD_EROSION * (0.6 + wisps * 0.8);
     }
 
-    float topFade = smoothstep(0.34, 0.58, st.y);
+    float topFade = smoothstep(0.34, 0.58, st.y) * edgeFade(st.y);
     float horizonFade = smoothstep(0.02, 0.2, heightAboveWater);
     float coverage = smoothstep(0.465 - dispersal * 0.03, 0.555 + dispersal * 0.04, density) * topFade * horizonFade;
 
@@ -378,14 +388,16 @@ vec3 paintUnderwater(vec3 color, vec2 st, float surfaceDepth, float depth, float
     }
 
     float light = exp(-depth * 1.9);
-    vec3 water = mix(color, WATER_DEEP, smoothstep(0.25, 1.3, depth) * 0.75 * submerged);
+    float shade = smoothstep(DEPTH_SHADE_START, DEPTH_SHADE_END, depth) * DEPTH_SHADE_STRENGTH;
+    vec3 water = mix(color, WATER_DEEP, shade * submerged);
 
     float causticIterations = byQuality(4.0, 3.0, 2.0);
     vec2 causticUv = vec2(st.x, st.y * 1.6 + depth * 0.35) * 0.9;
     float pattern = caustics(causticUv, causticIterations);
-    float causticAmount = pattern * light * submerged * 0.16;
+    float fade = edgeFade(st.y);
+    float causticAmount = pattern * light * submerged * fade * 0.16;
 
-    float shafts = lightShafts(st, aspect) * light * submerged * 0.06;
+    float shafts = lightShafts(st, aspect) * light * submerged * fade * 0.06;
 
     water = mix(water, WATER_MEDIUM, causticAmount + shafts);
     return water;

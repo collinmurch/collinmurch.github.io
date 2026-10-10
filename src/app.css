@@ -11,6 +11,10 @@
 		Consolas, "Liberation Mono", "Courier New", monospace;
 
 	--color-background: #122c3d;
+	/* The shader's flat tones at the screen edges; ocean.test.js keeps them in sync. */
+	--color-sky: #a0bed7;
+	--color-water: #1f3746;
+	--color-depths: #162f40;
 	--color-foreground: #e6f4f1;
 
 	--color-card: #163447;
