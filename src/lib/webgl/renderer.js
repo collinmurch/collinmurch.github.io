@@ -53,6 +53,7 @@ export function createWaveRenderer(canvas, { reducedQuality }) {
 	let renderPixelRatio = budget.pixelRatio;
 	let animationFrameId = 0;
 	let lastFrameTime = 0;
+	let lastDrawTime = 0;
 
 	const resizeCanvas = () => {
 		resizeCanvasToDisplaySize(canvas, renderPixelRatio);
@@ -112,6 +113,14 @@ export function createWaveRenderer(canvas, { reducedQuality }) {
 		gl.uniform4fv(uniforms.splashes, surface.splashes);
 		gl.uniform2f(uniforms.bulge, surface.bulge.x, surface.bulge.height);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
+		lastDrawTime = time;
+	};
+
+	// Resizing the drawing buffer clears it, and the paced loop may not draw
+	// again for several display frames, so repaint now to avoid a black flash.
+	const handleViewportResize = () => {
+		resizeCanvas();
+		draw(lastDrawTime);
 	};
 
 	const renderFrame = (now) => {
@@ -155,7 +164,10 @@ export function createWaveRenderer(canvas, { reducedQuality }) {
 	resizeCanvas();
 	gl.clearColor(...CLEAR_COLOR, 1);
 	gl.clear(gl.COLOR_BUFFER_BIT);
-	const cleanups = [listenToPointer(pointer), observeViewportResize(resizeCanvas)];
+	const cleanups = [
+		listenToPointer(pointer),
+		observeViewportResize(handleViewportResize),
+	];
 	document.addEventListener("visibilitychange", handleVisibilityChange);
 
 	return {

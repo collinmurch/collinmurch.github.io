@@ -29,9 +29,17 @@ Write current Svelte 5 code, even if older patterns would still compile:
 
 - The ocean is a WebGL fragment shader. Some of its constants and its wave function are mirrored in JavaScript so pointer interaction can follow the drawn surface. A test fails if the two drift apart, so change both together.
 - The water rises to cover the screen on every page except home, so new pages are underwater by default. The root layout decides this in one place and passes it to both the wave and the browser-bar tint.
-- iOS Safari 26 ignores `theme-color` and colors its status bar and toolbar from fixed elements at the screen edges. A dedicated tint component keeps both bars matching the scene; its header comment explains Safari's rules. Any new full-width fixed element touching the top or bottom edge, such as a sticky header or a modal backdrop, competes with it and changes the bar color.
 - The tint colors are the flat tones the shader settles to at the screen edges. A test derives them from the shader and fails if the CSS tokens drift, so change the scene's colors or depth shading and the tokens together.
 - Keep the background cheap. It adapts its quality to the device's frame rate and stops entirely when the user prefers reduced motion.
+
+## iPhone and iOS Safari gotchas
+
+- Safari 26 ignores `theme-color`. It colors the status bar and toolbar from the first full-width fixed or sticky element at each screen edge, using that element's background at full strength even when the element is nearly transparent. `ChromeTint.svelte` keeps a faint strip at each edge for this, and its header comment lists Safari's exact rules. Any new full-width fixed element touching the top or bottom edge, such as a sticky header or a modal backdrop, competes with those strips and changes the bar color.
+- If neither edge has a qualifying element, Safari keeps the previous bar color until the next full page load. Keep both strips mounted at all times and change only their color, or the bars stop updating on client-side navigation.
+- The toolbar collapses and expands while the user scrolls, which resizes the viewport in the middle of a scroll. The canvas is `h-dvh`, so it resizes too. Resizing a WebGL drawing buffer clears it to black, so the renderer redraws in the same callback that resizes it. Don't wait for the paced render loop: underwater it runs at 20fps, and the cleared buffer would flash black for several frames.
+- Size layout with `svh` tokens, not `dvh`, so content doesn't jump when the toolbar collapses. Only the fixed background uses `dvh`, so it always fills the visible screen.
+- The viewport uses `viewport-fit=cover`, so content can sit under the notch, the Dynamic Island, and the home indicator. Pad any fixed or edge-hugging UI with `env(safe-area-inset-*)`.
+- Simulators and desktop responsive modes don't reproduce toolbar collapse or bar tinting. Check those on a real iPhone. For glitches that only last a frame or two, take a screen recording, find dark or odd frames with `ffmpeg` (for example, `signalstats` average brightness), and extract those frames to inspect them.
 
 ## Blog
 
