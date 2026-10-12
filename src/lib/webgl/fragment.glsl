@@ -268,7 +268,12 @@ float cursorDispersal(vec2 screenUv, float aspect, out vec2 push) {
     float dist2 = dot(offset, offset);
     push = offset / CLOUD_CURSOR_SIGMA;
     float falloff = exp(-dist2 / (2.0 * CLOUD_CURSOR_SIGMA * CLOUD_CURSOR_SIGMA));
-    return u_pointerPresence * falloff * mix(1.0, 0.55, along);
+    // The taper is measured in distance, not as a fraction of the path. When the
+    // pointer rests the path shrinks to a point, and a fractional taper would
+    // jump across it in a pixel, cutting a hard line through the clouds.
+    float pathLength = sqrt(dot(ba, ba));
+    float taper = along * pathLength / max(pathLength, CLOUD_CURSOR_SIGMA);
+    return u_pointerPresence * falloff * mix(1.0, 0.55, taper);
 }
 
 vec3 paintSky(vec2 st, float heightAboveWater, float aspect) {
