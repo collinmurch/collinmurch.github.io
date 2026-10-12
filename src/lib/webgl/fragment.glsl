@@ -115,13 +115,18 @@ vec2 normalizeCoords(vec2 fragCoord, float aspect) {
     return st;
 }
 
-// Combines the surface-tension bulge above an underwater pointer with every
-// live splash. Each splash dips into a broad crater, then the displaced water
-// heaves up into a wide hump with a short jet at its center before settling,
-// while a ripple packet runs outward in both directions and fades.
-float surfaceDisturbance(float x) {
+// Lifts the surface above an underwater pointer, as if held by surface tension.
+float bulgeHeight(float x) {
     float spread = (x - u_bulge.x) / BULGE_WIDTH;
-    float height = u_bulge.y / pow(1.0 + spread * spread, 1.5);
+    return u_bulge.y / pow(1.0 + spread * spread, 1.5);
+}
+
+// Sums every live splash. Each splash dips into a broad crater, then the
+// displaced water heaves up into a wide hump with a short jet at its center
+// before settling, while a ripple packet runs outward in both directions and
+// fades.
+float splashHeight(float x) {
+    float height = 0.0;
 
     for (int i = 0; i < SPLASH_COUNT; i++) {
         vec4 splash = u_splashes[i];
@@ -334,7 +339,7 @@ vec3 paintRidge(vec3 color, float depth, float peak, float shade, float thicknes
     return mix(color, ridge, coverage);
 }
 
-vec3 paintFace(float depth, float litDepth, float height, float peak, vec2 st, float aspect, float pixel) {
+vec3 paintFace(float depth, float litDepth, float height, float peak, float foamPeak, vec2 st, float aspect, float pixel) {
     float lit = 1.0 - smoothstep(0.0, FACE_DEPTH + max(height, 0.0), litDepth);
     lit = lit * lit;
     vec3 sheen = mix(WATER_MEDIUM, WATER_DARK, 0.62 - 0.22 * peak);
@@ -343,7 +348,7 @@ vec3 paintFace(float depth, float litDepth, float height, float peak, vec2 st, f
     float rim = 1.0 - smoothstep(0.0, pixel * 3.0, depth);
     color = mix(color, FOAM_HIGHLIGHT, rim * (0.3 + 0.55 * peak));
 
-    float whitecap = smoothstep(0.45, 0.95, peak) * (1.0 - smoothstep(0.0, FOAM_WIDTH, depth));
+    float whitecap = smoothstep(0.45, 0.95, foamPeak) * (1.0 - smoothstep(0.0, FOAM_WIDTH, depth));
     if (whitecap > 0.001 && u_quality > -0.5) {
         vec2 foamFlow = vec2(st.x * aspect * 14.0, st.y * 26.0) + vec2(u_time * 0.35, u_time * 0.2);
         float foam = smoothstep(0.42, 0.78, fbm(foamFlow));
@@ -412,8 +417,11 @@ vec3 paintBackRidge(vec3 color, vec2 st, float ridgeLevel, float sliceDepth, flo
     return paintRidge(color, ridgeLevel + height - st.y, peak, shade, thickness, pixel);
 }
 
-vec3 paintFrontWater(vec3 color, vec2 st, float level, float bodyDepth, float disturbance, float iterations, float aspect, float pixel) {
+// A bulge brightens the rim like any crest but stays glassy, since surface
+// tension holds it smooth. Only the swell and splashes break into whitecaps.
+vec3 paintFrontWater(vec3 color, vec2 st, float level, float bodyDepth, float bulge, float splash, float iterations, float aspect, float pixel) {
     float swellHeight = ridgeHeight(st.x, 0.0, 1.0, iterations) * SWELL_AMPLITUDE;
+    float disturbance = bulge + splash;
     float frontHeight = swellHeight + disturbance;
     float frontDepth = level + frontHeight - st.y;
     float frontCoverage = smoothstep(-pixel, pixel, frontDepth);
@@ -421,8 +429,9 @@ vec3 paintFrontWater(vec3 color, vec2 st, float level, float bodyDepth, float di
         return color;
     }
     float frontPeak = clamp(swellHeight / CREST_REACH + max(disturbance - 0.015, 0.0) / 0.03, 0.0, 1.0);
+    float foamPeak = clamp(swellHeight / CREST_REACH + max(splash - 0.015, 0.0) / 0.03, 0.0, 1.0);
     float litDepth = max(frontDepth - disturbance * 0.85, 0.0);
-    vec3 face = paintFace(max(frontDepth, 0.0), litDepth, swellHeight, frontPeak, st, aspect, pixel);
+    vec3 face = paintFace(max(frontDepth, 0.0), litDepth, swellHeight, frontPeak, foamPeak, st, aspect, pixel);
     face = paintUnderwater(face, st, max(frontDepth, 0.0), bodyDepth, aspect);
     return mix(color, face, frontCoverage);
 }
@@ -437,7 +446,7 @@ void main() {
 
     vec3 color = bodyDepth > DEEP_WATER_DEPTH
         ? paintUnderwater(WATER_DARK, st, bodyDepth, bodyDepth, aspect)
-        : paintFrontWater(WATER_DARK, st, level, bodyDepth, 0.0, byQuality(12.0, 8.0, 5.0), aspect, pixel);
+        : paintFrontWater(WATER_DARK, st, level, bodyDepth, 0.0, 0.0, byQuality(12.0, 8.0, 5.0), aspect, pixel);
     gl_FragColor = vec4(color, 1.0);
 }
 #else
@@ -462,13 +471,15 @@ void main() {
         return;
     }
 
-    float disturbance = surfaceDisturbance(st.x);
+    float bulge = bulgeHeight(st.x);
+    float splash = splashHeight(st.x);
+    float disturbance = bulge + splash;
     float waterTop = max(farLevel + CREST_REACH * 0.45, level + CREST_REACH + max(disturbance, 0.0));
     if (st.y <= waterTop + pixel * 2.0) {
         float iterations = byQuality(12.0, 8.0, 5.0);
         color = paintBackRidge(color, st, farLevel, 9.0, 2.2, 0.4, iterations - 2.0, 0.16, FAR_RIDGE_OFFSET - MID_RIDGE_OFFSET, pixel);
         color = paintBackRidge(color, st, level + MID_RIDGE_OFFSET, 4.5, 1.5, 0.65, iterations - 1.0, 0.34, MID_RIDGE_OFFSET, pixel);
-        color = paintFrontWater(color, st, level, bodyDepth, disturbance, iterations, aspect, pixel);
+        color = paintFrontWater(color, st, level, bodyDepth, bulge, splash, iterations, aspect, pixel);
     }
     gl_FragColor = vec4(paintDroplets(color, st, level, pixel), 1.0);
 }
