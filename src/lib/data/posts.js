@@ -1,20 +1,18 @@
-const POSTS_DIR_PREFIX = "/src/posts/";
-const POSTS_SUFFIX = ".md";
+import { resolvePostEntries } from "$lib/data/post-paths";
 
-const postFiles = import.meta.glob("/src/posts/*.md");
+const postFiles = import.meta.glob("/src/posts/*/*.md");
+const entries = resolvePostEntries(Object.keys(postFiles));
 
-export const postSlugs = Object.keys(postFiles).map((path) =>
-	path.slice(POSTS_DIR_PREFIX.length, -POSTS_SUFFIX.length),
-);
+export const postSlugs = [...entries.keys()];
 
 /**
  * Loads a compiled post by slug, or returns undefined if no post has that slug.
  */
 export async function loadPost(slug) {
-	const resolver = postFiles[`${POSTS_DIR_PREFIX}${slug}${POSTS_SUFFIX}`];
-	if (!resolver) return undefined;
+	const path = entries.get(slug);
+	if (!path) return undefined;
 
-	const module = await resolver();
+	const module = await postFiles[path]();
 	return {
 		slug,
 		...module.metadata,

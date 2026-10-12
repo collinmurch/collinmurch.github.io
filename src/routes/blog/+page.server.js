@@ -1,7 +1,7 @@
 import { getPostMetadata } from "$lib/data/post-metadata.server";
 
-export function load() {
+export async function load() {
 	return {
-		posts: getPostMetadata(),
+		posts: await getPostMetadata(),
 	};
 }

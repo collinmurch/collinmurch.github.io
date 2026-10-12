@@ -84,4 +84,4 @@ sequenceDiagram
 
 An SVG next to the post is inlined, so it can draw with `currentColor` and the site's color tokens.
 
-![A tide curve between a high tide in the morning and a low tide in the afternoon](./test-post/tides.svg "Tides drawn with the site's accent and primary colors.")
+![A tide curve between a high tide in the morning and a low tide in the afternoon](./tides.svg "Tides drawn with the site's accent and primary colors.")
