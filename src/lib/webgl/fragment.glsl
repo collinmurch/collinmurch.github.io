@@ -86,8 +86,19 @@ float edgeFade(float y) {
     return smoothstep(0.0, EDGE_FADE, y) * smoothstep(0.0, EDGE_FADE, 1.0 - y);
 }
 
+// Quality eases between tiers rather than jumping, so every quality-dependent
+// value is interpolated and partial octaves fade in by their fractional weight.
+// A hard switch would reshape the waves and clouds in a single frame.
 float byQuality(float high, float medium, float low) {
-    return u_quality > 0.5 ? high : (u_quality > -0.5 ? medium : low);
+    return u_quality > 0.0 ? mix(medium, high, u_quality) : mix(low, medium, u_quality + 1.0);
+}
+
+float aboveLowQuality() {
+    return clamp(u_quality + 1.0, 0.0, 1.0);
+}
+
+float octaveFade(float count, int index) {
+    return clamp(count - float(index), 0.0, 1.0);
 }
 
 float fbmOctaves(vec2 p, float octaves) {
@@ -98,7 +109,7 @@ float fbmOctaves(vec2 p, float octaves) {
         if (float(i) >= octaves) {
             break;
         }
-        value += (noise(p) - 0.5) * amplitude;
+        value += (noise(p) - 0.5) * amplitude * octaveFade(octaves, i);
         p = FBM_ROT * p * 1.9 + vec2(0.37, -0.21);
         amplitude *= 0.5;
     }
@@ -193,7 +204,7 @@ vec3 paintDroplets(vec3 color, vec2 st, float level, float pixel) {
             vec2 offset = st - position;
             float dist = length(offset);
             float visible = smoothstep(level - 0.01, level + 0.01, position.y);
-            float drop = (1.0 - smoothstep(radius - pixel, radius + pixel, dist)) * visible;
+            float drop = (1.0 - smoothstep(radius - pixel, radius + pixel, dist)) * visible * octaveFade(dropletCount, k);
             vec2 shine = offset - vec2(-0.3, 0.35) * radius;
             coverage = max(coverage, drop);
             glint = max(glint, drop * exp(-dot(shine, shine) / (radius * radius * 0.12)));
@@ -229,9 +240,10 @@ float oceanHeight(vec2 position, float iterations) {
         float x = dot(direction, position) * frequency + time * timeMultiplier + phaseShift;
         float crest = exp(sin(x) - 1.0);
         float slope = crest * cos(x);
-        position -= direction * slope * weight * OCEAN_DRAG;
-        total += crest * weight;
-        totalWeight += weight;
+        float faded = weight * octaveFade(iterations, i);
+        position -= direction * slope * faded * OCEAN_DRAG;
+        total += crest * faded;
+        totalWeight += faded;
         weight *= OCEAN_WEIGHT_DECAY;
         frequency *= OCEAN_FREQUENCY_GROWTH;
         timeMultiplier *= OCEAN_SPEED_GROWTH;
@@ -263,6 +275,11 @@ vec3 paintSky(vec2 st, float heightAboveWater, float aspect) {
     float skyBlend = smoothstep(0.2, 1.0, st.y);
     vec3 skyBase = mix(SKY_HORIZON, SKY_ZENITH, skyBlend);
 
+    float cloudBand = smoothstep(0.34, 0.58, st.y) * edgeFade(st.y) * smoothstep(0.02, 0.2, heightAboveWater);
+    if (cloudBand <= 0.0) {
+        return skyBase;
+    }
+
     vec2 cloudFlow = st * 2.0;
     cloudFlow += vec2(u_time * 0.015, u_time * 0.006);
 
@@ -274,28 +291,29 @@ vec3 paintSky(vec2 st, float heightAboveWater, float aspect) {
 
     float macro = fbm(cloudFlow * 0.85);
     float detail = macro;
-    if (u_quality > 0.5) {
-        detail = fbm(cloudFlow * 2.6 + vec2(12.7, -9.1) + macro * 0.9);
+    float detailBlend = clamp(u_quality, 0.0, 1.0);
+    if (detailBlend > 0.0) {
+        detail = mix(macro, fbm(cloudFlow * 2.6 + vec2(12.7, -9.1) + macro * 0.9), detailBlend);
     }
     float density = macro * 0.7 + detail * 0.3;
 
-    if (dispersal > 0.002 && u_quality > -0.5) {
+    float shapedBlend = aboveLowQuality();
+    if (dispersal > 0.002 && shapedBlend > 0.0) {
         float wisps = fbm(cloudFlow * 2.8 + vec2(4.7, -13.2));
-        density -= dispersal * CLOUD_EROSION * (0.6 + wisps * 0.8);
+        density -= dispersal * CLOUD_EROSION * (0.6 + wisps * 0.8) * shapedBlend;
     }
 
-    float topFade = smoothstep(0.34, 0.58, st.y) * edgeFade(st.y);
-    float horizonFade = smoothstep(0.02, 0.2, heightAboveWater);
-    float coverage = smoothstep(0.465 - dispersal * 0.03, 0.555 + dispersal * 0.04, density) * topFade * horizonFade;
+    float coverage = smoothstep(0.465 - dispersal * 0.03, 0.555 + dispersal * 0.04, density) * cloudBand;
 
     float lit = smoothstep(0.47, 0.66, density);
-    if (u_quality > -0.5) {
+    if (shapedBlend > 0.0) {
         float above = fbmOctaves((cloudFlow + vec2(0.05, 0.11)) * 0.85, 3.0);
-        lit = clamp(0.55 + (above - macro) * 2.2 + (density - 0.55) * 2.0, 0.0, 1.0);
+        float shaped = clamp(0.55 + (above - macro) * 2.2 + (density - 0.55) * 2.0, 0.0, 1.0);
+        lit = mix(lit, shaped, shapedBlend);
     }
     vec3 cloudColor = mix(CLOUD_SHADOW, SKY_HIGHLIGHT, lit);
 
-    float veil = smoothstep(0.4, 0.55, macro) * topFade * horizonFade * (1.0 - dispersal * 0.7);
+    float veil = smoothstep(0.4, 0.55, macro) * cloudBand * (1.0 - dispersal * 0.7);
     vec3 sky = mix(skyBase, mix(skyBase, SKY_HIGHLIGHT, 0.45), veil * 0.25);
     return mix(sky, cloudColor, coverage);
 }
@@ -305,8 +323,10 @@ vec3 applyHaze(vec3 color, vec2 st, float heightAboveWater, float aspect) {
     if (amount <= 0.0) {
         return color;
     }
-    if (u_quality < -0.5) {
-        return mix(color, WATER_MEDIUM, 0.45 * amount);
+    vec3 plain = mix(color, WATER_MEDIUM, 0.45 * amount);
+    float detailBlend = aboveLowQuality();
+    if (detailBlend <= 0.0) {
+        return plain;
     }
 
     vec2 hazeFlow = vec2(st.x * aspect * 3.8, st.y * 7.2);
@@ -319,24 +339,24 @@ vec3 applyHaze(vec3 color, vec2 st, float heightAboveWater, float aspect) {
 
     color = mix(color, WATER_MEDIUM, clamp(hazeSoft * 1.25, 0.0, 1.0) * 0.6 * amount);
     color = mix(color, FOAM_HIGHLIGHT, clamp(hazeCrests + 0.25 * hazeIslands, 0.0, 1.0) * amount);
-    return color;
+    return mix(plain, color, detailBlend);
 }
 
 vec3 paintAtmosphere(vec2 st, float heightAboveWater, float aspect) {
     return applyHaze(paintSky(st, heightAboveWater, aspect), st, heightAboveWater, aspect);
 }
 
-vec3 paintRidge(vec3 color, float depth, float peak, float shade, float thickness, float pixel) {
+vec4 paintRidge(float depth, float peak, float shade, float thickness, float pixel) {
     float coverage = smoothstep(-pixel, pixel, depth);
     if (coverage <= 0.0) {
-        return color;
+        return vec4(0.0);
     }
     float falloff = smoothstep(0.0, thickness, depth);
     float tone = shade + falloff * 0.14 - peak * 0.06;
     vec3 ridge = mix(WATER_MEDIUM, WATER_DARK, clamp(tone, 0.0, 1.0));
     float rim = (1.0 - smoothstep(0.0, pixel * 2.5, depth)) * (0.2 + 0.5 * peak);
     ridge = mix(ridge, FOAM_HIGHLIGHT, rim * 0.45);
-    return mix(color, ridge, coverage);
+    return vec4(ridge, coverage);
 }
 
 vec3 paintFace(float depth, float litDepth, float height, float peak, float foamPeak, vec2 st, float aspect, float pixel) {
@@ -349,7 +369,8 @@ vec3 paintFace(float depth, float litDepth, float height, float peak, float foam
     color = mix(color, FOAM_HIGHLIGHT, rim * (0.3 + 0.55 * peak));
 
     float whitecap = smoothstep(0.45, 0.95, foamPeak) * (1.0 - smoothstep(0.0, FOAM_WIDTH, depth));
-    if (whitecap > 0.001 && u_quality > -0.5) {
+    whitecap *= aboveLowQuality();
+    if (whitecap > 0.001) {
         vec2 foamFlow = vec2(st.x * aspect * 14.0, st.y * 26.0) + vec2(u_time * 0.35, u_time * 0.2);
         float foam = smoothstep(0.42, 0.78, fbm(foamFlow));
         color = mix(color, FOAM_HIGHLIGHT, whitecap * foam * 0.6);
@@ -370,8 +391,9 @@ float caustics(vec2 uv, float iterations) {
         }
         float t = time * (1.0 - 3.5 / float(n + 1));
         i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
-        c += 1.0 / length(vec2(p.x / (sin(i.x + t) / INTENSITY), p.y / (cos(i.y + t) / INTENSITY)));
-        count += 1.0;
+        float fade = octaveFade(iterations, n);
+        c += fade / length(vec2(p.x / (sin(i.x + t) / INTENSITY), p.y / (cos(i.y + t) / INTENSITY)));
+        count += fade;
     }
     c /= count;
     c = 1.17 - pow(c, 1.4);
@@ -411,29 +433,29 @@ vec3 paintUnderwater(vec3 color, vec2 st, float surfaceDepth, float depth, float
 // Draws one of the distant swell rows behind the front water. Each row is a
 // slice of the ocean further back, compressed horizontally for perspective and
 // with a smaller amplitude.
-vec3 paintBackRidge(vec3 color, vec2 st, float ridgeLevel, float sliceDepth, float compression, float amplitude, float iterations, float shade, float thickness, float pixel) {
+vec4 paintBackRidge(vec2 st, float ridgeLevel, float sliceDepth, float compression, float amplitude, float iterations, float shade, float thickness, float pixel) {
     float height = ridgeHeight(st.x, sliceDepth, compression, iterations) * SWELL_AMPLITUDE * amplitude;
     float peak = clamp(height / (CREST_REACH * amplitude), 0.0, 1.0);
-    return paintRidge(color, ridgeLevel + height - st.y, peak, shade, thickness, pixel);
+    return paintRidge(ridgeLevel + height - st.y, peak, shade, thickness, pixel);
 }
 
 // A bulge brightens the rim like any crest but stays glassy, since surface
 // tension holds it smooth. Only the swell and splashes break into whitecaps.
-vec3 paintFrontWater(vec3 color, vec2 st, float level, float bodyDepth, float bulge, float splash, float iterations, float aspect, float pixel) {
+vec4 paintFrontWater(vec2 st, float level, float bodyDepth, float bulge, float splash, float iterations, float aspect, float pixel) {
     float swellHeight = ridgeHeight(st.x, 0.0, 1.0, iterations) * SWELL_AMPLITUDE;
     float disturbance = bulge + splash;
     float frontHeight = swellHeight + disturbance;
     float frontDepth = level + frontHeight - st.y;
     float frontCoverage = smoothstep(-pixel, pixel, frontDepth);
     if (frontCoverage <= 0.0) {
-        return color;
+        return vec4(0.0);
     }
     float frontPeak = clamp(swellHeight / CREST_REACH + max(disturbance - 0.015, 0.0) / 0.03, 0.0, 1.0);
     float foamPeak = clamp(swellHeight / CREST_REACH + max(splash - 0.015, 0.0) / 0.03, 0.0, 1.0);
     float litDepth = max(frontDepth - disturbance * 0.85, 0.0);
     vec3 face = paintFace(max(frontDepth, 0.0), litDepth, swellHeight, frontPeak, foamPeak, st, aspect, pixel);
     face = paintUnderwater(face, st, max(frontDepth, 0.0), bodyDepth, aspect);
-    return mix(color, face, frontCoverage);
+    return vec4(face, frontCoverage);
 }
 
 #ifdef SUBMERGED
@@ -444,12 +466,21 @@ void main() {
     float level = WATER_LEVEL + u_transition * TRANSITION_SCALE;
     float bodyDepth = level - st.y;
 
-    vec3 color = bodyDepth > DEEP_WATER_DEPTH
-        ? paintUnderwater(WATER_DARK, st, bodyDepth, bodyDepth, aspect)
-        : paintFrontWater(WATER_DARK, st, level, bodyDepth, 0.0, 0.0, byQuality(12.0, 8.0, 5.0), aspect, pixel);
-    gl_FragColor = vec4(color, 1.0);
+    if (bodyDepth > DEEP_WATER_DEPTH) {
+        gl_FragColor = vec4(paintUnderwater(WATER_DARK, st, bodyDepth, bodyDepth, aspect), 1.0);
+        return;
+    }
+    vec4 front = paintFrontWater(st, level, bodyDepth, 0.0, 0.0, byQuality(12.0, 8.0, 5.0), aspect, pixel);
+    gl_FragColor = vec4(mix(WATER_DARK, front.rgb, front.a), 1.0);
 }
 #else
+// Adds a layer behind everything composited so far. Layers are composited front
+// to back, so once a nearer one is opaque the costlier ones behind it are skipped.
+void compositeBehind(inout vec3 color, inout float remaining, vec4 layer) {
+    color += remaining * layer.a * layer.rgb;
+    remaining *= 1.0 - layer.a;
+}
+
 void main() {
     float aspect = u_resolution.x / u_resolution.y;
     vec2 st = normalizeCoords(gl_FragCoord.xy, aspect);
@@ -465,21 +496,28 @@ void main() {
         return;
     }
 
-    vec3 color = paintAtmosphere(st, heightAboveWater, aspect);
     if (st.y > level + SURFACE_BAND_HEIGHT) {
-        gl_FragColor = vec4(color, 1.0);
+        gl_FragColor = vec4(paintAtmosphere(st, heightAboveWater, aspect), 1.0);
         return;
     }
 
     float bulge = bulgeHeight(st.x);
     float splash = splashHeight(st.x);
-    float disturbance = bulge + splash;
-    float waterTop = max(farLevel + CREST_REACH * 0.45, level + CREST_REACH + max(disturbance, 0.0));
+    float waterTop = max(farLevel + CREST_REACH * 0.45, level + CREST_REACH + max(bulge + splash, 0.0));
+    vec3 color = vec3(0.0);
+    float remaining = 1.0;
     if (st.y <= waterTop + pixel * 2.0) {
         float iterations = byQuality(12.0, 8.0, 5.0);
-        color = paintBackRidge(color, st, farLevel, 9.0, 2.2, 0.4, iterations - 2.0, 0.16, FAR_RIDGE_OFFSET - MID_RIDGE_OFFSET, pixel);
-        color = paintBackRidge(color, st, level + MID_RIDGE_OFFSET, 4.5, 1.5, 0.65, iterations - 1.0, 0.34, MID_RIDGE_OFFSET, pixel);
-        color = paintFrontWater(color, st, level, bodyDepth, bulge, splash, iterations, aspect, pixel);
+        compositeBehind(color, remaining, paintFrontWater(st, level, bodyDepth, bulge, splash, iterations, aspect, pixel));
+        if (remaining > 0.0) {
+            compositeBehind(color, remaining, paintBackRidge(st, level + MID_RIDGE_OFFSET, 4.5, 1.5, 0.65, iterations - 1.0, 0.34, MID_RIDGE_OFFSET, pixel));
+        }
+        if (remaining > 0.0) {
+            compositeBehind(color, remaining, paintBackRidge(st, farLevel, 9.0, 2.2, 0.4, iterations - 2.0, 0.16, FAR_RIDGE_OFFSET - MID_RIDGE_OFFSET, pixel));
+        }
+    }
+    if (remaining > 0.0) {
+        color += remaining * paintAtmosphere(st, heightAboveWater, aspect);
     }
     gl_FragColor = vec4(paintDroplets(color, st, level, pixel), 1.0);
 }

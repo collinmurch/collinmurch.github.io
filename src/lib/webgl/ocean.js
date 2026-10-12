@@ -79,11 +79,12 @@ export function sceneEdgeColors() {
 	return { sky: toHex(SKY_ZENITH), water: toHex(WATER_DARK), depths: toHex(depths) };
 }
 
-/** Returns how many wave octaves the shader sums at a given quality tier. */
+/**
+ * Returns how many wave octaves the shader sums at a quality from -1 to 1. The
+ * count is fractional between tiers, where the last octave is partly faded in.
+ */
 export function swellIterations(quality) {
-	if (quality > 0.5) return 12;
-	if (quality > -0.5) return 8;
-	return 5;
+	return quality > 0 ? 8 + 4 * quality : 8 + 3 * quality;
 }
 
 /**
@@ -114,10 +115,11 @@ export function swellHeight(x, time, iterations) {
 			phaseShift;
 		const crest = Math.exp(Math.sin(phase) - 1);
 		const slope = crest * Math.cos(phase);
-		positionX -= directionX * slope * weight * OCEAN_DRAG;
-		positionY -= directionY * slope * weight * OCEAN_DRAG;
-		total += crest * weight;
-		totalWeight += weight;
+		const faded = weight * Math.min(Math.max(iterations - i, 0), 1);
+		positionX -= directionX * slope * faded * OCEAN_DRAG;
+		positionY -= directionY * slope * faded * OCEAN_DRAG;
+		total += crest * faded;
+		totalWeight += faded;
 		weight *= OCEAN_WEIGHT_DECAY;
 		frequency *= OCEAN_FREQUENCY_GROWTH;
 		timeMultiplier *= OCEAN_SPEED_GROWTH;

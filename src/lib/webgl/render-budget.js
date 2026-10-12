@@ -93,3 +93,12 @@ export function createQualityController({
 
 	return controller;
 }
+
+/**
+ * Moves `current` toward `target` by at most `step`, so the shader eases
+ * between quality tiers instead of reshaping the scene in one frame.
+ */
+export function easeQuality(current, target, step) {
+	if (current < target) return Math.min(target, current + step);
+	return Math.max(target, current - step);
+}

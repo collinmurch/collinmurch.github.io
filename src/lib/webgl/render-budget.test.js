@@ -1,5 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { createFramePacer, createQualityController } from "./render-budget";
+import {
+	createFramePacer,
+	createQualityController,
+	easeQuality,
+} from "./render-budget";
 
 const renderedFrames = (refreshRate, interval, seconds = 1) => {
 	const pacer = createFramePacer();
@@ -84,5 +88,24 @@ describe("createQualityController", () => {
 		const controller = createController();
 		for (let i = 1; i < 10; i++) controller.recordFrame(i * 100);
 		expect(controller.quality).toBe(1);
+	});
+});
+
+describe("easeQuality", () => {
+	test("steps up toward a higher target", () => {
+		expect(easeQuality(0, 1, 0.25)).toBe(0.25);
+	});
+
+	test("steps down toward a lower target", () => {
+		expect(easeQuality(0, -1, 0.25)).toBe(-0.25);
+	});
+
+	test("does not overshoot the target", () => {
+		expect(easeQuality(0.9, 1, 0.25)).toBe(1);
+		expect(easeQuality(-0.9, -1, 0.25)).toBe(-1);
+	});
+
+	test("holds still without a step", () => {
+		expect(easeQuality(0.5, 1, 0)).toBe(0.5);
 	});
 });

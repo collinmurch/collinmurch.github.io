@@ -38,6 +38,7 @@
 		let generation = 0;
 		let destroyed = false;
 		let cancelScheduledCreation = () => {};
+		let rendererModule = null;
 
 		const teardown = () => {
 			generation += 1;
@@ -49,12 +50,14 @@
 		const createRenderer = async () => {
 			const attempt = ++generation;
 			try {
-				const { createWaveRenderer } = await import("$lib/webgl/renderer");
+				const { createWaveRenderer } = await rendererModule;
 				if (attempt !== generation || destroyed || reducedMotion.matches) return;
 				renderer = createWaveRenderer(canvas, {
 					reducedQuality: prefersReducedQuality(),
+					submerged,
 				});
 			} catch (error) {
+				rendererModule = null;
 				console.error("Unable to initialize the wave background", error);
 				return;
 			}
@@ -63,6 +66,8 @@
 		const scheduleCreation = () => {
 			cancelScheduledCreation();
 			if (destroyed || reducedMotion.matches || renderer) return;
+			// Download while waiting for idle time; only creating the renderer waits.
+			rendererModule ??= import("$lib/webgl/renderer");
 			cancelScheduledCreation = whenIdle(createRenderer);
 		};
 

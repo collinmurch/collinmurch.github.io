@@ -75,6 +75,11 @@ describe("swellIterations", () => {
 	test("uses the fewest octaves at low quality", () => {
 		expect(swellIterations(-1)).toBe(5);
 	});
+
+	test("is fractional between tiers", () => {
+		expect(swellIterations(0.5)).toBe(10);
+		expect(swellIterations(-0.5)).toBe(6.5);
+	});
 });
 
 describe("swellHeight", () => {
@@ -92,6 +97,15 @@ describe("swellHeight", () => {
 
 	test("varies along the surface", () => {
 		expect(swellHeight(0.2, 31, 12)).not.toBeCloseTo(swellHeight(0.9, 31, 12), 3);
+	});
+
+	test("changes gradually as octaves fade in", () => {
+		const step = Math.abs(swellHeight(0.4, 31, 8.01) - swellHeight(0.4, 31, 8));
+		expect(step).toBeLessThan(0.0005);
+	});
+
+	test("matches whole octave counts at the ends of a fade", () => {
+		expect(swellHeight(0.4, 31, 8.999999)).toBeCloseTo(swellHeight(0.4, 31, 9), 5);
 	});
 
 	test("moves over time", () => {
