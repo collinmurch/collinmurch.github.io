@@ -28,7 +28,7 @@ export function setupCodeCopy() {
 		const button = target.closest("[data-copy-btn]");
 		if (!(button instanceof HTMLElement)) return;
 
-		const code = button.closest(".code-block")?.querySelector("pre code");
+		const code = button.closest(".code-block, .diagram")?.querySelector("pre code");
 		const text = code?.innerText ?? code?.textContent ?? "";
 		if (!text) return;
 

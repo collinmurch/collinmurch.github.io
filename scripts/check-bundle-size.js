@@ -16,9 +16,16 @@ function compressedSize(path) {
 
 function modulePreloadSize(page) {
 	const html = readFileSync(resolve(buildDirectory, page), "utf8");
-	const hrefs = [...html.matchAll(/<link rel="modulepreload" href="([^"]+)">/g)].map(
-		(match) => match[1],
-	);
+	const hrefs = [...html.matchAll(/<link\b[^>]*>/g)]
+		.map(([tag]) => tag)
+		.filter((tag) => /\srel="modulepreload"/.test(tag))
+		.map((tag) => tag.match(/\shref="([^"]+)"/)?.[1])
+		.filter(Boolean);
+	if (hrefs.length === 0) {
+		throw new Error(
+			`${page} has no modulepreload links; the budget would measure nothing`,
+		);
+	}
 	const uniquePaths = new Set(
 		hrefs.map((href) => new URL(href, `https://example.com/${page}`).pathname),
 	);

@@ -4,9 +4,4 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
-	resolve: {
-		alias: {
-			$components: "/src/components",
-		},
-	},
 });

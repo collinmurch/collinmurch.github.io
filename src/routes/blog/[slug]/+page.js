@@ -1,12 +1,12 @@
-import { loadPost } from "$lib/data/posts";
+import { loadPost, postSlugs } from "$lib/data/posts";
 import { error } from "@sveltejs/kit";
 
+export function entries() {
+	return postSlugs.map((slug) => ({ slug }));
+}
+
 export async function load({ params }) {
-	try {
-		const post = await loadPost(params.slug);
-		return { post };
-	} catch (e) {
-		console.error("Error loading post:", e);
-		throw error(404, `Post not found: ${params.slug}`);
-	}
+	const post = await loadPost(params.slug);
+	if (!post) error(404, `Post not found: ${params.slug}`);
+	return { post };
 }

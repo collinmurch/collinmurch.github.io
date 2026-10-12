@@ -8,6 +8,7 @@
 	import WaveCanvas from "$components/WaveCanvas.svelte";
 	import { getTransition } from "$lib/animations/transitions";
 	import { getRouteMeta, normalizeRoute } from "$lib/seo/meta";
+	import { createScrollReveal } from "$lib/utils/scroll-reveal";
 	import "../app.css";
 
 	const { children } = $props();
@@ -26,6 +27,20 @@
 	// alongside the page transition, then settled to the page actually shown.
 	let submerged = $state(isSubmerged(page.url.pathname));
 
+	const scrollReveal = createScrollReveal();
+	let header = $state();
+	let scrolledAway = $state(false);
+	let navFocused = $state(false);
+	const navHidden = $derived(!isHome && scrolledAway && !navFocused);
+
+	function syncNav() {
+		const root = document.documentElement;
+		scrolledAway = scrollReveal.update(window.scrollY, {
+			max: root.scrollHeight - root.clientHeight,
+			topZone: header.offsetTop + header.offsetHeight,
+		});
+	}
+
 	onMount(() => {
 		const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 		const syncReducedMotion = () => {
@@ -33,9 +48,11 @@
 		};
 		syncReducedMotion();
 		reducedMotionQuery.addEventListener("change", syncReducedMotion);
+		window.addEventListener("scroll", syncNav, { passive: true });
 
 		return () => {
 			reducedMotionQuery.removeEventListener("change", syncReducedMotion);
+			window.removeEventListener("scroll", syncNav);
 		};
 	});
 
@@ -52,6 +69,8 @@
 
 	afterNavigate(() => {
 		submerged = isSubmerged(page.url.pathname);
+		scrollReveal.reset(window.scrollY);
+		scrolledAway = false;
 	});
 </script>
 
@@ -73,7 +92,13 @@
 
 	<div class="relative z-20 flex min-h-svh flex-col">
 		<header
-			class="pointer-events-none fixed inset-x-0 top-(--header-offset) z-30 flex justify-center pl-[calc(1rem+env(safe-area-inset-left))] pr-[calc(1rem+env(safe-area-inset-right))]"
+			bind:this={header}
+			onfocusin={() => (navFocused = true)}
+			onfocusout={() => (navFocused = false)}
+			class={[
+				"pointer-events-none fixed inset-x-0 top-(--header-offset) z-30 flex justify-center pl-[calc(1rem+env(safe-area-inset-left))] pr-[calc(1rem+env(safe-area-inset-right))] transition-transform duration-300 ease-out motion-reduce:transition-none",
+				navHidden && "-translate-y-[calc(var(--header-height)+4rem)]",
+			]}
 		>
 			<Navigation />
 		</header>

@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	import { setupCodeCopy } from "$lib/markdown/code-copy";
+	import { setupDiagrams } from "$lib/markdown/diagram-controls";
 	import { formatDate, toISODate } from "$lib/utils/dates";
 
 	const { data } = $props();
@@ -23,7 +24,16 @@
 
 	const publishedISO = $derived(toISODate(data?.post?.date));
 
+	const Content = $derived(data.post.content);
+
+	let article = $state();
+
 	onMount(setupCodeCopy);
+
+	$effect(() => {
+		void Content;
+		return setupDiagrams(article);
+	});
 </script>
 
 <svelte:head>
@@ -46,7 +56,7 @@
 		{publishedISO ? formatDate(publishedISO) : "Coming soon"}
 	</time>
 
-	<article class="prose-rich space-y-8">
-		{@render data?.post.content()}
+	<article bind:this={article} class="prose-rich space-y-8">
+		<Content />
 	</article>
 </div>

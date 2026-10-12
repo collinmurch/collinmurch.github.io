@@ -1,31 +1,23 @@
-const postFiles = import.meta.glob("/src/posts/*.md");
-const moduleCache = new Map();
-
 const POSTS_DIR_PREFIX = "/src/posts/";
 const POSTS_SUFFIX = ".md";
 
-function getPostResolver(path) {
-	const resolver = postFiles[path];
-	if (!resolver) throw new Error(`Post not found: ${path}`);
-	return resolver;
-}
+const postFiles = import.meta.glob("/src/posts/*.md");
 
-async function loadPostModule(path) {
-	if (!moduleCache.has(path)) {
-		const resolver = getPostResolver(path);
-		moduleCache.set(path, resolver());
-	}
+export const postSlugs = Object.keys(postFiles).map((path) =>
+	path.slice(POSTS_DIR_PREFIX.length, -POSTS_SUFFIX.length),
+);
 
-	return moduleCache.get(path);
-}
+/**
+ * Loads a compiled post by slug, or returns undefined if no post has that slug.
+ */
+export async function loadPost(slug) {
+	const resolver = postFiles[`${POSTS_DIR_PREFIX}${slug}${POSTS_SUFFIX}`];
+	if (!resolver) return undefined;
 
-export const loadPost = async (slug) => {
-	const path = `${POSTS_DIR_PREFIX}${slug}${POSTS_SUFFIX}`;
-	const module = await loadPostModule(path);
-
+	const module = await resolver();
 	return {
 		slug,
 		...module.metadata,
 		content: module.default,
 	};
-};
+}

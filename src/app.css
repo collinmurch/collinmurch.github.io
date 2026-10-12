@@ -18,6 +18,8 @@
 	--color-foreground: #e6f4f1;
 
 	--color-card: #163447;
+	/* Poimandres' editor background, shared by code blocks and diagrams. */
+	--color-panel: #1b1e28;
 	--color-card-foreground: #e6f4f1;
 	--color-popover: #163447;
 	--color-popover-foreground: #e6f4f1;
@@ -71,6 +73,7 @@
 	--header-height: calc(var(--header-offset) + var(--nav-height));
 	--social-size: clamp(2.125rem, 5.25svh, 2.75rem);
 	--page-gap: clamp(1rem, 5svh, 3.5rem);
+	--block-padding: clamp(1rem, 0.9rem + 0.6vw, 1.75rem);
 	--sky: calc(var(--waterline) - var(--header-height) - 2 * var(--page-gap));
 
 	/*
@@ -203,19 +206,154 @@
 		font-style: italic;
 	}
 
-	.prose-rich :where(pre) {
+	.prose-rich :where(pre, .figure) {
 		margin-block: clamp(1.25rem, 1rem + 1vw, 2.25rem);
-		max-width: 100%;
-		padding: clamp(1rem, 0.9rem + 0.6vw, 1.75rem);
+	}
+
+	.prose-rich :where(pre, .diagram) {
+		padding: var(--block-padding);
 		border-radius: 0.9rem;
 		border: 1px solid rgba(137, 221, 255, 0.25);
 		box-shadow: 0 10px 30px rgba(7, 12, 18, 0.45);
+		background: var(--color-panel);
+	}
+
+	.prose-rich :where(pre) {
+		max-width: 100%;
 		overflow-x: auto;
 		overflow-y: hidden;
 		scrollbar-gutter: stable both-edges;
-		-webkit-overflow-scrolling: touch;
-		background: color-mix(in srgb, var(--color-background) 82%, black 18%);
 		font-family: var(--font-mono);
+	}
+
+	.prose-rich :where(img) {
+		max-width: 100%;
+		height: auto;
+	}
+
+	.prose-rich :where(.figure > img) {
+		display: block;
+		margin-inline: auto;
+		border-radius: var(--radius-sm);
+	}
+
+	/*
+	 * Inline SVGs scale with the reading text: 1px of the drawing is 1/16em, so
+	 * they grow with the prose size but never past the column.
+	 */
+	.prose-rich :where(.figure) {
+		--figure-natural: calc(var(--figure-width) * 1em / 16);
+	}
+
+	.prose-rich :where(.figure > svg) {
+		display: block;
+		margin-inline: auto;
+		width: 100%;
+		max-width: var(--figure-natural);
+		height: auto;
+		aspect-ratio: var(--figure-width) / var(--figure-height);
+	}
+
+	/*
+	 * Diagrams aim for their natural size, shrunk to fit the screen's height but
+	 * never so far that labels drop below 3/4 size. They break out of the text
+	 * column, centered, up to the width of the article's container. The card is
+	 * a container so its viewport can size from the card's inner width.
+	 */
+	.prose-rich :where(.diagram) {
+		--diagram-min-scale: 0.75;
+		--diagram-max-height: 85svh;
+		--figure-readable: calc(var(--figure-natural) * var(--diagram-min-scale));
+		--figure-target: max(
+			var(--figure-readable),
+			min(
+				var(--figure-natural),
+				var(--diagram-max-height) * var(--figure-width) / var(--figure-height)
+			)
+		);
+		--figure-outer: clamp(
+			100%,
+			var(--figure-target) + 2 * var(--block-padding) + 2px,
+			100cqi
+		);
+		position: relative;
+		container-type: inline-size;
+		overflow: hidden;
+		width: var(--figure-outer);
+		margin-inline: calc((100% - var(--figure-outer)) / 2);
+		font-family: var(--font-sans);
+	}
+
+	/*
+	 * The viewport keeps the diagram's zoom-1 height and scrolls when zoomed or
+	 * when the card is narrower than the readable size. Auto margins center the
+	 * drawing when it is smaller than the viewport without clipping it when it
+	 * is larger.
+	 */
+	.prose-rich :where(.diagram-viewport) {
+		--diagram-base: clamp(var(--figure-readable), 100cqi, var(--figure-target));
+		display: flex;
+		height: calc(var(--diagram-base) * var(--figure-height) / var(--figure-width));
+		overflow: auto;
+		border-radius: 0.5rem;
+		scrollbar-width: thin;
+	}
+
+	.prose-rich :where(.diagram-viewport:focus-visible) {
+		outline: 2px solid color-mix(in srgb, var(--color-accent) 75%, transparent);
+		outline-offset: 2px;
+	}
+
+	.prose-rich :where(.diagram[data-pannable] .diagram-viewport) {
+		cursor: grab;
+	}
+
+	.prose-rich :where(.diagram[data-dragging] .diagram-viewport) {
+		cursor: grabbing;
+		user-select: none;
+	}
+
+	.prose-rich :where(.diagram-viewport > svg) {
+		flex: none;
+		margin: auto;
+		width: calc(var(--diagram-base) * var(--zoom, 1));
+		height: auto;
+		aspect-ratio: var(--figure-width) / var(--figure-height);
+	}
+
+	.prose-rich :where(.diagram-controls) {
+		display: flex;
+		gap: 0.35rem;
+	}
+
+	.prose-rich
+		:where(
+			.diagram:not([data-view="source"])
+				:is(.diagram-source, [data-when="source"], .show-diagram-icon),
+			.diagram[data-view="source"]
+				:is(.diagram-viewport, [data-when="diagram"], .show-source-icon)
+		) {
+		display: none;
+	}
+
+	.prose-rich :where(.diagram-source pre) {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		border-radius: 0;
+		box-shadow: none;
+		background: transparent;
+	}
+
+	.prose-rich :where(.diagram .mono) {
+		font-family: var(--font-mono);
+	}
+
+	.prose-rich :where(figcaption) {
+		margin-top: 0.75rem;
+		color: var(--color-muted-foreground);
+		font-size: 0.85em;
+		text-align: center;
 	}
 
 	.prose-rich :where(code) {
@@ -234,26 +372,70 @@
 		position: relative;
 	}
 
-	.prose-rich :where(.code-copy-btn) {
+	/*
+	 * Block buttons float over code blocks and diagrams. Related buttons join
+	 * into a group that takes the button's frame, and the buttons inside become
+	 * segments split by hairlines.
+	 */
+	.prose-rich :where(.block-btn, .block-btn-group) {
+		display: inline-flex;
+		border-radius: 0.45rem;
+		border: 1px solid color-mix(in srgb, var(--color-accent) 18%, transparent);
+		background: color-mix(in srgb, var(--color-background) 65%, black 35%);
+		backdrop-filter: blur(6px);
+		transition:
+			border-color 150ms ease,
+			background 150ms ease;
+	}
+
+	.prose-rich :where(.block-btn:hover, .block-btn-group:hover) {
+		border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+	}
+
+	.prose-rich :where(.block-btn) {
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		color: var(--color-foreground);
+		cursor: pointer;
+		touch-action: manipulation;
+	}
+
+	.prose-rich :where(.block-btn-group) {
+		overflow: hidden;
+	}
+
+	.prose-rich :where(.block-btn-group > .block-btn) {
+		border: 0;
+		border-radius: 0;
+		background: transparent;
+		backdrop-filter: none;
+	}
+
+	.prose-rich :where(.block-btn-group > .block-btn + .block-btn) {
+		border-inline-start: 1px solid
+			color-mix(in srgb, var(--color-accent) 14%, transparent);
+	}
+
+	.prose-rich :where(.block-btn-group > .block-btn:hover) {
+		background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+	}
+
+	.prose-rich :where(.block-btn-group > .block-btn:focus-visible) {
+		outline-offset: -2px;
+	}
+
+	/*
+	 * Block buttons float over the top-right corner of their card and appear
+	 * while it is hovered or focused.
+	 */
+	.prose-rich :where(.code-block > .code-copy-btn, .diagram-controls) {
 		position: absolute;
 		right: 0.9rem;
 		top: 0.85rem;
 		z-index: 1;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0;
-		width: 2rem;
-		height: 2rem;
-		padding: 0;
-		border-radius: 0.45rem;
-		border: 1px solid color-mix(in srgb, var(--color-accent) 18%, transparent);
-		background: color-mix(in srgb, var(--color-background) 65%, black 35%);
-		color: var(--color-foreground);
-		font-size: 0.75rem;
-		backdrop-filter: blur(6px);
-		cursor: pointer;
-		touch-action: manipulation;
 		opacity: 0;
 		transform: translateY(-2px);
 		transition:
@@ -264,12 +446,17 @@
 	}
 
 	.prose-rich
-		:where(.code-block:hover .code-copy-btn, .code-block:focus-within .code-copy-btn) {
+		:where(
+			.code-block:hover > .code-copy-btn,
+			.code-block:focus-within > .code-copy-btn,
+			.diagram:hover .diagram-controls,
+			.diagram:focus-within .diagram-controls
+		) {
 		opacity: 1;
 		transform: translateY(0);
 	}
 
-	.prose-rich :where(.code-copy-btn:focus-visible) {
+	.prose-rich :where(.block-btn:focus-visible) {
 		outline: 2px solid color-mix(in srgb, var(--color-accent) 75%, transparent);
 		outline-offset: 2px;
 	}

@@ -46,6 +46,14 @@ Write current Svelte 5 code, even if older patterns would still compile:
 - Posts are Markdown files compiled by mdsvex. Each one needs `title`, `date`, and `description` front matter, and `excerpt` is optional.
 - The blog listing must only import post metadata, never compiled post bodies, so the listing page stays small.
 - Code blocks are highlighted at build time with Shiki, so they ship no highlighting JavaScript.
+- Mermaid fences are rendered to SVG at build time with beautiful-mermaid, so pages ship no diagram JavaScript. It supports flowchart, state, sequence, class, ER, and XY chart diagrams, and a diagram it can't parse fails the build. Its output is post-processed in `src/lib/markdown/mermaid.js` and `svg.js`, so the version is pinned. Bump it deliberately and rerun the tests.
+- Diagram colors are site tokens passed as CSS variables, so diagrams follow `app.css` without a rebuild. Never hardcode colors there.
+- Inline SVGs share a page with each other, so their ids are prefixed and their `<style>` blocks are wrapped in `@scope`. Keep any new inline SVG path going through `prepareSvg`.
+- Post images live in a folder named after the post and are referenced relatively. Raster images are imported through Vite with their intrinsic size. An SVG on its own line is inlined so it can use `currentColor` and the color tokens.
+- Diagrams sit in a native scroll viewport, so touch, trackpad, and keyboard scrolling come from the browser. `diagram-controls.js` adds mouse drag panning, ctrl+wheel and Safari gesture zoom around the cursor, zoom and recenter buttons, and a toggle to the diagram's Shiki-highlighted source, which is rendered at build time beside the SVG. A plain wheel is never captured. The script builds the toolbar itself, so prerendered pages carry only the diagram and its source, and pinch zoom is applied at most once per frame.
+- Buttons that float over code blocks and diagrams share the `.block-btn` style and the top-right, reveal-on-hover placement. Reuse them for any new block control so they all feel the same, and put related buttons in a `.block-btn-group`, which joins them into one segmented button.
+- Code blocks and diagrams share the `--color-panel` background. Shiki's own background is stripped so that token stays the single source.
+- Figures scale with the reading text: 1px of drawing is 1/16em. Diagrams can break out of the text column up to the article container, which is why the blog layout is an `@container`.
 
 ## Verifying visual changes
 

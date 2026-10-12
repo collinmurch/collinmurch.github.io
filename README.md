@@ -34,4 +34,6 @@ excerpt: Optional shorter teaser.
 ---
 ```
 
+Fenced `mermaid` blocks render as diagrams. Put images in a folder named after the post and reference them relatively, such as `![Alt text](./example-post/chart.svg "Optional caption")`. An SVG on its own line is inlined, so it can draw with `currentColor` and the color tokens in `app.css`.
+
 Pushing to `main` deploys the site.
