@@ -51,13 +51,13 @@ I prefer working with CLIs wherever possible. Xcode does not spark joy. To that 
 Some examples:
 
 ```bash
-make lint; make test; make build # Self-explanatory.
-make run-device release=1 # Run on the plugged-in device (or connected via personal hotspot... did you know that works?!) in release mode (real calls to PCC).
-make receipts of=whole-foods-1/2 # Run the second image of our first Whole Foods receipt fixture through PCC, and check the result against our ground-truth data. More on this later.
-make receipts reasoning=deep max_pixels=2048 # Same as above, but for every receipt fixture we have, using deep reasoning and a maximum side length of 2048 pixels for the image.
-make screenshot of=review appearance=both # Take a screenshot of the review scenario, in both light and dark modes.
-make icons # Export all of our Icon Composer renditions. We use Icon Composer (https://developer.apple.com/icon-composer) because it's easy to make Liquid Glass icons.
-make previews # Generate all App Store previews. More on this in Preview Generation below.
+make lint; make test; make build                # Self-explanatory.
+make run-device release=1                       # Run on the plugged-in device (or connected via personal hotspot... did you know that works?!) in release mode (real calls to PCC).
+make receipts of=whole-foods-1/2                # Run the second image of our first Whole Foods receipt fixture through PCC, and check the result against our ground-truth data. More on this later.
+make receipts reasoning=deep max_pixels=2048    # Same as above, but for every receipt fixture we have, using deep reasoning and a maximum side length of 2048 pixels for the image.
+make screenshot of=review appearance=both       # Take a screenshot of the review scenario, in both light and dark modes.
+make icons                                      # Export all of our Icon Composer renditions. We use Icon Composer (https://developer.apple.com/icon-composer) because it's easy to make Liquid Glass icons.
+make previews                                   # Generate all App Store previews. More on this in Preview Generation below.
 ```
 
 All of these make it nearly seamless for my agents to iterate and collaborate across worktrees -- sometimes for hours -- until the desired result has been achieved.
