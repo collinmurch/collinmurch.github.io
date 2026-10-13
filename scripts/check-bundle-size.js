@@ -9,6 +9,7 @@ const pageBudgets = {
 	"blog.html": 42 * 1024,
 };
 const cssBudget = 8 * 1024;
+const katexCssBudget = 8 * 1024;
 
 function compressedSize(path) {
 	return brotliCompressSync(readFileSync(path)).byteLength;
@@ -45,11 +46,24 @@ for (const [page, budget] of Object.entries(pageBudgets)) {
 }
 
 const assetsDirectory = resolve(buildDirectory, "_app/immutable/assets");
-const cssSize = readdirSync(assetsDirectory)
-	.filter((file) => file.endsWith(".css"))
+const cssFiles = readdirSync(assetsDirectory).filter((file) => file.endsWith(".css"));
+const isKatex = (file) => file.startsWith("katex.");
+const cssSize = cssFiles
+	.filter((file) => !isKatex(file))
 	.reduce((total, file) => total + compressedSize(resolve(assetsDirectory, file)), 0);
 
 if (cssSize > cssBudget) {
 	throw new Error(`CSS is ${cssSize} bytes; budget is ${cssBudget}`);
 }
 console.log(`CSS: ${cssSize} of ${cssBudget} Brotli bytes`);
+
+const katexSize = cssFiles
+	.filter(isKatex)
+	.reduce((total, file) => total + compressedSize(resolve(assetsDirectory, file)), 0);
+
+if (katexSize > katexCssBudget) {
+	throw new Error(`KaTeX CSS is ${katexSize} bytes; budget is ${katexCssBudget}`);
+}
+console.log(
+	`KaTeX CSS (math posts only): ${katexSize} of ${katexCssBudget} Brotli bytes`,
+);

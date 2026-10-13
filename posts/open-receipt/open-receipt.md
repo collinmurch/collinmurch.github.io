@@ -76,7 +76,7 @@ Initially, I wanted Apple's local model to work. I really did. Unfortunately, it
 
 But what I did get out of that exploration was a pretty sweet harness for prompt development (engineering?) and image processing. To iterate on the prompt and pipeline, I built a receipt parser that both the app proper and the test harness call. Same prompt, same image processing, same receipt reading quality.
 
-> `make receipts of=whole-foods-1 cached=1`: Runs every image of the first Whole Foods receipt through PCC using caching (SHA-256 of config, prompt, image data, etc.).
+`make receipts of=whole-foods-1 cached=1`: Runs every image of the first Whole Foods receipt through PCC using caching (SHA-256 of config, prompt, image data, etc.).
 
 More importantly, this allowed me to use `/goal` with Claude Code/Codex and go to bed. Give it a target accuracy to hit, instructions to "train" on a select few receipts, then "test" on another set, and an explicit rule to not overfit to one given receipt or otherwise bloat the generated prompt, and it's off. Genuinely, after one to two hours of iterating (looping!), I had a pipeline that was accurate for almost any new receipt I threw at it.
 
@@ -90,11 +90,9 @@ Instead, we allow the agent to write a new "scenario" where we pull up the app s
 
 ### Preview Generation
 
-_Note: I don't know if this is a common technique in the iOS world, but I've really loved leveraging it!_
+> _Note: I don't know if this is a common technique in the iOS world, but I've really loved leveraging it!_
 
-Spending a ton of time in Photoshop every time I tweaked a screen didn't sound super appealing to me. But I wanted professional-looking previews for both the app screenshots and the newer [headers](https://developer.apple.com/app-store/asset-best-practices/#header) / [search results](https://developer.apple.com/app-store/asset-best-practices/#search-results) that were more than basic screenshots. Think: focused elements, stylized text, rounded corners, the works. To do this, I implemented an end-to-end preview generation pipeline. One command creates all the needed stylized assets.
-
-> Running `make previews` takes screenshots in the Simulator (using the same process explained in [Development Screenshots](#development-screenshots)), then draws gradients, adds text, and blows up desired elements, all using Swift.
+Spending a ton of time in Photoshop every time I tweaked a screen didn't sound super appealing to me. But I wanted professional-looking previews for both the app screenshots and the newer [headers](https://developer.apple.com/app-store/asset-best-practices/#header) / [search results](https://developer.apple.com/app-store/asset-best-practices/#search-results) that were more than basic screenshots. Think: focused elements, stylized text, rounded corners, the works. To do this, I implemented an end-to-end preview generation pipeline. One command -- `make previews` -- creates all the needed stylized assets.
 
 Here's how it works:
 

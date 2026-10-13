@@ -1,6 +1,7 @@
 import { createHighlighter } from "shiki";
 import { renderMermaid } from "./mermaid.js";
 import { toSvelteHtml } from "./html.js";
+import { displayMath, isMathFence } from "./math.js";
 import { injectImports, walk } from "./mdast.js";
 
 const THEME = "poimandres";
@@ -44,9 +45,12 @@ async function codeToHtml(code, lang) {
  * mdsvex highlighter for fenced code. Code is highlighted with Shiki at build
  * time and wrapped in a `CodeBlock`, and `mermaid` fences become prerendered
  * SVG `Diagram`s that carry their highlighted source for the source view.
- * `remarkCodeImports` imports both into the post.
+ * `remarkCodeImports` imports both into the post. `math` fences render as
+ * display math, as on GitHub.
  */
 export async function highlight(code, lang) {
+	if (isMathFence(lang)) return displayMath(code);
+
 	const language = lang?.toLowerCase() || "text";
 	const html = await codeToHtml(code, language);
 
@@ -66,7 +70,7 @@ export function remarkCodeImports() {
 	return (tree) => {
 		const imports = new Map();
 		walk(tree, (node) => {
-			if (node.type !== "code") return;
+			if (node.type !== "code" || isMathFence(node.lang)) return;
 			const component =
 				node.lang?.toLowerCase() === "mermaid" ? "Diagram" : "CodeBlock";
 			imports.set(component, {

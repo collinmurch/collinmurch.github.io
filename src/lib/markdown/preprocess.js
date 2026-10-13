@@ -2,6 +2,7 @@ import { mdsvex } from "mdsvex";
 import { remarkHeadings } from "./headings.js";
 import { highlight, remarkCodeImports } from "./highlight.js";
 import { remarkImages } from "./images.js";
+import { remarkMath } from "./math.js";
 
 const EXTENSIONS = [".md"];
 
@@ -32,8 +33,8 @@ function finishMarkdown(dependencies) {
 
 /**
  * Svelte preprocessors that compile Markdown posts: mdsvex with build-time
- * code highlighting, Mermaid diagrams, post-relative images, and heading
- * anchors and links.
+ * code highlighting, Mermaid diagrams, KaTeX math, post-relative images, and
+ * heading anchors and links.
  */
 export function markdownPreprocessor() {
 	const dependencies = new Map();
@@ -46,7 +47,12 @@ export function markdownPreprocessor() {
 		mdsvex({
 			extensions: EXTENSIONS,
 			highlight: { highlighter: highlight },
-			remarkPlugins: [remarkHeadings, remarkCodeImports, [remarkImages, { onInline }]],
+			remarkPlugins: [
+				remarkMath,
+				remarkHeadings,
+				remarkCodeImports,
+				[remarkImages, { onInline }],
+			],
 		}),
 		finishMarkdown(dependencies),
 	];

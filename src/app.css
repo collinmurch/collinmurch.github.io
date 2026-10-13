@@ -383,6 +383,24 @@
 		text-align: center;
 	}
 
+	/*
+	 * KaTeX sizes math relative to the surrounding text, so it scales with the
+	 * prose. Display math scrolls sideways instead of overflowing the column.
+	 */
+	.prose-rich :where(.math-block) {
+		margin-block: clamp(1.25rem, 1rem + 1vw, 2.25rem);
+	}
+
+	.prose-rich :where(.math-display) {
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+
+	.prose-rich .math-display > .katex-display {
+		margin: 0;
+		padding-block: 0.25em;
+	}
+
 	.prose-rich :where(code:not(pre *)) {
 		font-family: var(--font-mono);
 		font-size: 0.88em;
