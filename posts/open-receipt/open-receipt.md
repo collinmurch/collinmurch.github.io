@@ -4,7 +4,7 @@ date: "10-12-2026"
 description: "Open Receipt: Scan. Split. Settle."
 ---
 
-## The What
+## What
 
 Open Receipt is the side project I've been working on for the past month or two, and as of last week it's officially been submitted to the App Store for review!
 More importantly, I think it's time I wrote my first blog post here.
@@ -32,13 +32,11 @@ I'm pretty happy with the result! We use Apple's cloud model via Private Cloud C
 <a href="https://raw.githubusercontent.com/collinmurch/open-receipt/refs/heads/main/Assets/Previews/light/05-share.png" style="flex: 1; min-width: 0"><img src="https://raw.githubusercontent.com/collinmurch/open-receipt/refs/heads/main/Assets/Previews/light/05-share.png" alt="Sharing a receipt split from Open Receipt" style="display: block; width: 100%; border-radius: 0.5rem" /></a>
 </div>
 
-Please download it and try it out! The first 5 receipt reads are free, and then it's a one-time payment to unlock unlimited reads. This is mostly to offset the $99-a-year Apple Developer cost, and of course it's [open source](https://github.com/collinmurch/open-receipt/), so you can install it on your own device if you want.
-
 I won't go into detail on all of the features. Instead, let's discuss how I built it.
 
-## The How
+## How
 
-First and foremost, I didn't write or even (for the most part) look at a single line of code for this project. I haven't typed a line of Swift in over 10 years, and I wasn't planning on playing catch-up for this project. Any modern LLM will be much more of a subject-matter expert than I would be.
+First and foremost, I didn't write or even (for the most part) look at a single line of code for this project. I haven't typed a line of Swift in over 10 years, and I wasn't planning on playing catch-up for this project. Any modern LLM will be much more of a subject-matter expert here than I would be.
 
 > Some exceptions: the schema for data persistence, model instructions in `AGENTS.md`/`CLAUDE.md`, PCC prompt, organization, tooling, etc.
 
@@ -54,17 +52,11 @@ Some examples:
 
 ```bash
 make lint; make test; make build # Self-explanatory.
-
 make run-device release=1 # Run on the plugged-in device (or connected via personal hotspot... did you know that works?!) in release mode (real calls to PCC).
-
 make receipts of=whole-foods-1/2 # Run the second image of our first Whole Foods receipt fixture through PCC, and check the result against our ground-truth data. More on this later.
-
 make receipts reasoning=deep max_pixels=2048 # Same as above, but for every receipt fixture we have, using deep reasoning and a maximum side length of 2048 pixels for the image.
-
 make screenshot of=review appearance=both # Take a screenshot of the review scenario, in both light and dark modes.
-
 make icons # Export all of our Icon Composer renditions. We use Icon Composer (https://developer.apple.com/icon-composer) because it's easy to make Liquid Glass icons.
-
 make previews # Generate all App Store previews. More on this in Preview Generation below.
 ```
 
@@ -74,7 +66,7 @@ All of these make it nearly seamless for my agents to iterate and collaborate ac
 
 It's been understood for a while that verification loops are one of the most powerful constructs for productivity with modern agents. Put simply: give the agent a way to verify its own work. It helps pluck the rough feathers of the stochastic parrot (yes, I know I'm not using that metaphor entirely correctly).
 
-Talented engineers are already using this everywhere: running and recording unit/integration/E2E tests, rendering generated PowerPoints with LibreOffice, [discovering and proving new math with Lean](https://openai.com/index/sharing-ai-progress-in-mathematics) -- hell, even linting kind of falls into this category before the models got so good at writing formatted code.
+Talented engineers are already using this everywhere: running and recording unit/integration/E2E tests, rendering and viewing generated PowerPoints with LibreOffice, [discovering and proving new math with Lean](https://openai.com/index/sharing-ai-progress-in-mathematics) -- hell, even linting kind of fell into this category before the models got so good at writing formatted code.
 
 I'll share two examples I used in Open Receipt below.
 
@@ -149,6 +141,12 @@ flowchart LR
   class out done
 ```
 
+Basically:
+
+1. **Setup**: Create a screenshot scenario for the desired page using the same process explained in [Development Screenshots](#development-screenshots).
+2. **Capture**: Open the scenario in the Simulator, take one or more screenshots, and (if applicable) record the bounding box of the element we want to highlight.
+3. **Compose**: Stylize. Using SwiftUI and Core Graphics, place the gradient, rotate/scale images (like the focused elements), write text, etc.
+
 The search artwork works largely the same as the previews, but instead of highlighting a component, it draws additional shapes / text on the captured SwiftUI screenshots from the Simulator.
 
 Instead of taking a screenshot, the header artwork renders the same SwiftUI views (via `ImageRenderer`) that we use for the split-receipt share cards, which are then adjusted for opacity and orientation during a similar composition step.
@@ -166,3 +164,13 @@ A GPU-efficient shader seeded from the receipt's UUID causes each receipt's back
 #### Build Channels
 
 A `BuildChannel` value (debug, simulator, TestFlight, App Store) replaces `#if DEBUG` branches. It also lets us build for the Simulator using example data (the Simulator can't hit PCC). The value is set at compile time (release builds are further split between TestFlight and App Store at launch) and then read from a shared `BuildChannel` service.
+
+## Closing
+
+I've had an absolute blast building this project. I think it's some combination of using development techniques I've been experimenting with in a new environment (iOS), playing around with Apple's new models, and seeing my friends use and appreciate my work.
+
+Please download it and try it out! The first 5 receipt reads are free, and then it's a one-time payment of $3 to unlock unlimited reads. This is mostly to offset the $99-a-year Apple Developer cost, and of course it's [open source](https://github.com/collinmurch/open-receipt/), so you can install it on your own device if you want.
+
+> _Note:_ It's not actually approved by Apple or released yet; I'll replace this with a link once it is.
+
+Next up: [iPhone Duo](https://apple.com/iphone-duo) support, group creation with iCloud link sharing, and _maybe_ exploring using the local [AFM Core Advanced](https://machinelearning.apple.com/research/introducing-third-generation-of-apple-foundation-models) for parsing (if I can get my hands on a device that runs it).

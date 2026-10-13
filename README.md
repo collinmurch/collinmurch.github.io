@@ -33,6 +33,8 @@ description: The post summary, used for the page meta tags.
 ---
 ```
 
+The page renders `title` as the post's `<h1>`, so start the post's own headings at `##`.
+
 Fenced `mermaid` blocks render as diagrams. Keep images in the post's folder and reference them relatively, such as `![Alt text](./chart.svg "Optional caption")`. An SVG on its own line is inlined, so it can draw with `currentColor` and the color tokens in `app.css`.
 
 Pushing to `main` deploys the site.

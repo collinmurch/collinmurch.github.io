@@ -45,6 +45,7 @@ Write current Svelte 5 code, even if older patterns would still compile:
 
 - Each post is a folder in `posts/` holding its Markdown and assets. The folder name is the slug, and the post is the first of `<folder>.md`, `README.md`, or `index.md`. A folder with Markdown but none of those fails the build. `post-paths.js` resolves this for both the listing and the post route.
 - Posts are compiled by mdsvex. Each one needs `title`, `date` (`MM-DD-YYYY`), and `description` front matter, and `assertFrontMatter` fails the build when one is missing or the date doesn't parse, so pages never need placeholders. `description` is the only summary, used for the page meta tags.
+- The post page renders `title` as its only `<h1>`, so a post's own headings start at `##`. Don't use `#` in a post, and don't shift headings up because the raw Markdown seems to start a level too deep.
 - The blog listing must only import post metadata, never compiled post bodies, so the listing page stays small.
 - Code blocks are highlighted at build time with Shiki, so they ship no highlighting JavaScript.
 - Mermaid fences are rendered to SVG at build time with beautiful-mermaid, so pages ship no diagram JavaScript. It supports flowchart, state, sequence, class, ER, and XY chart diagrams, and a diagram it can't parse fails the build. Its output is post-processed in `src/lib/markdown/mermaid.js` and `svg.js`, so the version is pinned. Bump it deliberately and rerun the tests.
