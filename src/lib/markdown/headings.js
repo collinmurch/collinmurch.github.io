@@ -17,7 +17,8 @@ export function slugify(text) {
  * link to their own sections with `[text](#heading-text)`, and repeated
  * headings get a numeric suffix. Each also ends with a `HeadingLink` that
  * copies a link to its section, and marks itself `group/heading` so the link
- * shows on hover.
+ * shows on hover. Headings take focus on tap (`tabindex="-1"`), so touch
+ * screens without hover reveal the link by tapping the heading.
  */
 export function remarkHeadings() {
 	return (tree) => {
@@ -38,6 +39,7 @@ export function remarkHeadings() {
 				hProperties: {
 					...properties,
 					id,
+					tabIndex: -1,
 					className: [properties.className, "group/heading"].flat().filter(Boolean),
 				},
 			};

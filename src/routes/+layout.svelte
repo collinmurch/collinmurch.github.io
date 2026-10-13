@@ -108,7 +108,7 @@
 			onfocusin={() => (navFocused = true)}
 			onfocusout={() => (navFocused = false)}
 			class={[
-				"pointer-events-none fixed inset-x-0 top-(--header-offset) z-30 flex justify-center pl-[calc(1rem+env(safe-area-inset-left))] pr-[calc(1rem+env(safe-area-inset-right))] transition-transform duration-300 ease-out motion-reduce:transition-none",
+				"pointer-events-none fixed inset-x-0 top-(--header-offset) z-30 flex justify-center pl-[calc(1rem+env(safe-area-inset-left))] pr-[calc(1rem+env(safe-area-inset-right))] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
 				navHidden && "-translate-y-[calc(var(--header-height)+4rem)]",
 			]}
 		>

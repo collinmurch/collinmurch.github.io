@@ -64,7 +64,14 @@ describe("remarkHeadings", () => {
 		expect(node.data.hProperties).toEqual({
 			className: ["x", "group/heading"],
 			id: "kept",
+			tabIndex: -1,
 		});
+	});
+
+	test("makes a heading focusable on tap", () => {
+		const node = heading(text("Intro"));
+		remarkHeadings()(root(node));
+		expect(node.data.hProperties.tabIndex).toBe(-1);
 	});
 
 	test("leaves other nodes alone", () => {

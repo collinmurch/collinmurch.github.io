@@ -80,9 +80,9 @@ I'll share two examples I used in Open Receipt below.
 
 #### LLM Pipeline
 
-Initially, I wanted Apple's local model to work. I really did. Unfortunately, it (at least the iOS 26 3-billion-parameter model) was just not smart enough to do the receipt semantic understanding. I was feeding it relatively clean OCR data (it was/is a text-only model), and at the time it just wasn't able to turn that into usable JSON. Guided generation helped but didn't fix the model classifying items as tax or deciding the merchant name was an item. I'm not interested in playing regex edge-case whack-a-mole.
+Initially, I wanted Apple's local model to work. I really did. Unfortunately, it (at least the iOS 26 3-billion-parameter model) just didn't have the requisite IQ to do the receipt semantic understanding. I was feeding it relatively clean OCR data (it was/is a text-only model), and at the time it just wasn't able to turn that into usable JSON. Guided generation helped but didn't fix the model classifying items as tax or deciding the merchant name was an item. I'm not interested in playing regex edge-case whack-a-mole.
 
-But what I did get out of that exploration was a pretty sweet harness for prompt development (engineering?) and image processing. To iterate on the prompt and pipeline, I built a receipt parser that both the app proper and the test harness call. Same prompt, same image processing, same output quality.
+But what I did get out of that exploration was a pretty sweet harness for prompt development (engineering?) and image processing. To iterate on the prompt and pipeline, I built a receipt parser that both the app proper and the test harness call. Same prompt, same image processing, same receipt reading quality.
 
 > `make receipts of=whole-foods-1 cached=1`: Runs every image of the first Whole Foods receipt through PCC using caching (SHA-256 of config, prompt, image data, etc.).
 
@@ -92,9 +92,9 @@ More importantly, this allowed me to use `/goal` with Claude Code/Codex and go t
 
 For UI work, I included a `make screenshot` command the LLM uses to verify its changes. Modern LLMs largely understand SwiftUI shockingly well, but for newer features or quirky sizing (I'm looking at you, [iPhone Duo](https://apple.com/iphone-duo)), they need a way to verify their work.
 
-For frontend work, this sort of tool/skill often uses [Playwright](https://playwright.dev) browser capture, where the agent can navigate to a page in a browser and capture it. Unfortunately, Apple's Simulator doesn't really allow this.
+For frontend work, this sort of tool/skill often uses [Playwright](https://playwright.dev) browser capture, where the agent can navigate to a page in a browser and capture it. Unfortunately, Apple's Simulator doesn't really allow agent-controlled navigation.
 
-Instead, we allow the agent to write a new "scenario" where we stage the app state to the page we want to view. Then, using the `make` command, the agent can take a screenshot on a specific device in either light or dark mode. The agent then views the image, determines whether it wrote the correct SwiftUI, and there you have your loop.
+Instead, we allow the agent to write a new "scenario" where pull up the app state to the page we want to view. Then, using the `make` command, the agent can take a screenshot on a specific device in either light or dark mode. The agent then views the image, determines whether it wrote the correct SwiftUI, and there you have your self-verification loop.
 
 ### Preview Generation
 
