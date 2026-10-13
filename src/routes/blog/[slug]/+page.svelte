@@ -1,8 +1,8 @@
 <script>
-	import Button from "$components/Button.svelte";
-	import ButtonGroup from "$components/ButtonGroup.svelte";
-	import CopyButton from "$components/CopyButton.svelte";
-	import PostDate from "$components/PostDate.svelte";
+	import Button from "#components/Button.svelte";
+	import ButtonGroup from "#components/ButtonGroup.svelte";
+	import CopyButton from "#components/CopyButton.svelte";
+	import PostDate from "#components/PostDate.svelte";
 
 	const { data } = $props();
 

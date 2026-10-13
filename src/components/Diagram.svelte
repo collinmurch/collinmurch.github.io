@@ -1,6 +1,6 @@
 <script>
 	import { onMount, tick } from "svelte";
-	import { enhanceDiagram } from "$lib/markdown/diagram-controls";
+	import { enhanceDiagram } from "#lib/markdown/diagram-controls";
 	import BlockControls from "./BlockControls.svelte";
 	import Button from "./Button.svelte";
 	import ButtonGroup from "./ButtonGroup.svelte";

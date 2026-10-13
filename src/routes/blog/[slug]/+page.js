@@ -1,4 +1,4 @@
-import { loadPost, postSlugs } from "$lib/data/posts";
+import { loadPost, postSlugs } from "#lib/data/posts";
 import { error } from "@sveltejs/kit";
 
 export function entries() {

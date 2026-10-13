@@ -107,7 +107,7 @@ describe("remarkHeadings", () => {
 		const tree = root(heading(text("Intro")));
 		remarkHeadings()(tree);
 		expect(tree.children[0].value).toContain(
-			'import HeadingLink from "$components/HeadingLink.svelte";',
+			'import HeadingLink from "#components/HeadingLink.svelte";',
 		);
 	});
 

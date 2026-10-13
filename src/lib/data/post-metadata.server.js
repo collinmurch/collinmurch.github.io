@@ -1,5 +1,5 @@
-import { buildPostMetadata } from "$lib/data/post-metadata";
-import { resolvePostEntries } from "$lib/data/post-paths";
+import { buildPostMetadata } from "#lib/data/post-metadata";
+import { resolvePostEntries } from "#lib/data/post-paths";
 
 const postMetadataFiles = import.meta.glob("/posts/*/*.md", {
 	import: "metadata",

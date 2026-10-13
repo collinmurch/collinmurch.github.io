@@ -53,7 +53,7 @@ export function remarkHeadings() {
 
 		if (seen.size) {
 			injectImports(tree, [
-				{ name: "HeadingLink", specifier: "$components/HeadingLink.svelte" },
+				{ name: "HeadingLink", specifier: "#components/HeadingLink.svelte" },
 			]);
 		}
 	};

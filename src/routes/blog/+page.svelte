@@ -1,5 +1,5 @@
 <script>
-	import PostDate from "$components/PostDate.svelte";
+	import PostDate from "#components/PostDate.svelte";
 
 	const { data } = $props();
 </script>

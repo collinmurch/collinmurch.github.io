@@ -1,5 +1,5 @@
 <script>
-	import { formatDate, toISODate } from "$lib/utils/dates";
+	import { formatDate, toISODate } from "#lib/utils/dates";
 
 	/** A post's publish date, set small and spaced in capitals. */
 	const { date, class: className } = $props();

@@ -1,6 +1,6 @@
 <script>
 	import { page } from "$app/state";
-	import { normalizeRoute } from "$lib/seo/meta";
+	import { normalizeRoute } from "#lib/seo/meta";
 
 	const links = [
 		{ href: "/about", text: "About" },

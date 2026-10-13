@@ -84,14 +84,14 @@ describe("remarkCodeImports", () => {
 
 	test("imports CodeBlock for a code fence", () => {
 		expect(importsOf(code("js"))).toContain(
-			'import CodeBlock from "$components/CodeBlock.svelte";',
+			'import CodeBlock from "#components/CodeBlock.svelte";',
 		);
 	});
 
 	test("imports Diagram for a mermaid fence", () => {
 		const imports = importsOf(code("Mermaid"));
 
-		expect(imports).toContain('import Diagram from "$components/Diagram.svelte";');
+		expect(imports).toContain('import Diagram from "#components/Diagram.svelte";');
 		expect(imports).not.toContain("CodeBlock");
 	});
 

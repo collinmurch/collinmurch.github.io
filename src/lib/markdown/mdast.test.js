@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { injectImports, textOf, walk } from "./mdast.js";
 
 const text = (value) => ({ type: "text", value });
-const imports = [{ name: "A", specifier: "$components/A.svelte" }];
+const imports = [{ name: "A", specifier: "#components/A.svelte" }];
 
 describe("walk", () => {
 	test("visits a node and everything beneath it in order", () => {
@@ -34,7 +34,7 @@ describe("injectImports", () => {
 
 		expect(tree.children[0]).toEqual({
 			type: "html",
-			value: '<script>\n\timport A from "$components/A.svelte";\n</script>',
+			value: '<script>\n\timport A from "#components/A.svelte";\n</script>',
 		});
 	});
 

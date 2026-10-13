@@ -45,8 +45,8 @@ describe("markdownPreprocessor", () => {
 			join(directory, "post.md"),
 		);
 
-		expect(code).toContain('import HeadingLink from "$components/HeadingLink.svelte";');
-		expect(code).toContain('import CodeBlock from "$components/CodeBlock.svelte";');
+		expect(code).toContain('import HeadingLink from "#components/HeadingLink.svelte";');
+		expect(code).toContain('import CodeBlock from "#components/CodeBlock.svelte";');
 		expect(code).toMatch(/<h2 id="intro"[^>]*>Intro<HeadingLink id="intro"/);
 		expect(code).toContain("<CodeBlock>{@html ");
 	});

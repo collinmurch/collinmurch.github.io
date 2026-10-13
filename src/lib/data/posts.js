@@ -1,5 +1,5 @@
-import { assertFrontMatter } from "$lib/data/post-metadata";
-import { resolvePostEntries } from "$lib/data/post-paths";
+import { assertFrontMatter } from "#lib/data/post-metadata";
+import { resolvePostEntries } from "#lib/data/post-paths";
 
 const SOURCE_BASE =
 	"https://raw.githubusercontent.com/collinmurch/collinmurch.github.io/main";

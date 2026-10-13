@@ -1,5 +1,5 @@
 <script>
-	import Hero from "$components/Hero.svelte";
+	import Hero from "#components/Hero.svelte";
 </script>
 
 <Hero image="profile" alt="Portrait of Collin Murch">

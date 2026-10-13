@@ -67,7 +67,7 @@
 			cancelScheduledCreation();
 			if (destroyed || reducedMotion.matches || renderer) return;
 			// Download while waiting for idle time; only creating the renderer waits.
-			rendererModule ??= import("$lib/webgl/renderer");
+			rendererModule ??= import("#lib/webgl/renderer");
 			cancelScheduledCreation = whenIdle(createRenderer);
 		};
 

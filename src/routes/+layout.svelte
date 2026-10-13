@@ -2,13 +2,13 @@
 	import { afterNavigate, beforeNavigate } from "$app/navigation";
 	import { page } from "$app/state";
 	import { onMount } from "svelte";
-	import Navigation from "$components/Navigation.svelte";
-	import Socials from "$components/Socials.svelte";
-	import ChromeTint from "$components/ChromeTint.svelte";
-	import WaveCanvas from "$components/WaveCanvas.svelte";
-	import { getTransition } from "$lib/animations/transitions";
-	import { getRouteMeta, normalizeRoute } from "$lib/seo/meta";
-	import { createScrollReveal } from "$lib/utils/scroll-reveal";
+	import Navigation from "#components/Navigation.svelte";
+	import Socials from "#components/Socials.svelte";
+	import ChromeTint from "#components/ChromeTint.svelte";
+	import WaveCanvas from "#components/WaveCanvas.svelte";
+	import { getTransition } from "#lib/animations/transitions";
+	import { getRouteMeta, normalizeRoute } from "#lib/seo/meta";
+	import { createScrollReveal } from "#lib/utils/scroll-reveal";
 	import "../app.css";
 
 	const { children } = $props();

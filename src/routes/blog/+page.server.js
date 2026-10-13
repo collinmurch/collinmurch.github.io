@@ -1,4 +1,4 @@
-import { getPostMetadata } from "$lib/data/post-metadata.server";
+import { getPostMetadata } from "#lib/data/post-metadata.server";
 
 export async function load() {
 	return {

@@ -71,7 +71,7 @@ export function remarkCodeImports() {
 				node.lang?.toLowerCase() === "mermaid" ? "Diagram" : "CodeBlock";
 			imports.set(component, {
 				name: component,
-				specifier: `$components/${component}.svelte`,
+				specifier: `#components/${component}.svelte`,
 			});
 		});
 		if (imports.size) injectImports(tree, [...imports.values()]);

@@ -1,6 +1,6 @@
 <script>
 	import { onDestroy } from "svelte";
-	import { copyText } from "$lib/utils/clipboard";
+	import { copyText } from "#lib/utils/clipboard";
 	import Button from "./Button.svelte";
 
 	/**
