@@ -77,4 +77,22 @@ describe("createScrollReveal", () => {
 		reveal.reset(800);
 		expect(reveal.update(805)).toBe(false);
 	});
+
+	test("hide hides and rebases the position", () => {
+		const reveal = createScrollReveal({ hideAfter: 10, showAfter: 10 });
+		reveal.hide(800);
+		expect(reveal.update(805)).toBe(true);
+	});
+
+	test("shows after hide once the reader scrolls back up", () => {
+		const reveal = createScrollReveal({ hideAfter: 10, showAfter: 10 });
+		reveal.hide(800);
+		expect(reveal.update(785)).toBe(false);
+	});
+
+	test("shows after hide when the reader reaches the top zone", () => {
+		const reveal = createScrollReveal();
+		reveal.hide(800);
+		expect(reveal.update(40, { topZone: 100 })).toBe(false);
+	});
 });

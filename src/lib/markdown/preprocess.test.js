@@ -39,6 +39,18 @@ describe("markdownPreprocessor", () => {
 		expect(code).not.toContain('context="module"');
 	});
 
+	test("compiles headings and fences to components it imports", async () => {
+		const { code } = await compile(
+			"## Intro\n\n```js\nlet a;\n```\n",
+			join(directory, "post.md"),
+		);
+
+		expect(code).toContain('import HeadingLink from "$components/HeadingLink.svelte";');
+		expect(code).toContain('import CodeBlock from "$components/CodeBlock.svelte";');
+		expect(code).toMatch(/<h2 id="intro"[^>]*>Intro<HeadingLink id="intro"/);
+		expect(code).toContain("<CodeBlock>{@html ");
+	});
+
 	test("reports inlined SVGs as dependencies", async () => {
 		const { dependencies } = await compile(
 			"![Drawing](./drawing.svg)\n",

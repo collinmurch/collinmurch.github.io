@@ -32,10 +32,6 @@ describe("figure", () => {
 		);
 	});
 
-	test("adds an extra class name", () => {
-		expect(figure("", { className: "diagram" })).toContain('class="figure diagram"');
-	});
-
 	test("adds an escaped caption", () => {
 		expect(figure("", { caption: "<b>{Tides}</b>" })).toContain(
 			"<figcaption>&lt;b&gt;&#123;Tides&#125;&lt;/b&gt;</figcaption>",

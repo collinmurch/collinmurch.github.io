@@ -1,9 +1,40 @@
 import { describe, expect, test } from "bun:test";
-import { formatDate, toISODate } from "./dates";
+import { formatDate, parseDate, toISODate } from "./dates";
+
+describe("parseDate", () => {
+	test("parses an MM-DD-YYYY string at UTC midnight", () => {
+		expect(parseDate("11-16-2024")?.toISOString()).toBe("2024-11-16T00:00:00.000Z");
+	});
+
+	test("accepts single-digit months and days", () => {
+		expect(parseDate("3-7-2025")?.toISOString()).toBe("2025-03-07T00:00:00.000Z");
+	});
+
+	test("rejects a day-first date", () => {
+		expect(parseDate("16-11-2024")).toBeNull();
+	});
+
+	test("rejects a day past the end of the month", () => {
+		expect(parseDate("02-30-2024")).toBeNull();
+	});
+
+	test("accepts a leap day", () => {
+		expect(parseDate("02-29-2024")?.toISOString()).toBe("2024-02-29T00:00:00.000Z");
+	});
+
+	test("accepts a Date instance", () => {
+		const date = new Date("2024-11-16T23:45:00Z");
+		expect(parseDate(date)?.getTime()).toBe(date.getTime());
+	});
+
+	test("returns null for a missing date", () => {
+		expect(parseDate(undefined)).toBeNull();
+	});
+});
 
 describe("formatDate", () => {
-	test("formats a date-only string in UTC", () => {
-		expect(formatDate("2024-11-16")).toBe("November 16, 2024");
+	test("formats an MM-DD-YYYY string", () => {
+		expect(formatDate("11-16-2024")).toBe("November 16, 2024");
 	});
 
 	test("formats a valid Date instance", () => {
@@ -20,8 +51,8 @@ describe("formatDate", () => {
 });
 
 describe("toISODate", () => {
-	test("preserves a date-only value", () => {
-		expect(toISODate("2024-11-16")).toBe("2024-11-16");
+	test("converts an MM-DD-YYYY string", () => {
+		expect(toISODate("11-16-2024")).toBe("2024-11-16");
 	});
 
 	test("normalizes a timestamp to its UTC date", () => {

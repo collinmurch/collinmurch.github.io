@@ -43,16 +43,26 @@ Write current Svelte 5 code, even if older patterns would still compile:
 
 ## Blog
 
-- Each post is a folder in `src/posts/` holding its Markdown and assets. The folder name is the slug, and the post is the first of `<folder>.md`, `README.md`, or `index.md`. A folder with Markdown but none of those fails the build. `post-paths.js` resolves this for both the listing and the post route.
-- Posts are compiled by mdsvex. Each one needs `title`, `date`, and `description` front matter, and `excerpt` is optional.
+- Each post is a folder in `posts/` holding its Markdown and assets. The folder name is the slug, and the post is the first of `<folder>.md`, `README.md`, or `index.md`. A folder with Markdown but none of those fails the build. `post-paths.js` resolves this for both the listing and the post route.
+- Posts are compiled by mdsvex. Each one needs `title`, `date` (`MM-DD-YYYY`), and `description` front matter, and `assertFrontMatter` fails the build when one is missing or the date doesn't parse, so pages never need placeholders. `description` is the only summary, used for the page meta tags.
 - The blog listing must only import post metadata, never compiled post bodies, so the listing page stays small.
 - Code blocks are highlighted at build time with Shiki, so they ship no highlighting JavaScript.
 - Mermaid fences are rendered to SVG at build time with beautiful-mermaid, so pages ship no diagram JavaScript. It supports flowchart, state, sequence, class, ER, and XY chart diagrams, and a diagram it can't parse fails the build. Its output is post-processed in `src/lib/markdown/mermaid.js` and `svg.js`, so the version is pinned. Bump it deliberately and rerun the tests.
+- beautiful-mermaid rejects Mermaid's YAML front matter, so `mermaid.js` strips it first. `title` becomes the figure caption, and `config.look: handDrawn` (with optional `config.handDrawnSeed`) redraws the shapes with rough.js at build time in `sketch.js`. Theme and font settings are ignored, because diagrams always use the site's tokens and font.
 - Diagram colors are site tokens passed as CSS variables, so diagrams follow `app.css` without a rebuild. Never hardcode colors there.
 - Inline SVGs share a page with each other, so their ids are prefixed and their `<style>` blocks are wrapped in `@scope`. Keep any new inline SVG path going through `prepareSvg`.
 - Post images live in the post's folder and are referenced relatively. Raster images are imported through Vite with their intrinsic size. An SVG on its own line is inlined so it can use `currentColor` and the color tokens.
-- Diagrams sit in a native scroll viewport, so touch, trackpad, and keyboard scrolling come from the browser. `diagram-controls.js` adds mouse drag panning, ctrl+wheel and Safari gesture zoom around the cursor, zoom and recenter buttons, and a toggle to the diagram's Shiki-highlighted source, which is rendered at build time beside the SVG. A plain wheel is never captured. The script builds the toolbar itself, so prerendered pages carry only the diagram and its source, and pinch zoom is applied at most once per frame.
-- Buttons that float over code blocks and diagrams share the `.block-btn` style and the top-right, reveal-on-hover placement. Reuse them for any new block control so they all feel the same, and put related buttons in a `.block-btn-group`, which joins them into one segmented button.
+- Fenced code and headings compile to Svelte components. `highlight.js` wraps code in `CodeBlock` and renders Mermaid as a `Diagram`, and `headings.js` gives every heading a GitHub-style id and a `HeadingLink` that copies a link to it. Each remark plugin imports the components it emits through `injectImports` in `mdast.js`. Their buttons are prerendered with the page like any other component.
+- Diagrams sit in a native scroll viewport, so touch, trackpad, and keyboard scrolling come from the browser. `Diagram.svelte` has zoom and recenter buttons and a toggle to the diagram's Shiki-highlighted source, which it shows as an ordinary `CodeBlock` so source views always match other code. Don't style a diagram's source separately. `diagram-controls.js` adds mouse drag panning and ctrl+wheel and Safari gesture zoom around the cursor. A plain wheel is never captured, and pinch zoom is applied at most once per frame.
+
+## Buttons
+
+- Every icon button is `Button.svelte`. Don't hand-roll buttons or copy its classes. `framed` is the rectangle that floats over code and diagrams; `quiet` is the soft circle for controls in a page's chrome, like the share links beside a post title. Pass `href` for a link.
+- Join related buttons in a `ButtonGroup`. Framed buttons become one segmented control and quiet ones sit side by side, and buttons inside take the group's variant.
+- Anything that copies uses `CopyButton`, which confirms with the icon-to-check swap. That swap is the site's one confirmation animation, driven by `Button`'s `status`.
+- Icons live in `Icon.svelte` as stroke paths on a 24-unit grid. Add new ones there.
+- Controls over a code block or diagram go in `BlockControls`, which pins them to the top right and reveals them on hover or focus.
+- Code blocks fit 80 columns of code (`80ch` in the code's own font) and break out of the text column up to the article container when there's room, the same way diagrams do. Size them through that rule, not per block.
 - Code blocks and diagrams share the `--color-panel` background. Shiki's own background is stripped so that token stays the single source.
 - Figures scale with the reading text: 1px of drawing is 1/16em. Diagrams can break out of the text column up to the article container, which is why the blog layout is an `@container`.
 

@@ -1,7 +1,7 @@
 import { buildPostMetadata } from "$lib/data/post-metadata";
 import { resolvePostEntries } from "$lib/data/post-paths";
 
-const postMetadataFiles = import.meta.glob("/src/posts/*/*.md", {
+const postMetadataFiles = import.meta.glob("/posts/*/*.md", {
 	import: "metadata",
 	query: "?metadata",
 });

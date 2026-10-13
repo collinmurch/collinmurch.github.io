@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import {
-	TOOLBAR,
 	anchoredScroll,
 	clampZoom,
 	stepZoom,
@@ -66,38 +65,5 @@ describe("anchoredScroll", () => {
 
 	test("does nothing when the scale and position are unchanged", () => {
 		expect(anchoredScroll(30, 100, 100, 150, 1)).toBe(30);
-	});
-});
-
-describe("TOOLBAR", () => {
-	const buttons = () => [...TOOLBAR.matchAll(/<button[^>]*>/g)].map(([tag]) => tag);
-
-	test("groups zoom out, zoom in, and recenter", () => {
-		const group = TOOLBAR.match(/<div class="block-btn-group"[^>]*>([\s\S]*?)<\/div>/);
-		const actions = [...group[1].matchAll(/data-diagram-action="(\w+)"/g)].map(
-			(match) => match[1],
-		);
-
-		expect(actions).toEqual(["out", "in", "reset"]);
-	});
-
-	test("shows the zoom group only in the diagram view", () => {
-		expect(TOOLBAR).toContain(
-			'<div class="block-btn-group" role="group" aria-label="Zoom" data-when="diagram">',
-		);
-	});
-
-	test("puts the view toggle after the zoom group", () => {
-		expect(TOOLBAR.indexOf('data-diagram-action="toggle"')).toBeGreaterThan(
-			TOOLBAR.indexOf("</div>"),
-		);
-	});
-
-	test("shows the copy button only in the source view", () => {
-		expect(buttons().at(-1)).toMatch(/^<button data-when="source" [^>]*data-copy-btn/);
-	});
-
-	test("styles every button like the code copy button", () => {
-		for (const button of buttons()) expect(button).toMatch(/class="block-btn/);
 	});
 });

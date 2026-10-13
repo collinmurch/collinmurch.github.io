@@ -2,9 +2,8 @@ import { readFileSync } from "node:fs";
 import { dirname, extname, resolve } from "node:path";
 import { imageSize } from "image-size";
 import { escapeHtml, figure, toSvelteHtml } from "./html.js";
+import { injectImports } from "./mdast.js";
 import { prepareSvg } from "./svg.js";
-
-const INSTANCE_SCRIPT = /^<script(?![^>]*\b(?:context|module)\b)[^>]*>/;
 
 function isLocal(url) {
 	return !/^(?:[a-z][a-z\d+.-]*:|\/|#)/i.test(url);
@@ -20,27 +19,6 @@ function isLoneImage(node) {
 function intrinsicSize(file) {
 	const { width, height, orientation } = imageSize(readFileSync(file));
 	return orientation >= 5 ? { width: height, height: width } : { width, height };
-}
-
-function injectImports(tree, imports) {
-	const statements = imports
-		.map(({ name, specifier }) => `\timport ${name} from ${JSON.stringify(specifier)};`)
-		.join("\n");
-	const script = tree.children.find(
-		(node) => node.type === "html" && INSTANCE_SCRIPT.test(node.value),
-	);
-
-	if (script) {
-		script.value = script.value.replace(
-			INSTANCE_SCRIPT,
-			(tag) => `${tag}\n${statements}`,
-		);
-	} else {
-		tree.children.unshift({
-			type: "html",
-			value: `<script>\n${statements}\n</script>`,
-		});
-	}
 }
 
 /**

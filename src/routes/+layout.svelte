@@ -32,6 +32,7 @@
 	let scrolledAway = $state(false);
 	let navFocused = $state(false);
 	const navHidden = $derived(!isHome && scrolledAway && !navFocused);
+	let hashHideTimer;
 
 	function syncNav() {
 		const root = document.documentElement;
@@ -53,6 +54,7 @@
 		return () => {
 			reducedMotionQuery.removeEventListener("change", syncReducedMotion);
 			window.removeEventListener("scroll", syncNav);
+			clearTimeout(hashHideTimer);
 		};
 	});
 
@@ -67,10 +69,20 @@
 		if (to) submerged = isSubmerged(to.url.pathname);
 	});
 
-	afterNavigate(() => {
+	// Landing on a section shows the nav for a moment, then tucks it away so it
+	// doesn't cover the section. A section near the top leaves it shown.
+	afterNavigate(({ to }) => {
 		submerged = isSubmerged(page.url.pathname);
 		scrollReveal.reset(window.scrollY);
 		scrolledAway = false;
+
+		clearTimeout(hashHideTimer);
+		if (!to?.url.hash) return;
+		hashHideTimer = setTimeout(() => {
+			if (window.scrollY <= header.offsetTop + header.offsetHeight) return;
+			scrollReveal.hide(window.scrollY);
+			scrolledAway = true;
+		}, 500);
 	});
 </script>
 

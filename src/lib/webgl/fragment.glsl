@@ -56,7 +56,8 @@ const float DROPLET_LIFETIME = 1.2;
 const float RIPPLE_SPEED = 0.32;
 const float DROPLET_GRAVITY = 2.4;
 
-const float CAUSTIC_SPEED = 0.07;
+const float CAUSTIC_SPEED = 0.035;
+const float SHAFT_SPEED = 0.5;
 const float DEPTH_SHADE_START = 0.25;
 const float DEPTH_SHADE_END = 1.3;
 const float DEPTH_SHADE_STRENGTH = 0.75;
@@ -407,9 +408,10 @@ float caustics(vec2 uv, float iterations) {
 
 float lightShafts(vec2 st, float aspect) {
     float slant = st.x / aspect + (1.0 - st.y) * 0.22;
-    float drift = u_time * 0.012;
-    float shafts = noise(vec2(slant * 7.0 + drift, u_time * 0.03));
-    shafts = shafts * 0.6 + noise(vec2(slant * 17.0 - drift * 1.7, u_time * 0.045 + 5.0)) * 0.4;
+    float time = u_time * SHAFT_SPEED;
+    float drift = time * 0.012;
+    float shafts = noise(vec2(slant * 7.0 + drift, time * 0.03));
+    shafts = shafts * 0.6 + noise(vec2(slant * 17.0 - drift * 1.7, time * 0.045 + 5.0)) * 0.4;
     return smoothstep(0.45, 0.9, shafts);
 }
 

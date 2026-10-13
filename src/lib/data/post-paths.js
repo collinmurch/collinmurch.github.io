@@ -1,11 +1,11 @@
-const POSTS_DIR = "/src/posts/";
+const POSTS_DIR = "/posts/";
 
 /**
- * Maps each post folder in `src/posts/` to its Markdown file, keyed by slug. The file is
+ * Maps each post folder in `posts/` to its Markdown file, keyed by slug. The file is
  * the first that exists of `<folder>.md`, `README.md`, and `index.md`. A folder holding
  * Markdown but none of those names throws, so a misnamed post fails the build.
  *
- * @param {string[]} paths Paths from `import.meta.glob("/src/posts/*\/*.md")`.
+ * @param {string[]} paths Paths from `import.meta.glob("/posts/*\/*.md")`.
  * @returns {Map<string, string>}
  */
 export function resolvePostEntries(paths) {

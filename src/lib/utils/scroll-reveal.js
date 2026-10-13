@@ -49,5 +49,16 @@ export function createScrollReveal({ hideAfter = 96, showAfter = 12 } = {}) {
 			travel = 0;
 			hidden = false;
 		},
+
+		/**
+		 * Hides the header and treats `y` as the new starting position, so it
+		 * stays hidden until the reader scrolls back up.
+		 * @param {number} [y]
+		 */
+		hide(y = 0) {
+			lastY = y;
+			travel = 0;
+			hidden = true;
+		},
 	};
 }

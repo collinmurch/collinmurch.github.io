@@ -25,11 +25,10 @@ export function toSvelteHtml(html) {
  * Renders a block figure. A `size` exposes the content's natural dimensions
  * as custom properties so `app.css` can scale it with the surrounding text.
  */
-export function figure(body, { className, size, caption } = {}) {
-	const classes = ["figure", className].filter(Boolean).join(" ");
+export function figure(body, { size, caption } = {}) {
 	const style = size
 		? ` style="--figure-width:${size.width};--figure-height:${size.height}"`
 		: "";
 	const figcaption = caption ? `<figcaption>${escapeHtml(caption)}</figcaption>` : "";
-	return `<figure class="${classes}"${style}>${body}${figcaption}</figure>`;
+	return `<figure class="figure"${style}>${body}${figcaption}</figure>`;
 }

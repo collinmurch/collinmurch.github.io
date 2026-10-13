@@ -1,5 +1,7 @@
 import { renderMermaidSVG } from "beautiful-mermaid";
-import { escapeHtml, figure } from "./html.js";
+import { parse as parseYaml } from "yaml";
+import { escapeHtml } from "./html.js";
+import { sketchSvg } from "./sketch.js";
 import { prepareSvg, round } from "./svg.js";
 
 /**
@@ -30,6 +32,30 @@ function removeFontRules(svg) {
 	return svg.replace(/^\s*(?:text|\.mono)\s*\{\s*font-family:[^}]*\}\s*$/gm, "");
 }
 
+const FRONT_MATTER = /^\s*---[ \t]*\r?\n([\s\S]*?)\r?\n[ \t]*---[ \t]*(?:\r?\n|$)/;
+
+/**
+ * Splits Mermaid's YAML front matter from the diagram. beautiful-mermaid
+ * rejects front matter, so it is read here instead.
+ *
+ * `title` and `config.look: handDrawn` (with `config.handDrawnSeed`) are
+ * honored. Theme and font settings are ignored, since diagrams always use the
+ * site's color tokens and font.
+ */
+export function extractFrontMatter(source) {
+	const match = source.match(FRONT_MATTER);
+	if (!match) return { body: source, title: "", look: "classic", seed: 1 };
+
+	const data = parseYaml(match[1]) ?? {};
+	const config = data.config ?? {};
+	return {
+		body: source.slice(match[0].length),
+		title: typeof data.title === "string" ? data.title.trim() : "",
+		look: config.look === "handDrawn" ? "handDrawn" : "classic",
+		seed: Number.isInteger(config.handDrawnSeed) ? config.handDrawnSeed : 1,
+	};
+}
+
 /**
  * Pulls Mermaid's accessibility lines out of the source. beautiful-mermaid
  * does not understand them and would draw them as nodes.
@@ -53,31 +79,41 @@ export function extractAccessibility(source) {
 }
 
 /**
- * Renders a Mermaid diagram to a themed, self-contained SVG figure at build
- * time, so pages ship no diagram renderer. Invalid diagrams fail the build.
+ * Renders a Mermaid diagram to a themed, self-contained SVG at build time, so
+ * pages ship no diagram renderer. Invalid diagrams fail the build.
  *
- * The SVG sits in a focusable scroll viewport, and `sourceHtml`, the
- * highlighted diagram source, sits hidden beside it. `diagram-controls.js`
- * adds the toolbar that zooms and switches between them.
+ * Returns the parts `Diagram.svelte` assembles: the `body`, which holds the SVG
+ * in a focusable scroll viewport; the drawing's natural `width` and `height`;
+ * and a `caption` from the front matter `title`. The title also labels the
+ * diagram when it has no `accTitle`.
  */
-export function renderMermaid(source, { sourceHtml = "" } = {}) {
-	const { body, label } = extractAccessibility(source);
-
+export function renderMermaid(source) {
 	let svg;
+	let title;
+	let label;
 	try {
-		svg = renderMermaidSVG(body, THEME);
+		const frontMatter = extractFrontMatter(source);
+		const accessibility = extractAccessibility(frontMatter.body);
+		title = frontMatter.title;
+		label = accessibility.label || title;
+		svg = renderMermaidSVG(accessibility.body, THEME);
+		if (frontMatter.look === "handDrawn")
+			svg = sketchSvg(svg, { seed: frontMatter.seed });
 	} catch (error) {
-		throw new Error(`Could not render Mermaid diagram:\n${source.trim()}`, {
-			cause: error,
-		});
+		throw new Error(
+			`Could not render Mermaid diagram: ${error.message}\n${source.trim()}`,
+			{ cause: error },
+		);
 	}
 
 	const prepared = prepareSvg(roundGeometry(removeFontRules(svg)), {
 		label: label || undefined,
 	});
 	const viewportLabel = label ? `Diagram: ${escapeHtml(label)}` : "Diagram";
-	return figure(
-		`<div class="diagram-viewport" tabindex="0" role="region" aria-label="${viewportLabel}">${prepared.svg}</div><div class="diagram-source">${sourceHtml}</div>`,
-		{ className: "diagram", size: prepared },
-	);
+	return {
+		body: `<div class="diagram-viewport" tabindex="0" role="region" aria-label="${viewportLabel}">${prepared.svg}</div>`,
+		width: prepared.width,
+		height: prepared.height,
+		caption: title,
+	};
 }
