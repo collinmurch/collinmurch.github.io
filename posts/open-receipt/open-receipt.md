@@ -36,7 +36,7 @@ I won't go into detail on all of the features. Instead, let's discuss how I buil
 
 ## How
 
-First and foremost, I didn't write or even (for the most part) look at a single line of code for this project. I haven't typed a line of Swift in over 10 years, and I wasn't planning on playing catch-up for this project. Any modern LLM will be much more of a subject-matter expert here than I would be.
+First and foremost, I didn't write or even (for the most part) look at a single line of code for this project. I haven't used Swift in over 10 years, and I wasn't planning on playing catch-up for this project. Any modern LLM will be much more of a subject-matter expert here than I would be.
 
 > Some exceptions: the schema for data persistence, model instructions in `AGENTS.md`/`CLAUDE.md`, PCC prompt, organization, tooling, etc.
 
