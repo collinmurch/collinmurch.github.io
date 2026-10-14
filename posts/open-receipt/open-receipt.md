@@ -4,7 +4,7 @@ date: "10-12-2026"
 description: "How I built Open Receipt, a native, subscription-free receipt splitter for iOS, with agents, verification loops, and a lot of make commands."
 ---
 
-**Update**: Open Receipt is approved and [available on the App Store](https://apps.apple.com/us/app/open-receipt/id6800139702)! Go check it out.
+**Update**: Open Receipt now is approved and [available on the App Store](https://apps.apple.com/us/app/open-receipt/id6800139702)!
 
 ## What
 
@@ -168,6 +168,6 @@ A `BuildChannel` value (debug, simulator, TestFlight, App Store) replaces `#if D
 
 I've had an absolute blast building this project. I think it's some combination of using development techniques I've been experimenting with in a new environment (iOS), playing around with Apple's new models, and seeing my friends use and appreciate my work.
 
-Please [download it and try it out](https://apps.apple.com/us/app/open-receipt/id6800139702)! The first 5 receipt reads are free, and then it's a one-time payment of $3 to unlock unlimited reads. This is mostly to offset the $99-a-year Apple Developer cost. And of course, it's [open source](https://github.com/collinmurch/open-receipt/), so you can install it on your own device if you want.
+Please go [download and try it out](https://apps.apple.com/us/app/open-receipt/id6800139702)! The first 5 receipt reads are free, and then it's a one-time payment of $3 to unlock unlimited reads. This is mostly to offset the $99-a-year Apple Developer cost. And of course, it's [open source](https://github.com/collinmurch/open-receipt/), so you can install it on your own device if you want.
 
 Next up: [iPhone Duo](https://apple.com/iphone-duo) support, group creation with iCloud link sharing, and _maybe_ trying the local [AFM Core Advanced](https://machinelearning.apple.com/research/introducing-third-generation-of-apple-foundation-models) for parsing (if I can get my hands on a device that runs it).
