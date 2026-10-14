@@ -46,7 +46,7 @@ With that being said, E2E testing was and is a massive part of the development p
 
 I prefer working with CLIs wherever possible. Xcode does not spark joy. To that end, I've centralized all of the tooling around `make` commands, which allow me to do everything from my terminal. I haven't opened Xcode once since I started this project.
 
-> _Note: For both Codex and Claude Code, I exclude `make *` from the sandbox so they can still talk to the Simulator, hit the internet, etc. But they both trip sandbox restrictions on chained commands like `make blah && head -n 10`, so you have to tell them to avoid doing so in `CLAUDE.md`/`AGENTS.md`._
+> _For both Codex and Claude Code, I exclude `make *` from the sandbox so they can still talk to the Simulator, hit the internet, etc. But they both trip sandbox restrictions on chained commands like `make blah && head -n 10`, so you have to tell them to avoid doing so in `CLAUDE.md`/`AGENTS.md`._
 
 Some examples:
 
@@ -90,7 +90,7 @@ Instead, we allow the agent to write a new "scenario" where we pull up the app s
 
 ### Preview Generation
 
-> _Note: I don't know if this is a common technique in the iOS world, but I've really loved leveraging it!_
+> _I don't know if this is a common technique in the iOS world, but I've really loved leveraging it!_
 
 Spending a ton of time in Photoshop every time I tweaked a screen didn't sound super appealing to me. But I wanted professional-looking previews for both the app screenshots and the newer [headers](https://developer.apple.com/app-store/asset-best-practices/#header) / [search results](https://developer.apple.com/app-store/asset-best-practices/#search-results) that were more than basic screenshots. Think: focused elements, stylized text, rounded corners, the works. To do this, I implemented an end-to-end preview generation pipeline. One command -- `make previews` -- creates all the needed stylized assets.
 
