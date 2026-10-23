@@ -21,20 +21,28 @@
 </svelte:head>
 
 <div class="mx-auto max-w-measure space-y-14">
-	<div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
+	<div class="grid grid-cols-[auto_1fr] items-center gap-6">
 		<h1>Recipes</h1>
 
 		{#if data.recipes.length > 0}
+			<!--
+				A magnifying glass that opens into a search field while it's hovered,
+				focused, or holding a search. It scales a little behind the reading text and
+				opens to a set width, or to the rest of the row when that's narrower.
+			-->
 			<label
-				class="flex w-[min(100%,20rem)] items-center gap-2.5 rounded-full border border-accent/20 bg-card/60 px-4 py-2 text-muted-foreground transition-colors duration-150 focus-within:border-accent/50 hover:border-accent/35"
+				class={[
+					"flex h-[2.25em] cursor-pointer items-center justify-self-end overflow-hidden rounded-full border border-accent/20 bg-card/60 px-[calc(0.625em-1px)] text-[max(1rem,var(--text-prose)*0.9)] text-muted-foreground transition-[width,border-color] duration-300 ease-out focus-within:w-[min(16em,100%)] focus-within:border-accent/50 hover:w-[min(16em,100%)] hover:border-accent/35 motion-reduce:transition-none",
+					query ? "w-[min(16em,100%)]" : "w-[2.25em]",
+				]}
 			>
-				<Icon name="search" class="size-4" />
+				<Icon name="search" class="size-[1em]" />
 				<span class="sr-only">Search recipes</span>
 				<input
 					type="search"
 					bind:value={query}
-					placeholder="Dish, ingredient, cuisine"
-					class="w-full bg-transparent text-foreground outline-none placeholder:text-muted-foreground/70"
+					placeholder="Search"
+					class="w-full min-w-0 bg-transparent ps-[0.6em] text-foreground outline-none placeholder:text-muted-foreground/70"
 				/>
 			</label>
 		{/if}
