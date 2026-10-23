@@ -47,6 +47,11 @@ export function matchesSearch(recipe, query) {
 		.every((word) => recipe.keywords.includes(word));
 }
 
+/** The fields the recipe listing shows for a plan. */
+export function summarizePlan(plan) {
+	return { id: plan.id, title: plan.title, start: plan.start, name: plan.name };
+}
+
 /**
  * Recipes grouped the way a menu reads, breakfast through drinks. A course
  * this site doesn't know yet goes last, named after itself.

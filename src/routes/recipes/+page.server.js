@@ -1,5 +1,4 @@
-import { summarizePlan } from "#lib/recipes/bundle";
-import { summarize } from "#lib/recipes/listing";
+import { summarize, summarizePlan } from "#lib/recipes/listing";
 import { getBundle } from "#lib/recipes/data.server";
 
 export function load() {

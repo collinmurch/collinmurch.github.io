@@ -17,8 +17,9 @@
 	--color-foreground: #e6f4f1;
 
 	--color-card: #163447;
-	/* Poimandres' editor background, shared by code blocks and diagrams. */
+	/* Poimandres' editor background and cyan, for code blocks, diagrams, and recipes. */
 	--color-panel: #1b1e28;
+	--color-panel-edge: #89ddff;
 	/* Framed buttons over code and diagrams: the page's tone, darkened. */
 	--color-control: color-mix(in srgb, var(--color-background) 65%, black);
 
@@ -138,12 +139,20 @@
 	}
 }
 
-/* A raised card over the water, such as a recipe and its preview in a listing. */
+/* A raised card over the water, such as a recipe's preview in a listing. */
 @utility surface {
 	border: 1px solid color-mix(in srgb, var(--color-accent) 14%, transparent);
 	border-radius: 1rem;
 	background: color-mix(in srgb, var(--color-card) 80%, transparent);
 	box-shadow: 0 12px 32px rgb(7 12 18 / 0.3);
+}
+
+/* The dark card that code blocks, diagrams, and recipes sit in. */
+@utility panel {
+	border: 1px solid color-mix(in srgb, var(--color-panel-edge) 25%, transparent);
+	border-radius: 0.9rem;
+	background: var(--color-panel);
+	box-shadow: 0 10px 30px rgb(7 12 18 / 0.45);
 }
 
 @layer utilities {
@@ -260,11 +269,8 @@
 	}
 
 	.prose-rich :where(pre, .diagram) {
+		@apply panel;
 		padding: var(--block-padding);
-		border-radius: 0.9rem;
-		border: 1px solid rgba(137, 221, 255, 0.25);
-		box-shadow: 0 10px 30px rgba(7, 12, 18, 0.45);
-		background: var(--color-panel);
 	}
 
 	.prose-rich :where(pre) {

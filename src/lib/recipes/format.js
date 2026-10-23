@@ -45,3 +45,10 @@ export function describeSource(source) {
 	}
 	return { href: null, text: source };
 }
+
+/** A plan's display name: its title, or what the plan covers. */
+export function planTitle(plan) {
+	if (plan.title) return plan.title;
+	if (plan.name) return humanize(plan.name);
+	return `Week of ${plan.start}`;
+}

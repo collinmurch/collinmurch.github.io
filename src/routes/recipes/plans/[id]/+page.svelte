@@ -1,5 +1,5 @@
 <script>
-	import { planTitle } from "#lib/recipes/bundle";
+	import { planTitle } from "#lib/recipes/format";
 	import { humanize } from "#lib/recipes/format";
 	import { formatDate } from "#lib/utils/dates";
 

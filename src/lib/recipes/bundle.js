@@ -26,18 +26,6 @@ export function sourceUrl(index, recipe) {
 	return `${SOURCE_BASE}/${index.commit ?? "main"}/${recipe.path}`;
 }
 
-/** The fields the recipe listing shows for a plan. */
-export function summarizePlan(plan) {
-	return { id: plan.id, title: plan.title, start: plan.start, name: plan.name };
-}
-
-/** A plan's display name: its title, or what the plan covers. */
-export function planTitle(plan) {
-	if (plan.title) return plan.title;
-	if (plan.name) return plan.name.replaceAll("-", " ");
-	return `Week of ${plan.start}`;
-}
-
 /** The bundle's JSON-LD leaves out the page URL, which only the site knows. */
 export function withUrl(jsonLd, url) {
 	return { ...jsonLd, url };

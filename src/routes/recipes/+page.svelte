@@ -1,7 +1,7 @@
 <script>
 	import Icon from "#components/Icon.svelte";
 	import RecipeCards from "#components/RecipeCards.svelte";
-	import { planTitle } from "#lib/recipes/bundle";
+	import { planTitle } from "#lib/recipes/format";
 	import { byCourse, matchesSearch } from "#lib/recipes/listing";
 
 	const { data } = $props();

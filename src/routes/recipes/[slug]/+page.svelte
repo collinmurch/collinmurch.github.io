@@ -14,6 +14,9 @@
 
 	const { data } = $props();
 
+	const SUBHEADING =
+		"flex items-center gap-3 text-base text-accent after:h-px after:flex-1 after:bg-panel-edge/15";
+
 	const TOKEN_CLASSES = {
 		ingredient: "font-semibold text-accent",
 		timer: "font-semibold whitespace-nowrap",
@@ -97,7 +100,7 @@
 		</ul>
 	</header>
 
-	<article class="surface divide-y divide-accent/10 text-prose">
+	<article class="panel divide-y divide-panel-edge/15 text-prose">
 		<section
 			class="flex flex-col gap-4 p-(--block-padding)"
 			aria-labelledby="ingredients"
@@ -105,35 +108,27 @@
 			<div class="flex items-center justify-between gap-4">
 				<h2 id="ingredients" class="m-0 text-2xl">Ingredients</h2>
 
-				<div
-					role="group"
-					aria-label="Servings"
-					class="-me-2 flex items-center text-muted-foreground"
-				>
-					<Button
-						variant="quiet"
-						icon="minus"
-						label="Fewer servings"
-						disabled={servings <= 1}
-						onclick={() => servings--}
-					/>
-					<output aria-live="polite" class="min-w-[6.5em] text-center text-base">
+				<div class="flex items-center gap-3">
+					<output aria-live="polite" class="text-base text-muted-foreground">
 						{servings}
 						{servings === 1 ? "serving" : "servings"}
 					</output>
-					<Button
-						variant="quiet"
-						icon="plus"
-						label="More servings"
-						onclick={() => servings++}
-					/>
+					<ButtonGroup label="Servings">
+						<Button
+							icon="minus"
+							label="Fewer servings"
+							disabled={servings <= 1}
+							onclick={() => servings--}
+						/>
+						<Button icon="plus" label="More servings" onclick={() => servings++} />
+					</ButtonGroup>
 				</div>
 			</div>
 
 			{#each recipe.ingredients as group, groupIndex (groupIndex)}
 				<div>
 					{#if group.section}
-						<h3 class="mt-2 mb-2 text-base text-muted-foreground">{group.section}</h3>
+						<h3 class={["mt-2 mb-3", SUBHEADING]}>{group.section}</h3>
 					{/if}
 					<ul class="grid grid-cols-[minmax(4.5em,auto)_1fr] gap-x-5 gap-y-2">
 						{#each group.items as item, itemIndex (itemIndex)}
@@ -164,7 +159,7 @@
 
 			{#each recipe.sections as section, sectionIndex (sectionIndex)}
 				{#if section.name}
-					<h3 class="mt-4 mb-0 text-base text-muted-foreground">{section.name}</h3>
+					<h3 class={["mt-4 mb-0", SUBHEADING]}>{section.name}</h3>
 				{/if}
 				{#each stepRuns(section.content) as run, runIndex (runIndex)}
 					{#if run.type === "note"}

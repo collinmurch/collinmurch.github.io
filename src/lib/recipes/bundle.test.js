@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { jsonLdScript, parseIndex, planTitle, sourceUrl, withUrl } from "./bundle";
+import { jsonLdScript, parseIndex, sourceUrl, withUrl } from "./bundle";
 
 const EMPTY_INDEX = { schema: 1, commit: null, recipes: [], plans: [], vocab: [] };
 
@@ -40,26 +40,6 @@ describe("sourceUrl", () => {
 
 	test("links to main for a local build", () => {
 		expect(sourceUrl({ commit: null }, recipe)).toContain("/recipes/main/");
-	});
-});
-
-describe("planTitle", () => {
-	test("prefers the plan's title", () => {
-		expect(
-			planTitle({ title: "Thanksgiving", name: "turkey", start: "2026-11-26" }),
-		).toBe("Thanksgiving");
-	});
-
-	test("names a one-off plan from its id", () => {
-		expect(planTitle({ title: null, name: "christmas-eve", start: "2026-12-24" })).toBe(
-			"christmas eve",
-		);
-	});
-
-	test("names a week by its start", () => {
-		expect(planTitle({ title: null, name: null, start: "2026-10-12" })).toBe(
-			"Week of 2026-10-12",
-		);
 	});
 });
 

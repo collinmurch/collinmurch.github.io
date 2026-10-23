@@ -1,5 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import { describeSource, formatMinutes, humanize, stepRuns, tokenText } from "./format";
+import {
+	describeSource,
+	formatMinutes,
+	humanize,
+	planTitle,
+	stepRuns,
+	tokenText,
+} from "./format";
 
 describe("humanize", () => {
 	test("turns hyphens into spaces", () => {
@@ -89,5 +96,25 @@ describe("describeSource", () => {
 
 	test("does not link a non-web URL", () => {
 		expect(describeSource("javascript:alert(1)").href).toBeNull();
+	});
+});
+
+describe("planTitle", () => {
+	test("prefers the plan's title", () => {
+		expect(
+			planTitle({ title: "Thanksgiving", name: "turkey", start: "2026-11-26" }),
+		).toBe("Thanksgiving");
+	});
+
+	test("names a one-off plan from its id", () => {
+		expect(planTitle({ title: null, name: "christmas-eve", start: "2026-12-24" })).toBe(
+			"christmas eve",
+		);
+	});
+
+	test("names a week by its start", () => {
+		expect(planTitle({ title: null, name: null, start: "2026-10-12" })).toBe(
+			"Week of 2026-10-12",
+		);
 	});
 });
