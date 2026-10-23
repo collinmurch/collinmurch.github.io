@@ -60,7 +60,9 @@ Write current Svelte 5 code, even if older patterns would still compile:
 
 - Recipes live in the private [recipes repo](https://github.com/collinmurch/recipes) as Cooklang files. Its CI builds a bundle (`index.json`, `jsonld/<slug>.json`, `sources/<slug>.cook`), and the bundle is the whole contract. The site never parses Cooklang and never re-derives anything the bundle provides, such as ingredient lines, step text, or grocery totals. If the site needs something new, add it to the bundle in the recipes repo.
 - `src/lib/recipes/data.server.js` is the only code that reads the bundle. It fails the build on any `schema` but 1, so a format change can't ship half-rendered. New fields can appear without a schema change, so read only what you use.
-- CI checks out the recipes repo's `bundle` branch into `recipes-data/` before building: the commit a `recipes-updated` dispatch names, or else the branch tip, and fails if there's no `index.json`. Locally, run `recipes build` in the recipes repo and point `RECIPES_DIR` at its `dist`. Without a bundle the build warns and `/recipes` is empty.
+- `recipes-data/` holds the bundle, and the recipes repo's CI owns it. After every passing push to its `main`, that CI replaces the folder and commits it here with a deploy key, and that push deploys the site. Never edit the folder by hand, since the next publish overwrites it. Expect bot commits on `main`, so pull before pushing. Every commit holds the bundle it renders, so any commit builds and deploys the same way, and a missing bundle fails the build.
+- To preview unpublished recipes, run `recipes build` in the recipes repo and point `RECIPES_DIR` at its `dist`.
+- A bundle with an unknown `schema` fails the build of the commit that brought it, so the live site stays on the last good deploy. Teach the site the new schema before the recipes repo publishes it.
 - The listing gets summaries only, like the blog listing, and filters on the client. Each recipe page embeds the bundle's JSON-LD with `url` added, which is what lets Safari's share sheet save it to Mela. `/recipes/index.json` is served unchanged, because the recipes skill downloads it.
 
 ## Buttons

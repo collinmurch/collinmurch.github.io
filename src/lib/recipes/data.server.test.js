@@ -1,25 +1,58 @@
 import { describe, expect, test } from "bun:test";
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { readBundle } from "./data.server";
 
-const missing = `${import.meta.dir}/no-such-bundle`;
-const quiet = { warn: () => {} };
+function writeBundle(index) {
+	const dir = mkdtempSync(join(tmpdir(), "bundle-"));
+	mkdirSync(join(dir, "jsonld"));
+	mkdirSync(join(dir, "sources"));
+	writeFileSync(join(dir, "index.json"), JSON.stringify(index));
+	writeFileSync(join(dir, "jsonld", "jambalaya.json"), '{"name":"Jambalaya"}');
+	writeFileSync(join(dir, "sources", "jambalaya.cook"), "Add @rice{2%cups}.");
+	return dir;
+}
+
+const bundle = readBundle(
+	writeBundle({
+		schema: 1,
+		commit: null,
+		recipes: [{ slug: "jambalaya", title: "Jambalaya" }],
+		plans: [{ id: "2026-10-12" }],
+		vocab: [],
+	}),
+);
 
 describe("readBundle", () => {
-	test("gives an empty collection when the folder is missing", () => {
-		expect(readBundle(missing, quiet).index.recipes).toEqual([]);
+	test("fails when the folder is missing", () => {
+		expect(() => readBundle(`${import.meta.dir}/no-such-bundle`)).toThrow(
+			"No recipe bundle",
+		);
 	});
 
-	test("warns when the folder is missing", () => {
-		const warnings = [];
-		readBundle(missing, { warn: (message) => warnings.push(message) });
-		expect(warnings[0]).toContain("No recipe bundle");
+	test("fails on an unknown schema", () => {
+		expect(() => readBundle(writeBundle({ schema: 2 }))).toThrow("schema 2");
 	});
 
-	test("serves a valid index for an empty collection", () => {
-		expect(JSON.parse(readBundle(missing, quiet).indexText).schema).toBe(1);
+	test("finds a recipe by slug", () => {
+		expect(bundle.recipe("jambalaya")?.title).toBe("Jambalaya");
 	});
 
-	test("finds no recipe in an empty collection", () => {
-		expect(readBundle(missing, quiet).recipe("jambalaya")).toBeUndefined();
+	test("finds a plan by id", () => {
+		expect(bundle.plan("2026-10-12")).toBeDefined();
+	});
+
+	test("finds no recipe for an unknown slug", () => {
+		expect(bundle.recipe("gumbo")).toBeUndefined();
+	});
+
+	test("reads a recipe's JSON-LD and source", () => {
+		expect(bundle.jsonLd("jambalaya").name).toBe("Jambalaya");
+		expect(bundle.source("jambalaya")).toBe("Add @rice{2%cups}.");
+	});
+
+	test("keeps the index text unchanged for serving", () => {
+		expect(JSON.parse(bundle.indexText).schema).toBe(1);
 	});
 });

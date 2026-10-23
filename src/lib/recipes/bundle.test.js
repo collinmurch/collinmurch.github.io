@@ -1,12 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import {
-	EMPTY_INDEX,
-	jsonLdScript,
-	parseIndex,
-	planTitle,
-	summarize,
-	withUrl,
-} from "./bundle";
+import { jsonLdScript, parseIndex, planTitle, summarize, withUrl } from "./bundle";
+
+const EMPTY_INDEX = { schema: 1, commit: null, recipes: [], plans: [], vocab: [] };
 
 const carnitas = {
 	slug: "pork-carnitas",

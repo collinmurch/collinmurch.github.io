@@ -1,14 +1,6 @@
 /** The `index.json` format this site renders. */
 export const SCHEMA = 1;
 
-export const EMPTY_INDEX = Object.freeze({
-	schema: SCHEMA,
-	commit: null,
-	recipes: [],
-	plans: [],
-	vocab: [],
-});
-
 /**
  * Parses the bundle's `index.json`, failing on any schema but the one this
  * site renders, so a format change can't ship half-rendered.

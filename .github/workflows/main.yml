@@ -5,9 +5,14 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
-  repository_dispatch:
-    types: [recipes-updated]
   workflow_dispatch:
+
+# The recipes repo's CI also pushes to main, so pushes can arrive together.
+# Runs on a branch queue rather than overlap, and a queued run is replaced by a
+# newer one, so the newest commit is always the last to deploy.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -35,21 +40,6 @@ jobs:
 
       - name: Test
         run: bun run test
-
-      # A dispatch from the recipes repo names the bundle commit to render.
-      # Pushes here and manual runs take the tip of the bundle branch, so a
-      # site change never deploys stale or missing recipes.
-      - name: Fetch recipes
-        uses: actions/checkout@v4
-        with:
-          repository: collinmurch/recipes
-          ref: ${{ github.event.client_payload.sha || 'bundle' }}
-          token: ${{ secrets.SITE_TOKEN }}
-          persist-credentials: false
-          path: recipes-data
-
-      - name: Check recipes
-        run: test -f recipes-data/index.json
 
       - name: Build
         run: bun run build
