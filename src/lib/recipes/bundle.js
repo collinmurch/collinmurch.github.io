@@ -1,7 +1,7 @@
-import { searchable } from "./format";
-
 /** The `index.json` format this site renders. */
 export const SCHEMA = 1;
+
+const SOURCE_BASE = "https://raw.githubusercontent.com/collinmurch/recipes";
 
 /**
  * Parses the bundle's `index.json`, failing on any schema but the one this
@@ -17,40 +17,13 @@ export function parseIndex(text) {
 	return index;
 }
 
-/** The fields a recipe card shows, plus the words a search can match. */
-export function summarize(recipe) {
-	return {
-		slug: recipe.slug,
-		title: recipe.title,
-		course: recipe.course,
-		cuisine: recipe.cuisine ?? null,
-		time: recipe.time_total ?? null,
-		description: recipe.description ?? null,
-		keywords: keywords(recipe),
-	};
-}
-
-function keywords(recipe) {
-	const ingredients = recipe.ingredients
-		.flatMap((group) => group.items)
-		.flatMap((item) => [item.text, item.name]);
-	const words = [
-		recipe.title,
-		recipe.cuisine,
-		...recipe.proteins,
-		...(recipe.tags ?? []),
-	];
-	return searchable([...words, ...ingredients].filter(Boolean).join(" "));
-}
-
-/** The bundle's unit table, cut down to the units a recipe's amounts name. */
-export function unitsUsed(recipe, units) {
-	const used = new Set(
-		recipe.ingredients.flatMap((group) =>
-			group.items.flatMap((item) => item.amounts.map((amount) => amount.unit)),
-		),
-	);
-	return Object.fromEntries(Object.entries(units).filter(([unit]) => used.has(unit)));
+/**
+ * A recipe's raw Cooklang file in the recipes repo, at the commit the bundle was
+ * built from, so it always matches the page. A local build has no commit, so
+ * it links to the file on main.
+ */
+export function sourceUrl(index, recipe) {
+	return `${SOURCE_BASE}/${index.commit ?? "main"}/${recipe.path}`;
 }
 
 /** The fields the recipe listing shows for a plan. */

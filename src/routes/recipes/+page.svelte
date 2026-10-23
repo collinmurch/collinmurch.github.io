@@ -2,7 +2,7 @@
 	import Icon from "#components/Icon.svelte";
 	import RecipeCards from "#components/RecipeCards.svelte";
 	import { planTitle } from "#lib/recipes/bundle";
-	import { byCourse, matchesSearch } from "#lib/recipes/format";
+	import { byCourse, matchesSearch } from "#lib/recipes/listing";
 
 	const { data } = $props();
 
@@ -21,12 +21,12 @@
 </svelte:head>
 
 <div class="mx-auto max-w-measure space-y-14">
-	<div class="space-y-6">
+	<div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
 		<h1>Recipes</h1>
 
 		{#if data.recipes.length > 0}
 			<label
-				class="flex w-full max-w-sm items-center gap-2.5 rounded-full border border-accent/20 bg-card/60 px-4 py-2 text-muted-foreground transition-colors duration-150 focus-within:border-accent/50 hover:border-accent/35"
+				class="flex w-[min(100%,20rem)] items-center gap-2.5 rounded-full border border-accent/20 bg-card/60 px-4 py-2 text-muted-foreground transition-colors duration-150 focus-within:border-accent/50 hover:border-accent/35"
 			>
 				<Icon name="search" class="size-4" />
 				<span class="sr-only">Search recipes</span>

@@ -3,8 +3,8 @@ import { parseIndex } from "./bundle.js";
 
 /**
  * Reads the recipe bundle that the recipes repo builds: `index.json`, plus a
- * JSON-LD file and the raw `.cook` source per recipe. This is the only place
- * the site touches recipe data, and it never parses Cooklang.
+ * JSON-LD file per recipe. This is the only place the site touches recipe
+ * data, and it never parses Cooklang.
  *
  * The recipes repo's CI commits the bundle to `recipes-data/`, so a missing
  * bundle fails the build rather than deploying an empty `/recipes`. It reads
@@ -29,7 +29,6 @@ export function readBundle(dir) {
 		recipe: (slug) => recipes.get(slug),
 		plan: (id) => plans.get(id),
 		jsonLd: (slug) => JSON.parse(readFileSync(`${dir}/jsonld/${slug}.json`, "utf8")),
-		source: (slug) => readFileSync(`${dir}/sources/${slug}.cook`, "utf8"),
 	};
 }
 

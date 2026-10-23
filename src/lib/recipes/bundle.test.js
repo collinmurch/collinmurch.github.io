@@ -1,45 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import {
-	jsonLdScript,
-	parseIndex,
-	planTitle,
-	summarize,
-	unitsUsed,
-	withUrl,
-} from "./bundle";
+import { jsonLdScript, parseIndex, planTitle, sourceUrl, withUrl } from "./bundle";
 
 const EMPTY_INDEX = { schema: 1, commit: null, recipes: [], plans: [], vocab: [] };
-
-const carnitas = {
-	slug: "pork-carnitas",
-	kind: "recipe",
-	path: "recipes/pork-carnitas.cook",
-	title: "Pork Carnitas",
-	course: "main",
-	cuisine: "mexican",
-	servings: 4,
-	time_total: 240,
-	leftovers: "great",
-	tags: ["freezer-friendly"],
-	proteins: ["pork"],
-	ingredients: [
-		{
-			section: null,
-			items: [
-				{
-					name: "pork-shoulder",
-					text: "boston butt",
-					amounts: [{ value: 1.5, unit: "kg" }],
-				},
-				{ name: "salt", text: "salt", amounts: [] },
-			],
-		},
-	],
-	cookware: [],
-	sections: [],
-	last_cooked: null,
-	times_cooked: 0,
-};
 
 describe("parseIndex", () => {
 	test("accepts schema 1", () => {
@@ -67,52 +29,17 @@ describe("parseIndex", () => {
 	});
 });
 
-describe("summarize", () => {
-	test("keeps what a card shows", () => {
-		expect(summarize(carnitas)).toMatchObject({
-			slug: "pork-carnitas",
-			title: "Pork Carnitas",
-			course: "main",
-			cuisine: "mexican",
-			time: 240,
-			description: null,
-		});
+describe("sourceUrl", () => {
+	const recipe = { path: "recipes/jambalaya.cook" };
+
+	test("links to the file at the bundle's commit", () => {
+		expect(sourceUrl({ commit: "e2a7cf6" }, recipe)).toBe(
+			"https://raw.githubusercontent.com/collinmurch/recipes/e2a7cf6/recipes/jambalaya.cook",
+		);
 	});
 
-	test("leaves out the method", () => {
-		expect(summarize(carnitas)).not.toHaveProperty("sections");
-	});
-
-	test("leaves out how well it keeps", () => {
-		expect(summarize(carnitas)).not.toHaveProperty("leftovers");
-	});
-
-	test("gives a drink without a total time a null time", () => {
-		const { time_total: _, ...manhattan } = { ...carnitas, kind: "drink" };
-		expect(summarize(manhattan).time).toBeNull();
-	});
-
-	test("searches the title, cuisine, protein, and tags", () => {
-		const { keywords } = summarize(carnitas);
-		for (const word of ["carnitas", "mexican", "pork", "freezer friendly"]) {
-			expect(keywords).toContain(word);
-		}
-	});
-
-	test("searches ingredients as written and by name", () => {
-		const { keywords } = summarize(carnitas);
-		expect(keywords).toContain("boston butt");
-		expect(keywords).toContain("pork shoulder");
-	});
-});
-
-describe("unitsUsed", () => {
-	test("keeps only the units a recipe names", () => {
-		const units = {
-			kg: { plural: null, metric: true },
-			cup: { plural: "cups", metric: false },
-		};
-		expect(unitsUsed(carnitas, units)).toEqual({ kg: units.kg });
+	test("links to main for a local build", () => {
+		expect(sourceUrl({ commit: null }, recipe)).toContain("/recipes/main/");
 	});
 });
 

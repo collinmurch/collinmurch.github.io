@@ -1,13 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import {
-	byCourse,
-	describeSource,
-	formatMinutes,
-	humanize,
-	matchesSearch,
-	stepRuns,
-	tokenText,
-} from "./format";
+import { describeSource, formatMinutes, humanize, stepRuns, tokenText } from "./format";
 
 describe("humanize", () => {
 	test("turns hyphens into spaces", () => {
@@ -97,55 +89,5 @@ describe("describeSource", () => {
 
 	test("does not link a non-web URL", () => {
 		expect(describeSource("javascript:alert(1)").href).toBeNull();
-	});
-});
-
-describe("byCourse", () => {
-	const recipe = (slug, course) => ({ slug, course });
-
-	test("orders courses the way a menu reads", () => {
-		const courses = byCourse([
-			recipe("manhattan", "drink"),
-			recipe("carnitas", "main"),
-		]);
-		expect(courses.map(({ label }) => label)).toEqual(["Mains", "Drinks"]);
-	});
-
-	test("keeps each course's recipes in order", () => {
-		const courses = byCourse([
-			recipe("a", "side"),
-			recipe("b", "main"),
-			recipe("c", "side"),
-		]);
-		expect(courses[1].recipes.map(({ slug }) => slug)).toEqual(["a", "c"]);
-	});
-
-	test("puts a course it doesn't know last, named after itself", () => {
-		const courses = byCourse([recipe("a", "late-night"), recipe("b", "main")]);
-		expect(courses.map(({ label }) => label)).toEqual(["Mains", "late night"]);
-	});
-});
-
-describe("matchesSearch", () => {
-	const carnitas = { keywords: "pork carnitas mexican pork pork shoulder" };
-
-	test("matches everything for an empty search", () => {
-		expect(matchesSearch(carnitas, "  ")).toBe(true);
-	});
-
-	test("ignores case", () => {
-		expect(matchesSearch(carnitas, "Mexican")).toBe(true);
-	});
-
-	test("matches part of a word", () => {
-		expect(matchesSearch(carnitas, "carn")).toBe(true);
-	});
-
-	test("needs every word", () => {
-		expect(matchesSearch(carnitas, "pork chicken")).toBe(false);
-	});
-
-	test("reads hyphens as spaces", () => {
-		expect(matchesSearch(carnitas, "pork-shoulder")).toBe(true);
 	});
 });

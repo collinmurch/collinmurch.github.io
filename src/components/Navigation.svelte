@@ -12,16 +12,34 @@
 	const onRecipes = $derived(activeRoute === "/recipes");
 </script>
 
-<!--
-	The nav and the recipes tab are centered as a pair. The tab hides behind the
-	nav's right end and slides out only on the recipes pages. Its slot grows
-	from nothing, so the pair stays centered, and on a narrow screen the nav
-	shrinks to make room.
--->
-<div class="flex max-w-full items-center">
+<div class="relative mx-auto w-[calc(var(--nav-height)*10)] max-w-full">
+	<!--
+		The recipes card sits under Blog like a card under a hand. On the recipes
+		pages it slides down, so it peeks from under the nav, and
+		the part that shows is a link. The grid mirrors the nav's three columns.
+	-->
+	<div
+		class="pointer-events-none absolute inset-0 grid grid-cols-3 gap-2 px-1.5"
+		data-shown={onRecipes || undefined}
+	>
+		<a
+			href="/recipes"
+			aria-current={onRecipes ? "page" : undefined}
+			aria-hidden={onRecipes ? undefined : "true"}
+			tabindex={onRecipes ? undefined : -1}
+			class="recipes-card pointer-events-auto col-start-3 flex h-full w-max max-w-full justify-self-center rounded-full border border-border/70 bg-background/95 p-1.5 text-[calc(var(--nav-height)*0.32)] shadow-[0_15px_45px_rgba(0,0,0,0.35)] outline-none focus-visible:*:ring-2 focus-visible:*:ring-ring"
+		>
+			<span
+				class="recipes-pill inline-flex h-full w-full items-center justify-center whitespace-nowrap rounded-full px-[2ch] font-medium tracking-wide text-foreground/80"
+			>
+				Recipes
+			</span>
+		</a>
+	</div>
+
 	<nav
 		aria-label="Primary navigation"
-		class="pointer-events-auto relative z-30 flex h-(--nav-height) w-[calc(var(--nav-height)*10)] min-w-0 items-center gap-2 overflow-hidden rounded-full border border-border/70 bg-background/95 p-1.5 text-[calc(var(--nav-height)*0.32)] shadow-[0_15px_45px_rgba(0,0,0,0.35)] md:bg-background/80 md:backdrop-blur-xl"
+		class="pointer-events-auto relative z-30 flex h-(--nav-height) w-full items-center gap-2 overflow-hidden rounded-full border border-border/70 bg-background/95 p-1.5 text-[calc(var(--nav-height)*0.32)] shadow-[0_15px_45px_rgba(0,0,0,0.35)] md:bg-background/80 md:backdrop-blur-xl"
 	>
 		{#each links as link}
 			{@const isActive = activeRoute === link.href}
@@ -38,24 +56,6 @@
 			</a>
 		{/each}
 	</nav>
-
-	<div class="recipes-slot relative z-20 grid" data-shown={onRecipes || undefined}>
-		<div class="flex min-w-0 justify-end">
-			<a
-				href="/recipes"
-				aria-current={onRecipes ? "page" : undefined}
-				aria-hidden={onRecipes ? undefined : "true"}
-				tabindex={onRecipes ? undefined : -1}
-				class="recipes-tab pointer-events-auto flex h-(--nav-height) shrink-0 items-center rounded-e-full border border-s-0 border-border/70 bg-background/95 py-1.5 ps-[calc(var(--nav-height)/2+0.375rem)] pe-1.5 text-[calc(var(--nav-height)*0.32)] shadow-[0_15px_45px_rgba(0,0,0,0.35)] outline-none focus-visible:*:ring-2 focus-visible:*:ring-ring"
-			>
-				<span
-					class="recipes-pill inline-flex h-full items-center whitespace-nowrap rounded-full px-[2ch] font-medium tracking-wide text-foreground/80"
-				>
-					Recipes
-				</span>
-			</a>
-		</div>
-	</div>
 </div>
 
 <style>
@@ -63,28 +63,18 @@
 		box-shadow: 0 10px 30px rgb(0 0 0 / 25%);
 	}
 
-	/* The slot overlaps the nav's rounded end once the tab is out. */
-	.recipes-slot {
-		grid-template-columns: 0fr;
-		transition:
-			grid-template-columns 450ms cubic-bezier(0.22, 1, 0.36, 1),
-			margin 450ms cubic-bezier(0.22, 1, 0.36, 1);
-	}
-
-	.recipes-slot[data-shown] {
-		grid-template-columns: 1fr;
-		margin-inline-start: calc(var(--nav-height) / -2);
-		transition-delay: 150ms;
-	}
-
-	.recipes-tab {
+	/* Out from under the nav, still tucked under its edge, centered below Blog. */
+	.recipes-card {
 		visibility: hidden;
-		transition: visibility 0s 450ms;
+		transition:
+			transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
+			visibility 0s 450ms;
 	}
 
-	[data-shown] .recipes-tab {
+	[data-shown] .recipes-card {
 		visibility: visible;
-		transition: none;
+		transform: translateY(calc(var(--nav-height) * 0.7));
+		transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1) 150ms;
 	}
 
 	.recipes-pill {
@@ -103,9 +93,8 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.recipes-slot,
-		.recipes-slot[data-shown],
-		.recipes-tab,
+		.recipes-card,
+		[data-shown] .recipes-card,
 		.recipes-pill,
 		[data-shown] .recipes-pill {
 			transition: none;

@@ -45,10 +45,6 @@
 	{@html data.jsonLd}
 </svelte:head>
 
-{#snippet heading(id, text)}
-	<h2 {id} class="m-0 text-2xl">{text}</h2>
-{/snippet}
-
 <div class="mx-auto max-w-measure space-y-8">
 	<header class="space-y-3">
 		<div class="flex items-start justify-between gap-4">
@@ -62,11 +58,7 @@
 						copiedLabel="Link copied"
 						text={() => `${location.origin}${location.pathname}`}
 					/>
-					<Button
-						icon="code"
-						label="View Cooklang source"
-						href={`/recipes/${recipe.slug}.cook`}
-					/>
+					<Button icon="code" label="View Cooklang source" href={data.sourceUrl} />
 				</ButtonGroup>
 			</div>
 		</div>
@@ -111,7 +103,7 @@
 			aria-labelledby="ingredients"
 		>
 			<div class="flex items-center justify-between gap-4">
-				{@render heading("ingredients", "Ingredients")}
+				<h2 id="ingredients" class="m-0 text-2xl">Ingredients</h2>
 
 				<div
 					role="group"
@@ -168,7 +160,7 @@
 		</section>
 
 		<section class="flex flex-col gap-4 p-(--block-padding)" aria-labelledby="method">
-			{@render heading("method", "Method")}
+			<h2 id="method" class="m-0 text-2xl">Method</h2>
 
 			{#each recipe.sections as section, sectionIndex (sectionIndex)}
 				{#if section.name}
@@ -200,7 +192,7 @@
 
 	{#if data.pairs.length > 0}
 		<section class="flex flex-col gap-6" aria-labelledby="pairs">
-			{@render heading("pairs", "Goes with")}
+			<h2 id="pairs" class="m-0 text-2xl">Goes with</h2>
 			<RecipeCards recipes={data.pairs} />
 		</section>
 	{/if}

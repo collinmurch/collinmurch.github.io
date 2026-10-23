@@ -7,10 +7,8 @@ import { readBundle } from "./data.server";
 function writeBundle(index) {
 	const dir = mkdtempSync(join(tmpdir(), "bundle-"));
 	mkdirSync(join(dir, "jsonld"));
-	mkdirSync(join(dir, "sources"));
 	writeFileSync(join(dir, "index.json"), JSON.stringify(index));
 	writeFileSync(join(dir, "jsonld", "jambalaya.json"), '{"name":"Jambalaya"}');
-	writeFileSync(join(dir, "sources", "jambalaya.cook"), "Add @rice{2%cups}.");
 	return dir;
 }
 
@@ -47,9 +45,8 @@ describe("readBundle", () => {
 		expect(bundle.recipe("gumbo")).toBeUndefined();
 	});
 
-	test("reads a recipe's JSON-LD and source", () => {
+	test("reads a recipe's JSON-LD", () => {
 		expect(bundle.jsonLd("jambalaya").name).toBe("Jambalaya");
-		expect(bundle.source("jambalaya")).toBe("Add @rice{2%cups}.");
 	});
 
 	test("keeps the index text unchanged for serving", () => {
