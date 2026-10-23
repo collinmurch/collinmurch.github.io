@@ -105,10 +105,10 @@
 			class="flex flex-col gap-4 p-(--block-padding)"
 			aria-labelledby="ingredients"
 		>
-			<div class="flex items-center justify-between gap-4">
+			<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
 				<h2 id="ingredients" class="m-0 text-2xl">Ingredients</h2>
 
-				<div class="flex items-center gap-3">
+				<div class="ms-auto flex items-center gap-3 whitespace-nowrap">
 					<output aria-live="polite" class="text-base text-muted-foreground">
 						{servings}
 						{servings === 1 ? "serving" : "servings"}
