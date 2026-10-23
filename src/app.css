@@ -138,8 +138,17 @@
 	}
 }
 
+/* A raised card over the water, such as a recipe and its preview in a listing. */
+@utility surface {
+	border: 1px solid color-mix(in srgb, var(--color-accent) 14%, transparent);
+	border-radius: 1rem;
+	background: color-mix(in srgb, var(--color-card) 80%, transparent);
+	box-shadow: 0 12px 32px rgb(7 12 18 / 0.3);
+}
+
 @layer utilities {
-	.page-shell :where(a:not([data-button])) {
+	/* Text links. Buttons and cards are links too, but style themselves. */
+	.page-shell :where(a:not([data-button], [data-card])) {
 		color: var(--color-accent);
 		text-decoration-line: underline;
 		text-decoration-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
@@ -147,7 +156,7 @@
 		text-underline-offset: 0.26em;
 	}
 
-	.page-shell :where(a:not([data-button]):hover) {
+	.page-shell :where(a:not([data-button], [data-card]):hover) {
 		color: var(--color-primary);
 		text-decoration-color: color-mix(in srgb, var(--color-primary) 65%, transparent);
 	}

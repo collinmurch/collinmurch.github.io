@@ -46,21 +46,39 @@ export function describeSource(source) {
 	return { href: null, text: source };
 }
 
-/** The listing's filters: each facet's values, sorted. */
-export function facets(recipes) {
-	const values = (pick) => [...new Set(recipes.flatMap(pick))].toSorted();
-	return {
-		course: values((recipe) => [recipe.course]),
-		cuisine: values((recipe) => (recipe.cuisine ? [recipe.cuisine] : [])),
-		protein: values((recipe) => recipe.proteins),
-	};
+const COURSES = {
+	breakfast: "Breakfast",
+	main: "Mains",
+	side: "Sides",
+	sauce: "Sauces",
+	snack: "Snacks",
+	dessert: "Desserts",
+	drink: "Drinks",
+};
+
+/**
+ * Recipes grouped the way a menu reads, breakfast through drinks. A course
+ * this site doesn't know yet goes last, named after itself.
+ */
+export function byCourse(recipes) {
+	const present = new Set(recipes.map((recipe) => recipe.course));
+	const known = Object.keys(COURSES).filter((course) => present.has(course));
+	const unknown = [...present].filter((course) => !(course in COURSES)).toSorted();
+	return [...known, ...unknown].map((course) => ({
+		course,
+		label: COURSES[course] ?? humanize(course),
+		recipes: recipes.filter((recipe) => recipe.course === course),
+	}));
 }
 
-/** Whether a recipe matches every chosen filter. A null filter matches all. */
-export function matchesFilters(recipe, { course, cuisine, protein }) {
-	return (
-		(!course || recipe.course === course) &&
-		(!cuisine || recipe.cuisine === cuisine) &&
-		(!protein || recipe.proteins.includes(protein))
-	);
+/** Search text in one form: lowercase, with hyphens read as spaces. */
+export function searchable(text) {
+	return text.toLowerCase().replaceAll("-", " ");
+}
+
+/** Whether a recipe's keywords contain every word of a search. */
+export function matchesSearch(recipe, query) {
+	return searchable(query)
+		.split(/\s+/)
+		.every((word) => recipe.keywords.includes(word));
 }

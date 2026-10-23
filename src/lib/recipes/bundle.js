@@ -1,3 +1,5 @@
+import { searchable } from "./format";
+
 /** The `index.json` format this site renders. */
 export const SCHEMA = 1;
 
@@ -15,19 +17,40 @@ export function parseIndex(text) {
 	return index;
 }
 
-/** The fields the recipe listing shows and filters on. */
+/** The fields a recipe card shows, plus the words a search can match. */
 export function summarize(recipe) {
 	return {
 		slug: recipe.slug,
 		title: recipe.title,
-		kind: recipe.kind,
 		course: recipe.course,
 		cuisine: recipe.cuisine ?? null,
-		proteins: recipe.proteins,
 		time: recipe.time_total ?? null,
-		leftovers: recipe.leftovers ?? null,
 		description: recipe.description ?? null,
+		keywords: keywords(recipe),
 	};
+}
+
+function keywords(recipe) {
+	const ingredients = recipe.ingredients
+		.flatMap((group) => group.items)
+		.flatMap((item) => [item.text, item.name]);
+	const words = [
+		recipe.title,
+		recipe.cuisine,
+		...recipe.proteins,
+		...(recipe.tags ?? []),
+	];
+	return searchable([...words, ...ingredients].filter(Boolean).join(" "));
+}
+
+/** The bundle's unit table, cut down to the units a recipe's amounts name. */
+export function unitsUsed(recipe, units) {
+	const used = new Set(
+		recipe.ingredients.flatMap((group) =>
+			group.items.flatMap((item) => item.amounts.map((amount) => amount.unit)),
+		),
+	);
+	return Object.fromEntries(Object.entries(units).filter(([unit]) => used.has(unit)));
 }
 
 /** The fields the recipe listing shows for a plan. */

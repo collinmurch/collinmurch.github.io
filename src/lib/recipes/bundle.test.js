@@ -1,5 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import { jsonLdScript, parseIndex, planTitle, summarize, withUrl } from "./bundle";
+import {
+	jsonLdScript,
+	parseIndex,
+	planTitle,
+	summarize,
+	unitsUsed,
+	withUrl,
+} from "./bundle";
 
 const EMPTY_INDEX = { schema: 1, commit: null, recipes: [], plans: [], vocab: [] };
 
@@ -13,8 +20,21 @@ const carnitas = {
 	servings: 4,
 	time_total: 240,
 	leftovers: "great",
+	tags: ["freezer-friendly"],
 	proteins: ["pork"],
-	ingredients: [],
+	ingredients: [
+		{
+			section: null,
+			items: [
+				{
+					name: "pork-shoulder",
+					text: "boston butt",
+					amounts: [{ value: 1.5, unit: "kg" }],
+				},
+				{ name: "salt", text: "salt", amounts: [] },
+			],
+		},
+	],
 	cookware: [],
 	sections: [],
 	last_cooked: null,
@@ -48,16 +68,13 @@ describe("parseIndex", () => {
 });
 
 describe("summarize", () => {
-	test("keeps the listing's fields", () => {
-		expect(summarize(carnitas)).toEqual({
+	test("keeps what a card shows", () => {
+		expect(summarize(carnitas)).toMatchObject({
 			slug: "pork-carnitas",
 			title: "Pork Carnitas",
-			kind: "recipe",
 			course: "main",
 			cuisine: "mexican",
-			proteins: ["pork"],
 			time: 240,
-			leftovers: "great",
 			description: null,
 		});
 	});
@@ -66,9 +83,36 @@ describe("summarize", () => {
 		expect(summarize(carnitas)).not.toHaveProperty("sections");
 	});
 
+	test("leaves out how well it keeps", () => {
+		expect(summarize(carnitas)).not.toHaveProperty("leftovers");
+	});
+
 	test("gives a drink without a total time a null time", () => {
 		const { time_total: _, ...manhattan } = { ...carnitas, kind: "drink" };
 		expect(summarize(manhattan).time).toBeNull();
+	});
+
+	test("searches the title, cuisine, protein, and tags", () => {
+		const { keywords } = summarize(carnitas);
+		for (const word of ["carnitas", "mexican", "pork", "freezer friendly"]) {
+			expect(keywords).toContain(word);
+		}
+	});
+
+	test("searches ingredients as written and by name", () => {
+		const { keywords } = summarize(carnitas);
+		expect(keywords).toContain("boston butt");
+		expect(keywords).toContain("pork shoulder");
+	});
+});
+
+describe("unitsUsed", () => {
+	test("keeps only the units a recipe names", () => {
+		const units = {
+			kg: { plural: null, metric: true },
+			cup: { plural: "cups", metric: false },
+		};
+		expect(unitsUsed(carnitas, units)).toEqual({ kg: units.kg });
 	});
 });
 

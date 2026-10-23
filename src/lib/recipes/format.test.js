@@ -1,18 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import {
+	byCourse,
 	describeSource,
-	facets,
 	formatMinutes,
 	humanize,
-	matchesFilters,
+	matchesSearch,
 	stepRuns,
 	tokenText,
 } from "./format";
-
-const carnitas = { course: "main", cuisine: "mexican", proteins: ["pork"] };
-const asparagus = { course: "side", cuisine: null, proteins: [] };
-const jambalaya = { course: "main", cuisine: "cajun", proteins: ["chicken", "pork"] };
-const noFilters = { course: null, cuisine: null, protein: null };
 
 describe("humanize", () => {
 	test("turns hyphens into spaces", () => {
@@ -105,40 +100,52 @@ describe("describeSource", () => {
 	});
 });
 
-describe("facets", () => {
-	test("lists each course once, sorted", () => {
-		expect(facets([carnitas, asparagus, jambalaya]).course).toEqual(["main", "side"]);
+describe("byCourse", () => {
+	const recipe = (slug, course) => ({ slug, course });
+
+	test("orders courses the way a menu reads", () => {
+		const courses = byCourse([
+			recipe("manhattan", "drink"),
+			recipe("carnitas", "main"),
+		]);
+		expect(courses.map(({ label }) => label)).toEqual(["Mains", "Drinks"]);
 	});
 
-	test("skips recipes without a cuisine", () => {
-		expect(facets([carnitas, asparagus]).cuisine).toEqual(["mexican"]);
+	test("keeps each course's recipes in order", () => {
+		const courses = byCourse([
+			recipe("a", "side"),
+			recipe("b", "main"),
+			recipe("c", "side"),
+		]);
+		expect(courses[1].recipes.map(({ slug }) => slug)).toEqual(["a", "c"]);
 	});
 
-	test("collects every protein", () => {
-		expect(facets([carnitas, jambalaya]).protein).toEqual(["chicken", "pork"]);
+	test("puts a course it doesn't know last, named after itself", () => {
+		const courses = byCourse([recipe("a", "late-night"), recipe("b", "main")]);
+		expect(courses.map(({ label }) => label)).toEqual(["Mains", "late night"]);
 	});
 });
 
-describe("matchesFilters", () => {
-	test("matches everything with no filters", () => {
-		expect(matchesFilters(asparagus, noFilters)).toBe(true);
+describe("matchesSearch", () => {
+	const carnitas = { keywords: "pork carnitas mexican pork pork shoulder" };
+
+	test("matches everything for an empty search", () => {
+		expect(matchesSearch(carnitas, "  ")).toBe(true);
 	});
 
-	test("filters by course", () => {
-		expect(matchesFilters(asparagus, { ...noFilters, course: "main" })).toBe(false);
+	test("ignores case", () => {
+		expect(matchesSearch(carnitas, "Mexican")).toBe(true);
 	});
 
-	test("filters by cuisine", () => {
-		expect(matchesFilters(carnitas, { ...noFilters, cuisine: "cajun" })).toBe(false);
+	test("matches part of a word", () => {
+		expect(matchesSearch(carnitas, "carn")).toBe(true);
 	});
 
-	test("matches any of a recipe's proteins", () => {
-		expect(matchesFilters(jambalaya, { ...noFilters, protein: "pork" })).toBe(true);
+	test("needs every word", () => {
+		expect(matchesSearch(carnitas, "pork chicken")).toBe(false);
 	});
 
-	test("requires every filter to match", () => {
-		expect(
-			matchesFilters(jambalaya, { course: "main", cuisine: "mexican", protein: null }),
-		).toBe(false);
+	test("reads hyphens as spaces", () => {
+		expect(matchesSearch(carnitas, "pork-shoulder")).toBe(true);
 	});
 });

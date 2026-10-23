@@ -2,6 +2,8 @@
 	import Button from "#components/Button.svelte";
 	import ButtonGroup from "#components/ButtonGroup.svelte";
 	import CopyButton from "#components/CopyButton.svelte";
+	import RecipeCards from "#components/RecipeCards.svelte";
+	import { fractionGlyphs, scaleAmounts } from "#lib/recipes/amounts";
 	import {
 		describeSource,
 		formatMinutes,
@@ -9,7 +11,6 @@
 		stepRuns,
 		tokenText,
 	} from "#lib/recipes/format";
-	import { formatDate } from "#lib/utils/dates";
 
 	const { data } = $props();
 
@@ -24,16 +25,12 @@
 		recipe.description ?? `How to make ${recipe.title}, from Collin Murch's kitchen.`,
 	);
 	const source = $derived(recipe.source ? describeSource(recipe.source) : null);
-	const details = $derived(
-		[
-			recipe.course,
-			recipe.cuisine && humanize(recipe.cuisine),
-			`serves ${recipe.servings}`,
-			recipe.time_active && `${formatMinutes(recipe.time_active)} active`,
-			recipe.time_total && `${formatMinutes(recipe.time_total)} total`,
-			recipe.leftovers && `${recipe.leftovers} leftovers`,
-		].filter(Boolean),
-	);
+
+	let servings = $derived(recipe.servings);
+	const factor = $derived(servings / recipe.servings);
+
+	const amount = (item) =>
+		fractionGlyphs(scaleAmounts(item.amounts, factor, data.units));
 </script>
 
 <svelte:head>
@@ -48,95 +45,147 @@
 	{@html data.jsonLd}
 </svelte:head>
 
-<div class="mx-auto max-w-measure">
-	<div class="mb-2 flex items-center justify-between gap-4">
-		<h1>{recipe.title}</h1>
+{#snippet heading(id, text)}
+	<h2 {id} class="m-0 text-2xl">{text}</h2>
+{/snippet}
 
-		<div class="-me-2 shrink-0">
-			<ButtonGroup variant="quiet" label="Share">
-				<CopyButton
-					icon="link"
-					label="Copy link"
-					copiedLabel="Link copied"
-					text={() => `${location.origin}${location.pathname}`}
-				/>
-				<Button
-					icon="code"
-					label="View Cooklang source"
-					href={`/recipes/${recipe.slug}.cook`}
-				/>
-			</ButtonGroup>
-		</div>
-	</div>
-	<p
-		class="mb-8 text-xs font-semibold tracking-[0.3em] text-muted-foreground uppercase"
-	>
-		{details.join(" · ")}
-	</p>
+<div class="mx-auto max-w-measure space-y-8">
+	<header class="space-y-3">
+		<div class="flex items-start justify-between gap-4">
+			<h1>{recipe.title}</h1>
 
-	<article class="prose-rich space-y-8">
-		{#if recipe.description || source || recipe.times_cooked > 0}
-			<div>
-				{#if recipe.description}
-					<p>{recipe.description}</p>
-				{/if}
-				{#if source}
-					<p class="text-muted-foreground">
-						From
-						{#if source.href}
-							<a href={source.href}>{source.text}</a>
-						{:else}
-							{source.text}
-						{/if}
-					</p>
-				{/if}
-				{#if recipe.times_cooked > 0}
-					<p class="text-muted-foreground">
-						Made {recipe.times_cooked === 1 ? "once" : `${recipe.times_cooked} times`},
-						most recently {formatDate(recipe.last_cooked)}.
-					</p>
-				{/if}
+			<div class="-me-2 shrink-0">
+				<ButtonGroup variant="quiet" label="Share">
+					<CopyButton
+						icon="link"
+						label="Copy link"
+						copiedLabel="Link copied"
+						text={() => `${location.origin}${location.pathname}`}
+					/>
+					<Button
+						icon="code"
+						label="View Cooklang source"
+						href={`/recipes/${recipe.slug}.cook`}
+					/>
+				</ButtonGroup>
 			</div>
+		</div>
+
+		{#if recipe.description}
+			<p class="text-prose text-foreground/85">{recipe.description}</p>
 		{/if}
 
-		<section>
-			<h2>Ingredients</h2>
+		<ul
+			class="flex flex-wrap gap-x-2 text-muted-foreground *:not-first:before:me-2 *:not-first:before:content-['·']"
+		>
+			{#if recipe.cuisine}
+				<li class="capitalize">{humanize(recipe.cuisine)}</li>
+			{/if}
+			{#if recipe.time_total}
+				<li>{formatMinutes(recipe.time_total)} total</li>
+			{/if}
+			{#if recipe.time_active}
+				<li>{formatMinutes(recipe.time_active)} active</li>
+			{/if}
+			{#if source}
+				<li>
+					From
+					{#if source.href}
+						<a href={source.href}>{source.text}</a>
+					{:else}
+						{source.text}
+					{/if}
+				</li>
+			{/if}
+			{#if recipe.times_cooked > 0}
+				<li>
+					Made {recipe.times_cooked === 1 ? "once" : `${recipe.times_cooked} times`}
+				</li>
+			{/if}
+		</ul>
+	</header>
+
+	<article class="surface divide-y divide-accent/10 text-prose">
+		<section
+			class="flex flex-col gap-4 p-(--block-padding)"
+			aria-labelledby="ingredients"
+		>
+			<div class="flex items-center justify-between gap-4">
+				{@render heading("ingredients", "Ingredients")}
+
+				<div
+					role="group"
+					aria-label="Servings"
+					class="-me-2 flex items-center text-muted-foreground"
+				>
+					<Button
+						variant="quiet"
+						icon="minus"
+						label="Fewer servings"
+						disabled={servings <= 1}
+						onclick={() => servings--}
+					/>
+					<output aria-live="polite" class="min-w-[6.5em] text-center text-base">
+						{servings}
+						{servings === 1 ? "serving" : "servings"}
+					</output>
+					<Button
+						variant="quiet"
+						icon="plus"
+						label="More servings"
+						onclick={() => servings++}
+					/>
+				</div>
+			</div>
+
 			{#each recipe.ingredients as group, groupIndex (groupIndex)}
-				{#if group.section}
-					<h3>{group.section}</h3>
-				{/if}
-				<ul>
-					{#each group.items as item, itemIndex (itemIndex)}
-						<li>{item.line}</li>
-					{/each}
-				</ul>
+				<div>
+					{#if group.section}
+						<h3 class="mt-2 mb-2 text-base text-muted-foreground">{group.section}</h3>
+					{/if}
+					<ul class="grid grid-cols-[minmax(4.5em,auto)_1fr] gap-x-5 gap-y-2">
+						{#each group.items as item, itemIndex (itemIndex)}
+							{@const extras = [item.note, item.optional && "optional"].filter(Boolean)}
+							<li class="col-span-full grid grid-cols-subgrid">
+								<span class="text-muted-foreground">{amount(item)}</span>
+								<span>
+									{item.text}
+									{#if extras.length > 0}
+										<span class="text-muted-foreground/70">({extras.join(", ")})</span>
+									{/if}
+								</span>
+							</li>
+						{/each}
+					</ul>
+				</div>
 			{/each}
+
+			{#if recipe.cookware.length > 0}
+				<p class="text-base text-muted-foreground">
+					Equipment: {recipe.cookware.join(", ")}
+				</p>
+			{/if}
 		</section>
 
-		{#if recipe.cookware.length > 0}
-			<section>
-				<h2>Equipment</h2>
-				<ul>
-					{#each recipe.cookware as tool (tool)}
-						<li>{tool}</li>
-					{/each}
-				</ul>
-			</section>
-		{/if}
+		<section class="flex flex-col gap-4 p-(--block-padding)" aria-labelledby="method">
+			{@render heading("method", "Method")}
 
-		<section>
-			<h2>Method</h2>
 			{#each recipe.sections as section, sectionIndex (sectionIndex)}
 				{#if section.name}
-					<h3>{section.name}</h3>
+					<h3 class="mt-4 mb-0 text-base text-muted-foreground">{section.name}</h3>
 				{/if}
 				{#each stepRuns(section.content) as run, runIndex (runIndex)}
 					{#if run.type === "note"}
-						<blockquote>{run.text}</blockquote>
+						<p class="border-s-2 border-accent/30 ps-4 text-muted-foreground italic">
+							{run.text}
+						</p>
 					{:else}
-						<ol start={run.steps[0].number}>
+						<ol
+							start={run.steps[0].number}
+							class="list-decimal space-y-3 ps-[1.25em] marker:text-muted-foreground"
+						>
 							{#each run.steps as step (step.number)}
-								<li>
+								<li class="ps-2">
 									{#each step.tokens as token, tokenIndex (tokenIndex)}<span
 											class={TOKEN_CLASSES[token.type]}>{tokenText(token)}</span
 										>{/each}
@@ -147,16 +196,12 @@
 				{/each}
 			{/each}
 		</section>
-
-		{#if data.pairs.length > 0}
-			<section>
-				<h2>Goes with</h2>
-				<ul>
-					{#each data.pairs as pair (pair.slug)}
-						<li><a href={`/recipes/${pair.slug}`}>{pair.title}</a></li>
-					{/each}
-				</ul>
-			</section>
-		{/if}
 	</article>
+
+	{#if data.pairs.length > 0}
+		<section class="flex flex-col gap-6" aria-labelledby="pairs">
+			{@render heading("pairs", "Goes with")}
+			<RecipeCards recipes={data.pairs} />
+		</section>
+	{/if}
 </div>

@@ -1,5 +1,5 @@
 import { error } from "@sveltejs/kit";
-import { jsonLdScript, withUrl } from "#lib/recipes/bundle";
+import { jsonLdScript, summarize, unitsUsed, withUrl } from "#lib/recipes/bundle";
 import { getBundle } from "#lib/recipes/data.server";
 import { SITE_ORIGIN } from "#lib/seo/meta";
 
@@ -16,9 +16,10 @@ export function load({ params }) {
 	return {
 		recipe,
 		jsonLd: jsonLdScript(withUrl(bundle.jsonLd(recipe.slug), url)),
+		units: unitsUsed(recipe, bundle.index.units),
 		pairs: (recipe.pairs ?? [])
 			.map((slug) => bundle.recipe(slug))
 			.filter(Boolean)
-			.map(({ slug, title }) => ({ slug, title })),
+			.map(summarize),
 	};
 }

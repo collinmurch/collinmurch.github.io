@@ -44,9 +44,7 @@
 
 <div class="mx-auto max-w-measure">
 	<h1 class="mb-2 capitalize">{title}</h1>
-	<p
-		class="mb-8 text-xs font-semibold tracking-[0.3em] text-muted-foreground uppercase"
-	>
+	<p class="mb-8 text-muted-foreground">
 		From {formatDate(plan.start)}{#if plan.spent != null}
 			· spent ${plan.spent.toFixed(2)}{/if}
 	</p>

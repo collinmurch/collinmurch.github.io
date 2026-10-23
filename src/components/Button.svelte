@@ -19,7 +19,8 @@
 	 *
 	 * Passing `status` makes the button confirm its action: "success" swaps the
 	 * icon for a check, and "error" tints a framed button. An empty status is
-	 * the resting state. `element` binds the rendered link or button.
+	 * the resting state. `disabled` dims a button and ignores clicks. `element`
+	 * binds the rendered link or button.
 	 */
 	const group = getButtonGroup();
 	let {
@@ -28,6 +29,7 @@
 		label,
 		href,
 		status,
+		disabled = false,
 		onclick,
 		element = $bindable(),
 	} = $props();
@@ -36,7 +38,7 @@
 	const succeeded = $derived(status === "success");
 	const iconSize = $derived(variant === "framed" ? "size-4" : "size-[1.125rem]");
 	const classes = $derived([
-		"inline-flex shrink-0 cursor-pointer touch-manipulation items-center justify-center transition-colors duration-150 focus-visible:outline-2",
+		"inline-flex shrink-0 cursor-pointer touch-manipulation items-center justify-center transition-[color,background-color,border-color,opacity] duration-150 focus-visible:outline-2 disabled:pointer-events-none disabled:opacity-35",
 		variant === "framed" && [
 			"size-8 text-foreground focus-visible:outline-accent/75",
 			group
@@ -88,6 +90,7 @@
 		class={classes}
 		aria-label={label}
 		title={label}
+		{disabled}
 		{onclick}
 	>
 		{@render content()}

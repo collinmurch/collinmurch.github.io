@@ -46,8 +46,8 @@
 	{@render children()}
 	<BlockControls>
 		<ButtonGroup label="Zoom">
-			<Button icon="zoom-out" label="Zoom out" onclick={() => diagram?.zoomBy(-1)} />
-			<Button icon="zoom-in" label="Zoom in" onclick={() => diagram?.zoomBy(1)} />
+			<Button icon="minus" label="Zoom out" onclick={() => diagram?.zoomBy(-1)} />
+			<Button icon="plus" label="Zoom in" onclick={() => diagram?.zoomBy(1)} />
 			<Button icon="recenter" label="Recenter" onclick={() => diagram?.reset()} />
 		</ButtonGroup>
 		<Button
