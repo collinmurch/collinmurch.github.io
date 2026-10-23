@@ -105,24 +105,27 @@
 			class="flex flex-col gap-4 p-(--block-padding)"
 			aria-labelledby="ingredients"
 		>
-			<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-				<h2 id="ingredients" class="m-0 text-2xl">Ingredients</h2>
+			<div
+				class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 *:last:ms-auto"
+			>
+				<h2 id="ingredients" class="m-0 text-xl">Ingredients</h2>
 
-				<div class="ms-auto flex items-center gap-3 whitespace-nowrap">
-					<output aria-live="polite" class="text-base text-muted-foreground">
+				<ButtonGroup label="Servings">
+					<Button
+						icon="minus"
+						label="Fewer servings"
+						disabled={servings <= 1}
+						onclick={() => servings--}
+					/>
+					<output
+						aria-live="polite"
+						class="flex items-center border-s border-accent/14 px-3 text-sm whitespace-nowrap tabular-nums"
+					>
 						{servings}
 						{servings === 1 ? "serving" : "servings"}
 					</output>
-					<ButtonGroup label="Servings">
-						<Button
-							icon="minus"
-							label="Fewer servings"
-							disabled={servings <= 1}
-							onclick={() => servings--}
-						/>
-						<Button icon="plus" label="More servings" onclick={() => servings++} />
-					</ButtonGroup>
-				</div>
+					<Button icon="plus" label="More servings" onclick={() => servings++} />
+				</ButtonGroup>
 			</div>
 
 			{#each recipe.ingredients as group, groupIndex (groupIndex)}
@@ -155,7 +158,7 @@
 		</section>
 
 		<section class="flex flex-col gap-4 p-(--block-padding)" aria-labelledby="method">
-			<h2 id="method" class="m-0 text-2xl">Method</h2>
+			<h2 id="method" class="m-0 text-xl">Method</h2>
 
 			{#each recipe.sections as section, sectionIndex (sectionIndex)}
 				{#if section.name}
