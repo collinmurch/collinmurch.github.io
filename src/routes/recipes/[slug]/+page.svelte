@@ -29,6 +29,8 @@
 	);
 	const source = $derived(recipe.source ? describeSource(recipe.source) : null);
 
+	const MAX_SERVINGS = 99;
+
 	let servings = $derived(recipe.servings);
 	const factor = $derived(servings / recipe.servings);
 
@@ -119,12 +121,17 @@
 					/>
 					<output
 						aria-live="polite"
-						class="flex items-center border-s border-accent/14 px-3 text-sm whitespace-nowrap tabular-nums"
+						class="grid items-center justify-items-center border-s border-accent/14 px-3 text-sm whitespace-nowrap tabular-nums *:col-start-1 *:row-start-1"
 					>
-						{servings}
-						{servings === 1 ? "serving" : "servings"}
+						<span class="invisible">{MAX_SERVINGS} servings</span>
+						<span>{servings} {servings === 1 ? "serving" : "servings"}</span>
 					</output>
-					<Button icon="plus" label="More servings" onclick={() => servings++} />
+					<Button
+						icon="plus"
+						label="More servings"
+						disabled={servings >= MAX_SERVINGS}
+						onclick={() => servings++}
+					/>
 				</ButtonGroup>
 			</div>
 
