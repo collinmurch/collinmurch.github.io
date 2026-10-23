@@ -13,6 +13,15 @@ export default defineConfig({
 				runes: true,
 			},
 			extensions: [".svelte", ".md"],
+			prerender: {
+				// Recipe and plan pages exist only for what the bundle holds, which
+				// can be nothing, such as a local build without the bundle.
+				handleUnseenRoutes({ routes, message }) {
+					if (routes.some((route) => !route.startsWith("/recipes/"))) {
+						throw new Error(message);
+					}
+				},
+			},
 			preprocess: markdownPreprocessor(),
 		}),
 	],

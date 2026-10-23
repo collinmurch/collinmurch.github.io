@@ -56,6 +56,13 @@ Write current Svelte 5 code, even if older patterns would still compile:
 - Fenced code and headings compile to Svelte components. `highlight.js` wraps code in `CodeBlock` and renders Mermaid as a `Diagram`, and `headings.js` gives every heading a GitHub-style id and a `HeadingLink` that copies a link to it. Each remark plugin imports the components it emits through `injectImports` in `mdast.js`. Their buttons are prerendered with the page like any other component.
 - Diagrams sit in a native scroll viewport, so touch, trackpad, and keyboard scrolling come from the browser. `Diagram.svelte` has zoom and recenter buttons and a toggle to the diagram's Shiki-highlighted source, which it shows as an ordinary `CodeBlock` so source views always match other code. Don't style a diagram's source separately. `diagram-controls.js` adds mouse drag panning and ctrl+wheel and Safari gesture zoom around the cursor. A plain wheel is never captured, and pinch zoom is applied at most once per frame.
 
+## Recipes
+
+- Recipes live in the private [recipes repo](https://github.com/collinmurch/recipes) as Cooklang files. Its CI builds a bundle (`index.json`, `jsonld/<slug>.json`, `sources/<slug>.cook`), and the bundle is the whole contract. The site never parses Cooklang and never re-derives anything the bundle provides, such as ingredient lines, step text, or grocery totals. If the site needs something new, add it to the bundle in the recipes repo.
+- `src/lib/recipes/data.server.js` is the only code that reads the bundle. It fails the build on any `schema` but 1, so a format change can't ship half-rendered. New fields can appear without a schema change, so read only what you use.
+- CI checks out the recipes repo's `bundle` branch into `recipes-data/` before building: the commit a `recipes-updated` dispatch names, or else the branch tip, and fails if there's no `index.json`. Locally, run `recipes build` in the recipes repo and point `RECIPES_DIR` at its `dist`. Without a bundle the build warns and `/recipes` is empty.
+- The listing gets summaries only, like the blog listing, and filters on the client. Each recipe page embeds the bundle's JSON-LD with `url` added, which is what lets Safari's share sheet save it to Mela. `/recipes/index.json` is served unchanged, because the recipes skill downloads it.
+
 ## Buttons
 
 - Every icon button is `Button.svelte`. Don't hand-roll buttons or copy its classes. `framed` is the rectangle that floats over code and diagrams; `quiet` is the soft circle for controls in a page's chrome, like the share links beside a post title. Pass `href` for a link.

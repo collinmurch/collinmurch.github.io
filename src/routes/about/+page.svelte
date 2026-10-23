@@ -18,9 +18,9 @@
 
 			<p>
 				I'm deeply curious about service architecture, artificial intelligence, and
-				information security. Aside from computers I love cooking, card games
-				(especially Texas Hold'em), tennis, finding new electronic music, and pretty
-				much every water sport under the sun.
+				information security. Aside from computers I love <a href="/recipes">cooking</a
+				>, card games (especially Texas Hold'em), tennis, finding new electronic music,
+				and pretty much every water sport under the sun.
 			</p>
 
 			<p>
