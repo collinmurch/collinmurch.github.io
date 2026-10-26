@@ -197,7 +197,7 @@
 
 	{#if data.pairs.length > 0}
 		<section class="flex flex-col gap-6" aria-labelledby="pairs">
-			<h2 id="pairs" class="m-0 text-2xl">Goes with</h2>
+			<h2 id="pairs" class="m-0 text-heading">Goes with</h2>
 			<RecipeCards recipes={data.pairs} />
 		</section>
 	{/if}

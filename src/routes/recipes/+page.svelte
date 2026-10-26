@@ -35,7 +35,7 @@
 		<!-- A search shows every match. Otherwise a long course previews its first few and links to the rest. -->
 		{@const more = !searching && slug && recipes.length > PREVIEW_SIZE}
 		<section class="flex flex-col gap-6" aria-labelledby={`course-${course}`}>
-			<h2 id={`course-${course}`} class="m-0 text-2xl">
+			<h2 id={`course-${course}`} class="m-0 text-heading">
 				{#if more}
 					<ChevronLink href={`/recipes/${slug}`}>{label}</ChevronLink>
 				{:else}
@@ -63,7 +63,7 @@
 
 	{#if data.plans.length > 0}
 		<section class="flex flex-col gap-6">
-			<h2 class="m-0 text-2xl">Plans</h2>
+			<h2 class="m-0 text-heading">Plans</h2>
 			<ul class="space-y-2 text-prose">
 				{#each data.plans as plan (plan.id)}
 					<li>

@@ -124,7 +124,9 @@
 			<Navigation />
 		</header>
 
-		<main class="flex-1 min-h-0 scrollbar-reserve pt-(--header-height)">
+		<main
+			class="flex-1 min-h-0 [scrollbar-gutter:stable_both-edges] pt-(--header-height)"
+		>
 			{#key page.url.pathname}
 				<section
 					class="page-shell"

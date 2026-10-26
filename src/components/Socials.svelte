@@ -29,7 +29,7 @@
 		duration: animate && !prefersReducedMotion ? 240 : 0,
 		easing: cubicOut,
 	}}
-	class="pointer-events-auto fixed bottom-(--header-offset) left-1/2 z-30 flex -translate-x-1/2 items-center justify-center gap-[calc(var(--social-size)*0.3)] rounded-full border border-border/60 bg-background/90 p-[calc(var(--social-size)*0.12)] shadow-[0_12px_35px_rgba(0,0,0,0.35)] md:bg-background/75 md:backdrop-blur-xl"
+	class="pointer-events-auto fixed bottom-(--header-offset) left-1/2 z-30 flex -translate-x-1/2 items-center justify-center gap-[calc(var(--social-size)*0.3)] rounded-full border border-border/60 bg-background/90 p-[calc(var(--social-size)*0.12)] shadow-[0_12px_35px_rgba(0,0,0,0.35)]"
 >
 	{#each links as link}
 		<a

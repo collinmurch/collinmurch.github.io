@@ -9,6 +9,11 @@
 		{ href: "/blog", text: "Blog" },
 	];
 
+	const BAR =
+		"rounded-full border border-border/70 bg-background/95 p-1.5 text-[calc(var(--nav-height)*0.32)] shadow-[0_15px_45px_rgba(0,0,0,0.35)]";
+	const ITEM =
+		"inline-flex h-full items-center justify-center whitespace-nowrap rounded-full font-medium tracking-wide text-foreground/80 transition-[color,background-color,box-shadow] duration-150 motion-reduce:transition-none";
+
 	const showsRecipes = (section) => section === "/blog" || section === "/recipes";
 
 	const activeRoute = $derived(getSection(page.url.pathname));
@@ -38,11 +43,12 @@
 			aria-current={onRecipes ? "page" : undefined}
 			aria-hidden={shown ? undefined : "true"}
 			tabindex={shown ? undefined : -1}
-			class="recipes-card pointer-events-auto col-start-3 flex h-full w-max max-w-full justify-self-center rounded-full border border-border/70 bg-background/95 p-1.5 text-[calc(var(--nav-height)*0.32)] shadow-[0_15px_45px_rgba(0,0,0,0.35)] outline-none focus-visible:*:ring-2 focus-visible:*:ring-ring"
+			class={[
+				BAR,
+				"recipes-card group pointer-events-auto col-start-3 flex h-full w-max max-w-full justify-self-center outline-none focus-visible:*:ring-2 focus-visible:*:ring-ring",
+			]}
 		>
-			<span
-				class="recipes-pill inline-flex h-full w-full items-center justify-center whitespace-nowrap rounded-full px-[2ch] font-medium tracking-wide text-foreground/80"
-			>
+			<span class={[ITEM, "recipes-pill w-full px-[2ch] group-hover:text-foreground"]}>
 				Recipes
 			</span>
 		</a>
@@ -50,18 +56,20 @@
 
 	<nav
 		aria-label="Primary navigation"
-		class="pointer-events-auto relative z-30 flex h-(--nav-height) w-full items-center gap-2 overflow-hidden rounded-full border border-border/70 bg-background/95 p-1.5 text-[calc(var(--nav-height)*0.32)] shadow-[0_15px_45px_rgba(0,0,0,0.35)] md:bg-background/80 md:backdrop-blur-xl"
+		class={[
+			BAR,
+			"pointer-events-auto relative z-30 flex h-(--nav-height) w-full items-center gap-2 overflow-hidden",
+		]}
 	>
 		{#each links as link}
-			{@const isActive = activeRoute === link.href}
 			<a
 				href={link.href}
 				data-sveltekit-preload-code="viewport"
-				aria-current={isActive ? "page" : undefined}
-				class:bg-primary={isActive}
-				class:text-primary-foreground={isActive}
-				class:nav-active={isActive}
-				class="relative z-10 inline-flex h-full flex-1 items-center justify-center whitespace-nowrap rounded-full px-3 font-medium tracking-wide text-foreground/80 outline-none transition-colors duration-150 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+				aria-current={activeRoute === link.href ? "page" : undefined}
+				class={[
+					ITEM,
+					"relative z-10 flex-1 px-3 outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+				]}
 			>
 				{link.text}
 			</a>
@@ -70,7 +78,10 @@
 </div>
 
 <style>
-	.nav-active {
+	nav [aria-current="page"],
+	.recipes-card[aria-current="page"] .recipes-pill {
+		background-color: var(--color-primary);
+		color: var(--color-primary-foreground);
 		box-shadow: 0 10px 30px rgb(0 0 0 / 25%);
 	}
 
@@ -88,34 +99,18 @@
 		transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1) 150ms;
 	}
 
-	.recipes-pill {
-		transition:
-			background-color 150ms ease,
-			color 150ms ease,
-			box-shadow 150ms ease;
-	}
-
-	.recipes-card:hover .recipes-pill {
-		color: var(--color-foreground);
-	}
-
 	/* Selected once it has slid out, and deselected before it slides back. */
-	.recipes-card[aria-current] .recipes-pill {
-		background-color: var(--color-primary);
-		color: var(--color-primary-foreground);
-		box-shadow: 0 10px 30px rgb(0 0 0 / 25%);
+	.recipes-card[aria-current="page"] .recipes-pill {
 		transition-delay: 450ms;
 	}
 
-	[data-was-shown] .recipes-card[aria-current] .recipes-pill {
+	[data-was-shown] .recipes-card[aria-current="page"] .recipes-pill {
 		transition-delay: 0ms;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
 		.recipes-card,
-		[data-shown] .recipes-card,
-		.recipes-pill,
-		.recipes-card[aria-current] .recipes-pill {
+		[data-shown] .recipes-card {
 			transition: none;
 		}
 	}
