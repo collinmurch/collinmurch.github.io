@@ -58,6 +58,12 @@ describe("createScrollReveal", () => {
 		expect(reveal.update(290, { topZone: 400 })).toBe(false);
 	});
 
+	test("a per-update hideAfter overrides the default", () => {
+		const reveal = createScrollReveal({ hideAfter: 10, showAfter: 10 });
+		expect(reveal.update(200, { hideAfter: 300 })).toBe(false);
+		expect(reveal.update(520, { hideAfter: 300 })).toBe(true);
+	});
+
 	test("ignores rubber-band overscroll past the bottom", () => {
 		const reveal = createScrollReveal({ hideAfter: 10, showAfter: 10 });
 		reveal.update(1000, { max: 1000 });

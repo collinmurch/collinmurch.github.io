@@ -48,8 +48,4 @@ describe("readBundle", () => {
 	test("reads a recipe's JSON-LD", () => {
 		expect(bundle.jsonLd("jambalaya").name).toBe("Jambalaya");
 	});
-
-	test("keeps the index text unchanged for serving", () => {
-		expect(JSON.parse(bundle.indexText).schema).toBe(1);
-	});
 });

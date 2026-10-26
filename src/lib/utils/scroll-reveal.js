@@ -17,10 +17,14 @@ export function createScrollReveal({ hideAfter = 96, showAfter = 12 } = {}) {
 	return {
 		/**
 		 * @param {number} y The current scroll position.
-		 * @param {{ max?: number, topZone?: number }} [bounds]
+		 * @param {{ max?: number, topZone?: number, hideAfter?: number }} [bounds]
+		 *   `hideAfter` overrides the creation option, so it can follow the viewport.
 		 * @returns {boolean} Whether the header should be hidden.
 		 */
-		update(y, { max = Infinity, topZone = 0 } = {}) {
+		update(
+			y,
+			{ max = Infinity, topZone = 0, hideAfter: hideDistance = hideAfter } = {},
+		) {
 			const clamped = Math.min(Math.max(y, 0), Math.max(max, 0));
 			const delta = clamped - lastY;
 			lastY = clamped;
@@ -35,7 +39,7 @@ export function createScrollReveal({ hideAfter = 96, showAfter = 12 } = {}) {
 			if (Math.sign(delta) !== Math.sign(travel)) travel = 0;
 			travel += delta;
 
-			if (travel > hideAfter) hidden = true;
+			if (travel > hideDistance) hidden = true;
 			else if (travel < -showAfter) hidden = false;
 			return hidden;
 		},

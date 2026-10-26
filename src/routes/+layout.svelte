@@ -39,6 +39,8 @@
 		scrolledAway = scrollReveal.update(window.scrollY, {
 			max: root.scrollHeight - root.clientHeight,
 			topZone: header.offsetTop + header.offsetHeight,
+			// A flick on a phone covers hundreds of pixels, so a fixed distance hides it at once.
+			hideAfter: window.innerHeight / 3,
 		});
 	}
 
@@ -108,8 +110,10 @@
 			onfocusin={() => (navFocused = true)}
 			onfocusout={() => (navFocused = false)}
 			class={[
-				"pointer-events-none fixed inset-x-0 top-(--header-offset) z-30 flex justify-center pl-[calc(1rem+env(safe-area-inset-left))] pr-[calc(1rem+env(safe-area-inset-right))] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
-				navHidden && "-translate-y-[calc(var(--header-height)+var(--nav-height)+4rem)]",
+				"pointer-events-none fixed inset-x-0 top-(--header-offset) z-30 flex justify-center pl-[calc(1rem+env(safe-area-inset-left))] pr-[calc(1rem+env(safe-area-inset-right))] transition-transform motion-reduce:transition-none",
+				navHidden
+					? "-translate-y-[calc(var(--header-height)+var(--nav-height)+4rem)] duration-700 ease-in-out"
+					: "duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
 			]}
 		>
 			<Navigation />
