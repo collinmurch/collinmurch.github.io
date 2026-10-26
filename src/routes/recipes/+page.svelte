@@ -1,14 +1,16 @@
 <script>
-	import Icon from "#components/Icon.svelte";
+	import ChevronLink from "#components/ChevronLink.svelte";
 	import RecipeCards from "#components/RecipeCards.svelte";
+	import RecipeSearch from "#components/RecipeSearch.svelte";
 	import { planTitle } from "#lib/recipes/format";
-	import { byCourse, matchesSearch } from "#lib/recipes/listing";
+	import { byCourse, matchesSearch, PREVIEW_SIZE } from "#lib/recipes/listing";
 
 	const { data } = $props();
 
 	let query = $state("");
 	const shown = $derived(data.recipes.filter((recipe) => matchesSearch(recipe, query)));
 	const courses = $derived(byCourse(shown));
+	const searching = $derived(query.trim() !== "");
 </script>
 
 <svelte:head>
@@ -25,37 +27,31 @@
 		<h1>Recipes</h1>
 
 		{#if data.recipes.length > 0}
-			<!--
-				A magnifying glass that opens into a search field while it's hovered,
-				focused, or holding a search. It scales a little behind the reading text and
-				opens to a set width, or to the rest of the row when that's narrower.
-			-->
-			<label
-				class={[
-					"flex h-[2.25em] cursor-pointer items-center justify-self-end overflow-hidden rounded-full border border-accent/20 bg-card/60 px-[calc(0.625em-1px)] text-[max(1rem,var(--text-prose)*0.9)] text-muted-foreground transition-[width,border-color] duration-300 ease-out focus-within:w-[min(16em,100%)] focus-within:border-accent/50 hover:w-[min(16em,100%)] hover:border-accent/35 motion-reduce:transition-none",
-					query ? "w-[min(16em,100%)]" : "w-[2.25em]",
-				]}
-			>
-				<Icon name="search" class="size-[1em]" />
-				<span class="sr-only">Search recipes</span>
-				<input
-					type="search"
-					bind:value={query}
-					placeholder="Search"
-					class="w-full min-w-0 bg-transparent ps-[0.6em] text-foreground outline-none placeholder:text-muted-foreground/70"
-				/>
-			</label>
+			<RecipeSearch bind:query count={shown.length} />
 		{/if}
 	</div>
 
-	<p class="sr-only" aria-live="polite">
-		{query.trim() ? `${shown.length} ${shown.length === 1 ? "recipe" : "recipes"}` : ""}
-	</p>
-
-	{#each courses as { course, label, recipes } (course)}
+	{#each courses as { course, label, slug, recipes } (course)}
+		<!-- A search shows every match. Otherwise a long course previews its first few and links to the rest. -->
+		{@const more = !searching && slug && recipes.length > PREVIEW_SIZE}
 		<section class="flex flex-col gap-6" aria-labelledby={`course-${course}`}>
-			<h2 id={`course-${course}`} class="m-0 text-2xl">{label}</h2>
-			<RecipeCards {recipes} />
+			<h2 id={`course-${course}`} class="m-0 text-2xl">
+				{#if more}
+					<ChevronLink href={`/recipes/${slug}`}>{label}</ChevronLink>
+				{:else}
+					{label}
+				{/if}
+			</h2>
+			<RecipeCards recipes={more ? recipes.slice(0, PREVIEW_SIZE) : recipes} />
+			{#if more}
+				<ChevronLink
+					href={`/recipes/${slug}`}
+					class="self-start text-prose text-muted-foreground"
+				>
+					All {recipes.length}
+					{label.toLowerCase()}
+				</ChevronLink>
+			{/if}
 		</section>
 	{:else}
 		<p class="text-prose text-muted-foreground">

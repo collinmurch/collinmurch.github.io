@@ -1,11 +1,16 @@
 import { error } from "@sveltejs/kit";
 import { jsonLdScript, sourceUrl, withUrl } from "#lib/recipes/bundle";
 import { getBundle } from "#lib/recipes/data.server";
-import { summarize } from "#lib/recipes/listing";
+import { courseOf, summarize } from "#lib/recipes/listing";
 import { SITE_ORIGIN } from "#lib/seo/meta";
 
 export function entries() {
-	return getBundle().index.recipes.map(({ slug }) => ({ slug }));
+	return getBundle().index.recipes.map(({ slug }) => {
+		if (courseOf(slug)) {
+			throw new Error(`Recipe "${slug}" has the same URL as the ${slug} course page`);
+		}
+		return { slug };
+	});
 }
 
 export function load({ params }) {

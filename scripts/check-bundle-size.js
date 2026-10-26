@@ -7,9 +7,9 @@ const pageBudgets = {
 	"index.html": 42 * 1024,
 	"about.html": 42 * 1024,
 	"blog.html": 42 * 1024,
-	"recipes.html": 42 * 1024,
+	"recipes.html": 43 * 1024,
 };
-const cssBudget = 8.5 * 1024;
+const cssBudget = 9 * 1024;
 const katexCssBudget = 8 * 1024;
 
 function compressedSize(path) {

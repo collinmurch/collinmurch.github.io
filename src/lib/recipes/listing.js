@@ -1,4 +1,4 @@
-import { humanize } from "./format";
+import { humanize } from "./format.js";
 
 const COURSES = {
 	breakfast: "Breakfast",
@@ -9,6 +9,24 @@ const COURSES = {
 	dessert: "Desserts",
 	drink: "Drinks",
 };
+
+/**
+ * How many recipes a course shows on the listing before linking to its own
+ * page. Six fills whole rows whether the cards sit one, two, or three across.
+ */
+export const PREVIEW_SIZE = 6;
+
+/** Recipe cards for a listing, the most recently and most often cooked first. */
+export function listRecipes(recipes) {
+	return recipes.toSorted(byCooking).map(summarize);
+}
+
+function byCooking(a, b) {
+	return (
+		(b.last_cooked ?? "").localeCompare(a.last_cooked ?? "") ||
+		b.times_cooked - a.times_cooked
+	);
+}
 
 /** The fields a recipe card shows, plus the words a search can match. */
 export function summarize(recipe) {
@@ -53,8 +71,9 @@ export function summarizePlan(plan) {
 }
 
 /**
- * Recipes grouped the way a menu reads, breakfast through drinks. A course
- * this site doesn't know yet goes last, named after itself.
+ * Recipes grouped the way a menu reads, breakfast through drinks. Each known
+ * course has a page at `/recipes/<slug>`. A course this site doesn't know yet
+ * goes last, named after itself, and has no page.
  */
 export function byCourse(recipes) {
 	const present = new Set(recipes.map((recipe) => recipe.course));
@@ -62,7 +81,22 @@ export function byCourse(recipes) {
 	const unknown = [...present].filter((course) => !(course in COURSES)).toSorted();
 	return [...known, ...unknown].map((course) => ({
 		course,
-		label: COURSES[course] ?? humanize(course),
+		label: courseLabel(course),
+		slug: courseSlug(course),
 		recipes: recipes.filter((recipe) => recipe.course === course),
 	}));
+}
+
+/** A course's heading, such as `Mains` for `main`. */
+export function courseLabel(course) {
+	return COURSES[course] ?? humanize(course);
+}
+
+function courseSlug(course) {
+	return COURSES[course]?.toLowerCase();
+}
+
+/** The course a course page's slug names, such as `main` for `mains`. */
+export function courseOf(slug) {
+	return Object.keys(COURSES).find((course) => courseSlug(course) === slug);
 }

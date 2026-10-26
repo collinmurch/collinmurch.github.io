@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { byCourse, matchesSearch, summarize } from "./listing";
+import { byCourse, courseOf, listRecipes, matchesSearch, summarize } from "./listing";
 
 const carnitas = {
 	slug: "pork-carnitas",
@@ -71,6 +71,37 @@ describe("summarize", () => {
 	});
 });
 
+describe("listRecipes", () => {
+	const cooked = (slug, last_cooked, times_cooked) => ({
+		...carnitas,
+		slug,
+		last_cooked,
+		times_cooked,
+	});
+
+	test("puts the most recently cooked first", () => {
+		const recipes = listRecipes([
+			cooked("never", null, 0),
+			cooked("spring", "2026-04-02", 1),
+			cooked("summer", "2026-07-10", 1),
+		]);
+		expect(recipes.map(({ slug }) => slug)).toEqual(["summer", "spring", "never"]);
+	});
+
+	test("breaks a tie by how often it's been cooked", () => {
+		const recipes = listRecipes([
+			cooked("once", "2026-07-10", 1),
+			cooked("often", "2026-07-10", 4),
+		]);
+		expect(recipes.map(({ slug }) => slug)).toEqual(["often", "once"]);
+	});
+
+	test("keeps the bundle's order otherwise", () => {
+		const recipes = listRecipes([cooked("a", null, 0), cooked("b", null, 0)]);
+		expect(recipes.map(({ slug }) => slug)).toEqual(["a", "b"]);
+	});
+});
+
 describe("byCourse", () => {
 	const recipe = (slug, course) => ({ slug, course });
 
@@ -94,6 +125,23 @@ describe("byCourse", () => {
 	test("puts a course it doesn't know last, named after itself", () => {
 		const courses = byCourse([recipe("a", "late-night"), recipe("b", "main")]);
 		expect(courses.map(({ label }) => label)).toEqual(["Mains", "late night"]);
+	});
+
+	test("gives each known course a page slug", () => {
+		const courses = byCourse([recipe("a", "main"), recipe("b", "late-night")]);
+		expect(courses.map(({ slug }) => slug)).toEqual(["mains", undefined]);
+	});
+});
+
+describe("courseOf", () => {
+	test("reads a page slug as its course", () => {
+		expect(courseOf("mains")).toBe("main");
+		expect(courseOf("breakfast")).toBe("breakfast");
+	});
+
+	test("rejects anything else, such as a recipe's slug", () => {
+		expect(courseOf("pork-carnitas")).toBeUndefined();
+		expect(courseOf("main")).toBeUndefined();
 	});
 });
 

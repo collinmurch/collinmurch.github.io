@@ -213,8 +213,8 @@
 }
 
 @layer utilities {
-	/* Text links. Buttons and cards are links too, but style themselves. */
-	.page-shell :where(a:not([data-button], [data-card])) {
+	/* Text links. Buttons, cards, and chevron links are links too, but style themselves. */
+	.page-shell :where(a:not([data-button], [data-card], [data-chevron-link])) {
 		color: var(--color-accent);
 		text-decoration-line: underline;
 		text-decoration-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
@@ -222,7 +222,7 @@
 		text-underline-offset: 0.26em;
 	}
 
-	.page-shell :where(a:not([data-button], [data-card]):hover) {
+	.page-shell :where(a:not([data-button], [data-card], [data-chevron-link]):hover) {
 		color: var(--color-primary);
 		text-decoration-color: color-mix(in srgb, var(--color-primary) 65%, transparent);
 	}
