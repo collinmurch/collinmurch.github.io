@@ -14,20 +14,10 @@ export const transitions = {
 		transition: fly,
 		params: { y: -1000, duration: 300 },
 	},
-	fadeScale: {
-		transition: () => {
-			return {
-				duration: 300,
-				css: (t) => {
-					return `
-                            opacity: ${t};
-                            transform: scale(${0.95 + 0.05 * t});
-                        `;
-				},
-				easing: cubicOut,
-			};
-		},
-		params: {},
+	// A fixed rise, so long pages don't swing their top edge the way scaling them would.
+	fadeRise: {
+		transition: fly,
+		params: { y: 12, duration: 300, easing: cubicOut },
 	},
 };
 
@@ -40,7 +30,7 @@ export const transitionMappings = {
 	},
 };
 
-const defaultAnimation = transitions.fadeScale;
+const defaultAnimation = transitions.fadeRise;
 
 export function getTransition(fromPath, toPath, prefersReducedMotion = false) {
 	if (prefersReducedMotion) return transitions.instant;

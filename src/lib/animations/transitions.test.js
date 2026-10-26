@@ -11,7 +11,7 @@ describe("getTransition", () => {
 	});
 
 	test("uses the default transition between interior routes", () => {
-		expect(getTransition("/about", "/blog")).toBe(transitions.fadeScale);
+		expect(getTransition("/about", "/blog")).toBe(transitions.fadeRise);
 	});
 
 	test("uses the instant transition for reduced motion", () => {
