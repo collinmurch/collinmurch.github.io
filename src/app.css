@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
-/* Latin-only variable weights, self-hosted so pages load no third-party CSS. */
+/*
+ * Latin-only variable weights, self-hosted so pages load no third-party CSS.
+ * Literata's own metrics make a 1.49em box, which is how tall the text caret
+ * draws. The overrides shrink it to 1.2em around the same baseline, so set
+ * line heights place text exactly where they did.
+ */
 @font-face {
 	font-family: "Literata";
 	font-style: normal;
@@ -8,6 +13,9 @@
 	font-display: swap;
 	src: url("@fontsource-variable/literata/files/literata-latin-wght-normal.woff2")
 		format("woff2-variations");
+	ascent-override: 103.45%;
+	descent-override: 16.55%;
+	line-gap-override: 0%;
 }
 
 @font-face {
@@ -17,6 +25,9 @@
 	font-display: swap;
 	src: url("@fontsource-variable/literata/files/literata-latin-wght-italic.woff2")
 		format("woff2-variations");
+	ascent-override: 103.45%;
+	descent-override: 16.55%;
+	line-gap-override: 0%;
 }
 
 /* Georgia resized to Literata's width and line metrics, so text barely moves when it loads. */
@@ -24,8 +35,8 @@
 	font-family: "Literata Fallback";
 	src: local("Georgia");
 	size-adjust: 107.28%;
-	ascent-override: 109.72%;
-	descent-override: 28.71%;
+	ascent-override: 96.43%;
+	descent-override: 15.43%;
 	line-gap-override: 0%;
 }
 
