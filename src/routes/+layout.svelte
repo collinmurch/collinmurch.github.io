@@ -10,6 +10,8 @@
 	import { getRouteMeta, normalizeRoute } from "#lib/seo/meta";
 	import { createScrollReveal } from "#lib/utils/scroll-reveal";
 	import "../app.css";
+	import frauncesUrl from "@fontsource-variable/fraunces/files/fraunces-latin-full-normal.woff2?url";
+	import literataUrl from "@fontsource-variable/literata/files/literata-latin-wght-normal.woff2?url";
 
 	const { children } = $props();
 
@@ -89,6 +91,9 @@
 </script>
 
 <svelte:head>
+	{#each [literataUrl, frauncesUrl] as href (href)}
+		<link rel="preload" as="font" type="font/woff2" {href} crossorigin="anonymous" />
+	{/each}
 	{#if meta}
 		<title>{meta.title}</title>
 		<meta name="description" content={meta.description} />

@@ -1,14 +1,14 @@
 <script>
 	import { formatDate, toISODate } from "#lib/utils/dates";
 
-	/** A post's publish date, set small and spaced in capitals. */
+	/** A post's publish date, set in italic like the home tagline. */
 	const { date, class: className } = $props();
 </script>
 
 <time
 	datetime={toISODate(date)}
 	class={[
-		"block text-xs font-semibold tracking-[0.4em] text-muted-foreground uppercase",
+		"block text-[calc(var(--text-prose)*0.95)] text-muted-foreground italic",
 		className,
 	]}
 >
