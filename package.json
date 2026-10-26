@@ -13,8 +13,8 @@
 		"lint": "oxlint --max-warnings=0",
 		"lint:fix": "oxlint --fix --max-warnings=0",
 		"test": "bun test",
-		"format": "prettier --check .",
-		"format:write": "prettier --write .",
+		"format": "oxfmt --check",
+		"format:write": "oxfmt",
 		"budget": "bun scripts/check-bundle-size.js",
 		"prepare": "husky",
 		"lint-staged": "lint-staged"
@@ -32,9 +32,8 @@
 		"katex": "^0.19.0",
 		"lint-staged": "^17.6.0",
 		"mdsvex": "^0.12.8",
+		"oxfmt": "^0.74.0",
 		"oxlint": "^1.88.0",
-		"prettier": "^3.9.10",
-		"prettier-plugin-svelte": "^4.1.1",
 		"roughjs": "^4.6.6",
 		"shiki": "^4.5.0",
 		"svelte": "^5.57.2",
@@ -47,7 +46,7 @@
 			"oxlint --fix --max-warnings=0"
 		],
 		"*.{js,ts,cjs,mjs,jsx,tsx,svelte,md,json,css,html}": [
-			"prettier --write --ignore-unknown"
+			"oxfmt"
 		]
 	}
 }
