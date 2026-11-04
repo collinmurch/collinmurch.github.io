@@ -64,13 +64,9 @@
 						{#if meal.servings}
 							for {meal.servings}
 						{/if}
-						<span class="text-muted-foreground">
-							{#if meal.cooked}
-								· made {formatDate(meal.cooked)}
-							{:else if meal.date}
-								· planned for {formatDate(meal.date)}
-							{/if}
-						</span>
+						{#if meal.date}
+							<span class="text-muted-foreground">· {formatDate(meal.date)}</span>
+						{/if}
 						{#if meal.note}
 							<br /><span class="text-muted-foreground">{meal.note}</span>
 						{/if}
