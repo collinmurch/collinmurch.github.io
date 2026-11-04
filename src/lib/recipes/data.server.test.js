@@ -14,7 +14,7 @@ function writeBundle(index) {
 
 const bundle = readBundle(
 	writeBundle({
-		schema: 1,
+		schema: 2,
 		commit: null,
 		recipes: [{ slug: "jambalaya", title: "Jambalaya" }],
 		plans: [{ id: "2026-10-12" }],
@@ -30,7 +30,7 @@ describe("readBundle", () => {
 	});
 
 	test("fails on an unknown schema", () => {
-		expect(() => readBundle(writeBundle({ schema: 2 }))).toThrow("schema 2");
+		expect(() => readBundle(writeBundle({ schema: 3 }))).toThrow("schema 3");
 	});
 
 	test("finds a recipe by slug", () => {

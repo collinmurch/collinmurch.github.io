@@ -1,16 +1,16 @@
 import { describe, expect, test } from "bun:test";
 import { jsonLdScript, parseIndex, sourceUrl, withUrl } from "./bundle";
 
-const EMPTY_INDEX = { schema: 1, commit: null, recipes: [], plans: [], vocab: [] };
+const EMPTY_INDEX = { schema: 2, commit: null, recipes: [], plans: [], vocab: [] };
 
 describe("parseIndex", () => {
-	test("accepts schema 1", () => {
+	test("accepts schema 2", () => {
 		expect(parseIndex(JSON.stringify(EMPTY_INDEX)).recipes).toEqual([]);
 	});
 
 	test("rejects a newer schema", () => {
-		expect(() => parseIndex(JSON.stringify({ ...EMPTY_INDEX, schema: 2 }))).toThrow(
-			"schema 2",
+		expect(() => parseIndex(JSON.stringify({ ...EMPTY_INDEX, schema: 3 }))).toThrow(
+			"schema 3",
 		);
 	});
 
@@ -19,8 +19,8 @@ describe("parseIndex", () => {
 	});
 
 	test("rejects a schema written as a string", () => {
-		expect(() => parseIndex(JSON.stringify({ ...EMPTY_INDEX, schema: "1" }))).toThrow(
-			'schema "1"',
+		expect(() => parseIndex(JSON.stringify({ ...EMPTY_INDEX, schema: "2" }))).toThrow(
+			'schema "2"',
 		);
 	});
 

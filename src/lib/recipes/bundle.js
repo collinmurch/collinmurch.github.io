@@ -1,5 +1,5 @@
 /** The `index.json` format this site renders. */
-export const SCHEMA = 1;
+export const SCHEMA = 2;
 
 const SOURCE_BASE = "https://raw.githubusercontent.com/collinmurch/recipes";
 
