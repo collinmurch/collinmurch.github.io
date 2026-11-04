@@ -1,9 +1,9 @@
 <script>
-	import ChevronLink from "#components/ChevronLink.svelte";
+	import PlanList from "#components/PlanList.svelte";
+	import PreviewSection from "#components/PreviewSection.svelte";
 	import RecipeCards from "#components/RecipeCards.svelte";
 	import RecipeSearch from "#components/RecipeSearch.svelte";
-	import { planTitle } from "#lib/recipes/format";
-	import { byCourse, matchesSearch, PREVIEW_SIZE } from "#lib/recipes/listing";
+	import { byCourse, matchesSearch } from "#lib/recipes/listing";
 
 	const { data } = $props();
 
@@ -32,27 +32,15 @@
 	</div>
 
 	{#each courses as { course, label, slug, recipes } (course)}
-		<!-- A search shows every match. Otherwise a long course previews its first few and links to the rest. -->
-		{@const more = !searching && slug && recipes.length > PREVIEW_SIZE}
-		<section class="flex flex-col gap-6" aria-labelledby={`course-${course}`}>
-			<h2 id={`course-${course}`} class="m-0 text-heading">
-				{#if more}
-					<ChevronLink href={`/recipes/${slug}`}>{label}</ChevronLink>
-				{:else}
-					{label}
-				{/if}
-			</h2>
-			<RecipeCards recipes={more ? recipes.slice(0, PREVIEW_SIZE) : recipes} />
-			{#if more}
-				<ChevronLink
-					href={`/recipes/${slug}`}
-					class="self-start text-prose text-muted-foreground"
-				>
-					All {recipes.length}
-					{label.toLowerCase()}
-				</ChevronLink>
-			{/if}
-		</section>
+		<!-- A search shows every match, so it never links away to a course page. -->
+		<PreviewSection
+			id={`course-${course}`}
+			{label}
+			items={recipes}
+			href={!searching && slug ? `/recipes/${slug}` : null}
+		>
+			{#snippet list(shown)}<RecipeCards recipes={shown} />{/snippet}
+		</PreviewSection>
 	{:else}
 		<p class="text-prose text-muted-foreground">
 			{data.recipes.length === 0
@@ -62,17 +50,8 @@
 	{/each}
 
 	{#if data.plans.length > 0}
-		<section class="flex flex-col gap-6">
-			<h2 class="m-0 text-heading">Plans</h2>
-			<ul class="space-y-2 text-prose">
-				{#each data.plans as plan (plan.id)}
-					<li>
-						<a class="capitalize" href={`/recipes/plans/${plan.id}`}
-							>{planTitle(plan)}</a
-						>
-					</li>
-				{/each}
-			</ul>
-		</section>
+		<PreviewSection id="plans" label="Plans" items={data.plans} href="/recipes/plans">
+			{#snippet list(shown)}<PlanList plans={shown} />{/snippet}
+		</PreviewSection>
 	{/if}
 </div>

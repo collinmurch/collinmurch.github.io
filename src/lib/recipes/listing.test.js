@@ -1,5 +1,13 @@
 import { describe, expect, test } from "bun:test";
-import { byCourse, courseOf, listRecipes, matchesSearch, summarize } from "./listing";
+import {
+	backTo,
+	byCourse,
+	courseOf,
+	listPlans,
+	listRecipes,
+	matchesSearch,
+	summarize,
+} from "./listing";
 
 const carnitas = {
 	slug: "pork-carnitas",
@@ -166,5 +174,42 @@ describe("matchesSearch", () => {
 
 	test("reads hyphens as spaces", () => {
 		expect(matchesSearch(carnitas, "pork-shoulder")).toBe(true);
+	});
+});
+
+describe("backTo", () => {
+	const plans = [{ id: "2026-w44", title: "Week of fall" }];
+
+	test("leads back to the listing, a course, or a plan", () => {
+		expect(backTo("/recipes", plans)).toEqual({ href: "/recipes", label: "Recipes" });
+		expect(backTo("/recipes/mains/", plans)).toEqual({
+			href: "/recipes/mains",
+			label: "Mains",
+		});
+		expect(backTo("/recipes/plans/2026-w44", plans)).toEqual({
+			href: "/recipes/plans/2026-w44",
+			label: "Week of fall",
+		});
+	});
+
+	test("ignores recipes, unrelated plans, and other pages", () => {
+		expect(backTo("/recipes/pork-carnitas", plans)).toBeNull();
+		expect(backTo("/recipes/plans/other", plans)).toBeNull();
+		expect(backTo("/recipes/mains/extra", plans)).toBeNull();
+		expect(backTo("/blog", plans)).toBeNull();
+		expect(backTo("/", plans)).toBeNull();
+	});
+});
+
+describe("listPlans", () => {
+	test("puts the newest plan first", () => {
+		const plans = [
+			{ id: "2026-10-12", start: "2026-10-12", meals: [] },
+			{ id: "2026-10-19", start: "2026-10-19", meals: [] },
+		];
+		expect(listPlans(plans).map((plan) => plan.id)).toEqual([
+			"2026-10-19",
+			"2026-10-12",
+		]);
 	});
 });

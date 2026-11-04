@@ -1,6 +1,6 @@
 <script>
-	import { planTitle } from "#lib/recipes/format";
-	import { humanize } from "#lib/recipes/format";
+	import BackLink from "#components/BackLink.svelte";
+	import { humanize, planTitle } from "#lib/recipes/format";
 	import { formatDate } from "#lib/utils/dates";
 
 	const { data } = $props();
@@ -43,6 +43,7 @@
 {/snippet}
 
 <div class="mx-auto max-w-measure">
+	<BackLink href="/recipes/plans">Plans</BackLink>
 	<h1 class="mb-2 capitalize">{title}</h1>
 	<p class="mb-8 text-muted-foreground">
 		From {formatDate(plan.start)}{#if plan.spent != null}

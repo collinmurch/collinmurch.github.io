@@ -11,8 +11,8 @@ const COURSES = {
 };
 
 /**
- * How many recipes a course shows on the listing before linking to its own
- * page. Six fills whole rows whether the cards sit one, two, or three across.
+ * How many recipes or plans a section of the listing shows before linking to
+ * its own page. Six fills whole rows whether the cards sit one, two, or three across.
  */
 export const PREVIEW_SIZE = 6;
 
@@ -65,8 +65,13 @@ export function matchesSearch(recipe, query) {
 		.every((word) => recipe.keywords.includes(word));
 }
 
+/** Plans for a listing, newest first. The bundle lists them oldest first. */
+export function listPlans(plans) {
+	return plans.map(summarizePlan).toReversed();
+}
+
 /** The fields the recipe listing shows for a plan. */
-export function summarizePlan(plan) {
+function summarizePlan(plan) {
 	return { id: plan.id, title: plan.title, start: plan.start, name: plan.name };
 }
 
@@ -99,4 +104,23 @@ function courseSlug(course) {
 /** The course a course page's slug names, such as `main` for `mains`. */
 export function courseOf(slug) {
 	return Object.keys(COURSES).find((course) => courseSlug(course) === slug);
+}
+
+export const RECIPES_HOME = { href: "/recipes", label: "Recipes" };
+
+/**
+ * Where a recipe page's back link leads after arriving from `pathname`: the
+ * recipe listing, a course page, or one of `plans` (the plans that include the
+ * recipe, as `{ id, title }`). Null for anywhere else, such as another recipe.
+ */
+export function backTo(pathname, plans) {
+	const [, root, slug, id, ...rest] = pathname.replace(/\/$/, "").split("/");
+	if (root !== "recipes" || rest.length > 0) return null;
+	if (!slug) return RECIPES_HOME;
+	if (slug === "plans") {
+		const plan = plans.find((candidate) => candidate.id === id);
+		return plan ? { href: `/recipes/plans/${id}`, label: plan.title } : null;
+	}
+	const course = !id && courseOf(slug);
+	return course ? { href: `/recipes/${slug}`, label: courseLabel(course) } : null;
 }

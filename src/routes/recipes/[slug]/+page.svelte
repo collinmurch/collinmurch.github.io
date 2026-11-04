@@ -1,4 +1,6 @@
 <script>
+	import { afterNavigate } from "$app/navigation";
+	import BackLink from "#components/BackLink.svelte";
 	import Button from "#components/Button.svelte";
 	import ButtonGroup from "#components/ButtonGroup.svelte";
 	import CopyButton from "#components/CopyButton.svelte";
@@ -11,6 +13,7 @@
 		stepRuns,
 		tokenText,
 	} from "#lib/recipes/format";
+	import { backTo, RECIPES_HOME } from "#lib/recipes/listing";
 
 	const { data } = $props();
 
@@ -34,6 +37,15 @@
 	let servings = $derived(recipe.servings);
 	const factor = $derived(servings / recipe.servings);
 
+	// A recipe can be reached from the listing, a course page, or a plan, so the
+	// back link follows the page you came from. Going on to a paired recipe keeps
+	// it, since this component is reused, and a fresh load can only know the listing.
+	let back = $state(RECIPES_HOME);
+	afterNavigate(({ from }) => {
+		const origin = from && backTo(from.url.pathname, data.plans);
+		if (origin) back = origin;
+	});
+
 	const amount = (item) =>
 		fractionGlyphs(scaleAmounts(item.amounts, factor, data.units));
 </script>
@@ -52,6 +64,7 @@
 
 <div class="mx-auto max-w-measure space-y-8">
 	<header class="space-y-3">
+		<BackLink href={back.href}>{back.label}</BackLink>
 		<div class="flex items-start justify-between gap-4">
 			<h1>{recipe.title}</h1>
 

@@ -1,6 +1,7 @@
 import { error } from "@sveltejs/kit";
 import { jsonLdScript, sourceUrl, withUrl } from "#lib/recipes/bundle";
 import { getBundle } from "#lib/recipes/data.server";
+import { planTitle } from "#lib/recipes/format";
 import { courseOf, summarize } from "#lib/recipes/listing";
 import { SITE_ORIGIN } from "#lib/seo/meta";
 
@@ -8,6 +9,9 @@ export function entries() {
 	return getBundle().index.recipes.map(({ slug }) => {
 		if (courseOf(slug)) {
 			throw new Error(`Recipe "${slug}" has the same URL as the ${slug} course page`);
+		}
+		if (slug === "plans") {
+			throw new Error('Recipe "plans" has the same URL as the plans page');
 		}
 		return { slug };
 	});
@@ -28,5 +32,8 @@ export function load({ params }) {
 			.map((slug) => bundle.recipe(slug))
 			.filter(Boolean)
 			.map(summarize),
+		plans: bundle.index.plans
+			.filter((plan) => plan.meals.some((meal) => meal.recipe === recipe.slug))
+			.map((plan) => ({ id: plan.id, title: planTitle(plan) })),
 	};
 }

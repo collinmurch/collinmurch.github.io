@@ -1,5 +1,5 @@
 <script>
-	import ChevronLink from "#components/ChevronLink.svelte";
+	import BackLink from "#components/BackLink.svelte";
 	import RecipeCards from "#components/RecipeCards.svelte";
 	import RecipeSearch from "#components/RecipeSearch.svelte";
 	import { matchesSearch } from "#lib/recipes/listing";
@@ -27,9 +27,7 @@
 
 <div class="mx-auto max-w-measure space-y-14">
 	<header class="space-y-4">
-		<ChevronLink href="/recipes" back class="text-prose text-muted-foreground">
-			Recipes
-		</ChevronLink>
+		<BackLink href="/recipes">Recipes</BackLink>
 		<div class="grid grid-cols-[auto_1fr] items-center gap-6">
 			<h1>{data.label}</h1>
 			<RecipeSearch bind:query count={shown.length} />
