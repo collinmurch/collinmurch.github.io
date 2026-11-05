@@ -7,6 +7,9 @@
 	The chevron sits inline with `vertical-align: middle`, which centers it on the
 	lowercase letters rather than on the whole line box, so it reads as level. It
 	needs `inline-block`, because Tailwind's base styles make every SVG a block.
+
+	A `back` link hangs its chevron into the margin by the chevron's width plus
+	its gap (0.7em + 0.3em), so the words line up with the text below.
 -->
 <script>
 	import Icon from "#components/Icon.svelte";
@@ -30,6 +33,7 @@
 	{href}
 	data-chevron-link
 	class={[
+		back && "-ms-[1em]",
 		"group transition-colors duration-150 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring",
 		className,
 	]}
