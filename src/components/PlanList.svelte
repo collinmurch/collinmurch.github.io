@@ -7,7 +7,7 @@
 <ul class="space-y-2 text-prose">
 	{#each plans as plan (plan.id)}
 		<li>
-			<a class="capitalize" href={`/recipes/plans/${plan.id}`}>{planTitle(plan)}</a>
+			<a href={`/recipes/plans/${plan.id}`}>{planTitle(plan)}</a>
 		</li>
 	{/each}
 </ul>

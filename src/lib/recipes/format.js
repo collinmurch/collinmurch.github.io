@@ -46,9 +46,33 @@ export function describeSource(source) {
 	return { href: null, text: source };
 }
 
-/** A plan's display name: its title, or what the plan covers. */
+const MONTH_DAY = new Intl.DateTimeFormat("en-US", {
+	month: "long",
+	day: "numeric",
+	timeZone: "UTC",
+});
+const WEEKDAY = new Intl.DateTimeFormat("en-US", {
+	weekday: "short",
+	month: "short",
+	day: "numeric",
+	timeZone: "UTC",
+});
+
+function utcDate(isoDate) {
+	return new Date(`${isoDate}T00:00:00Z`);
+}
+
+/**
+ * A plan's display name: its title, its name in title case, or the week it
+ * starts. The year is left to the plan page's subtitle.
+ */
 export function planTitle(plan) {
 	if (plan.title) return plan.title;
-	if (plan.name) return humanize(plan.name);
-	return `Week of ${plan.start}`;
+	if (plan.name) return humanize(plan.name).replaceAll(/\b\w/g, (c) => c.toUpperCase());
+	return `Week of ${MONTH_DAY.format(utcDate(plan.start))}`;
+}
+
+/** A meal's day in a plan, like "Thu, Nov 5". */
+export function mealDay(isoDate) {
+	return WEEKDAY.format(utcDate(isoDate));
 }

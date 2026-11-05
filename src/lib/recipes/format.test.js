@@ -3,6 +3,7 @@ import {
 	describeSource,
 	formatMinutes,
 	humanize,
+	mealDay,
 	planTitle,
 	stepRuns,
 	tokenText,
@@ -108,13 +109,19 @@ describe("planTitle", () => {
 
 	test("names a one-off plan from its id", () => {
 		expect(planTitle({ title: null, name: "christmas-eve", start: "2026-12-24" })).toBe(
-			"christmas eve",
+			"Christmas Eve",
 		);
 	});
 
 	test("names a week by its start", () => {
 		expect(planTitle({ title: null, name: null, start: "2026-10-12" })).toBe(
-			"Week of 2026-10-12",
+			"Week of October 12",
 		);
+	});
+});
+
+describe("mealDay", () => {
+	test("reads as a short weekday and date, whatever the local time zone", () => {
+		expect(mealDay("2026-11-05")).toBe("Thu, Nov 5");
 	});
 });

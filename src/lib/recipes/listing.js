@@ -16,6 +16,9 @@ const COURSES = {
  */
 export const PREVIEW_SIZE = 6;
 
+/** How many recipes a course's carousel on the listing shows before its "All N" card. */
+export const CAROUSEL_SIZE = 10;
+
 /** Recipe cards for a listing, the most recently and most often cooked first. */
 export function listRecipes(recipes) {
 	return recipes.toSorted(byCooking).map(summarize);

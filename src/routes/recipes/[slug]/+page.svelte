@@ -14,11 +14,9 @@
 		tokenText,
 	} from "#lib/recipes/format";
 	import { backTo, RECIPES_HOME } from "#lib/recipes/listing";
+	import { SUBHEADING } from "#lib/recipes/styles";
 
 	const { data } = $props();
-
-	const SUBHEADING =
-		"flex items-center gap-3 text-base text-accent after:h-px after:flex-1 after:bg-panel-edge/15";
 
 	const TOKEN_CLASSES = {
 		ingredient: "font-semibold text-accent",

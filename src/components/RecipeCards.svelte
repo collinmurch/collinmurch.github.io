@@ -1,13 +1,29 @@
 <script>
+	import ChevronLink from "#components/ChevronLink.svelte";
 	import { formatMinutes, humanize } from "#lib/recipes/format";
 
-	/** Recipe summaries as a grid of cards that link to each recipe. */
-	const { recipes } = $props();
+	/**
+	 * Recipe summaries as cards that link to each recipe: a grid, or with
+	 * `carousel` a row that scrolls sideways. `all` (`{ href, text }`) ends the
+	 * carousel with a card leading to the rest.
+	 *
+	 * The carousel bleeds 1rem past the text column, the narrowest page padding,
+	 * and pads itself back so the cards line up with the heading. The extra
+	 * block padding keeps the card shadows from being clipped by the scroller.
+	 */
+	const { recipes, carousel = false, all = null } = $props();
 </script>
 
-<ul class="grid grid-cols-[repeat(auto-fill,minmax(min(100%,17rem),1fr))] gap-4">
+<ul
+	class={[
+		"grid gap-4",
+		carousel
+			? "-mx-4 -mt-2 -mb-8 snap-x snap-mandatory auto-cols-[min(17rem,82%)] grid-flow-col overflow-x-auto overscroll-x-contain scroll-px-4 px-4 pt-2 pb-8 [scrollbar-width:thin]"
+			: "grid-cols-[repeat(auto-fill,minmax(min(100%,17rem),1fr))]",
+	]}
+>
 	{#each recipes as recipe (recipe.slug)}
-		<li class="flex">
+		<li class="flex snap-start">
 			<a
 				href={`/recipes/${recipe.slug}`}
 				data-card
@@ -34,4 +50,14 @@
 			</a>
 		</li>
 	{/each}
+	{#if all}
+		<li class="flex snap-start">
+			<ChevronLink
+				href={all.href}
+				class="flex w-full items-center justify-center rounded-2xl border border-dashed border-accent/25 px-5 py-4 text-center text-xl text-muted-foreground hover:border-accent/50"
+			>
+				{all.text}
+			</ChevronLink>
+		</li>
+	{/if}
 </ul>

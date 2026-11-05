@@ -1,6 +1,8 @@
 <script>
 	import BackLink from "#components/BackLink.svelte";
-	import { humanize, planTitle } from "#lib/recipes/format";
+	import { fractionGlyphs } from "#lib/recipes/amounts";
+	import { humanize, mealDay, planTitle } from "#lib/recipes/format";
+	import { SUBHEADING } from "#lib/recipes/styles";
 	import { formatDate } from "#lib/utils/dates";
 
 	const { data } = $props();
@@ -26,49 +28,72 @@
 	<meta name="twitter:description" content={description} />
 </svelte:head>
 
-{#snippet groceryList(sections)}
-	{#each sections as section (section.name)}
-		<h3 class="capitalize">{section.name}</h3>
-		<ul>
-			{#each section.items as item (item.name)}
-				<li>
-					{humanize(item.name)}{#if item.amount}, {item.amount}{/if}
-					{#if item.optional}
-						<span class="text-muted-foreground">(optional)</span>
-					{/if}
-				</li>
+{#snippet groceries(id, label, sections)}
+	<section class="flex flex-col gap-4 p-(--block-padding)" aria-labelledby={id}>
+		<h2 {id} class="m-0 text-xl">{label}</h2>
+		<div class="columns-[15em] gap-x-10">
+			{#each sections as section (section.name)}
+				<div class="mb-5 break-inside-avoid">
+					<h3 class={["mt-2 mb-3 capitalize", SUBHEADING]}>{section.name}</h3>
+					<ul class="grid grid-cols-[minmax(4.5em,auto)_1fr] gap-x-5 gap-y-2">
+						{#each section.items as item (item.name)}
+							<li class="col-span-full grid grid-cols-subgrid">
+								<span class="text-muted-foreground">
+									{item.amount ? fractionGlyphs(item.amount) : ""}
+								</span>
+								<span>
+									{humanize(item.name)}
+									{#if item.optional}
+										<span class="text-muted-foreground/70">(optional)</span>
+									{/if}
+								</span>
+							</li>
+						{/each}
+					</ul>
+				</div>
 			{/each}
-		</ul>
-	{/each}
+		</div>
+	</section>
 {/snippet}
 
-<div class="mx-auto max-w-measure">
-	<BackLink href="/recipes/plans">Plans</BackLink>
-	<h1 class="mb-2 capitalize">{title}</h1>
-	<p class="mb-8 text-muted-foreground">
-		From {formatDate(plan.start)}{#if plan.spent != null}
-			· spent ${plan.spent.toFixed(2)}{/if}
-	</p>
+<div class="mx-auto max-w-measure space-y-8">
+	<header class="space-y-3">
+		<BackLink href="/recipes/plans">Plans</BackLink>
+		<h1>{title}</h1>
 
-	<article class="prose-rich space-y-8">
 		{#each notes as paragraph, index (index)}
-			<p class="whitespace-pre-line">{paragraph}</p>
+			<p class="text-prose whitespace-pre-line text-foreground/85">{paragraph}</p>
 		{/each}
 
-		<section>
-			<h2>Meals</h2>
-			<ul>
+		<ul
+			class="flex flex-wrap gap-x-2 text-muted-foreground *:not-first:before:me-2 *:not-first:before:content-['·']"
+		>
+			<li>From {formatDate(plan.start)}</li>
+			{#if plan.spent != null}
+				<li>Spent ${plan.spent.toFixed(2)}</li>
+			{/if}
+		</ul>
+	</header>
+
+	<article class="panel divide-y divide-panel-edge/15 text-prose">
+		<section class="flex flex-col gap-4 p-(--block-padding)" aria-labelledby="meals">
+			<h2 id="meals" class="m-0 text-xl">Meals</h2>
+			<ul class="flex flex-col gap-3">
 				{#each data.meals as meal, index (index)}
-					<li>
+					{@const details = [
+						meal.date && mealDay(meal.date),
+						meal.servings &&
+							`${meal.servings} ${meal.servings === 1 ? "serving" : "servings"}`,
+					].filter(Boolean)}
+					<li class="flex flex-wrap items-baseline justify-between gap-x-4">
 						<a href={`/recipes/${meal.recipe}`}>{meal.title}</a>
-						{#if meal.servings}
-							for {meal.servings}
-						{/if}
-						{#if meal.date}
-							<span class="text-muted-foreground">· {formatDate(meal.date)}</span>
+						{#if details.length > 0}
+							<span class="text-base whitespace-nowrap text-muted-foreground">
+								{details.join(" · ")}
+							</span>
 						{/if}
 						{#if meal.note}
-							<br /><span class="text-muted-foreground">{meal.note}</span>
+							<p class="basis-full text-base text-muted-foreground">{meal.note}</p>
 						{/if}
 					</li>
 				{/each}
@@ -76,17 +101,11 @@
 		</section>
 
 		{#if shopping.length > 0}
-			<section>
-				<h2>Groceries</h2>
-				{@render groceryList(shopping)}
-			</section>
+			{@render groceries("groceries", "Groceries", shopping)}
 		{/if}
 
 		{#if onHand.length > 0}
-			<section>
-				<h2>On hand</h2>
-				{@render groceryList(onHand)}
-			</section>
+			{@render groceries("on-hand", "On hand", onHand)}
 		{/if}
 	</article>
 </div>

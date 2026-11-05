@@ -3,7 +3,7 @@
 	import PreviewSection from "#components/PreviewSection.svelte";
 	import RecipeCards from "#components/RecipeCards.svelte";
 	import RecipeSearch from "#components/RecipeSearch.svelte";
-	import { byCourse, matchesSearch } from "#lib/recipes/listing";
+	import { byCourse, CAROUSEL_SIZE, matchesSearch } from "#lib/recipes/listing";
 
 	const { data } = $props();
 
@@ -38,8 +38,12 @@
 			{label}
 			items={recipes}
 			href={!searching && slug ? `/recipes/${slug}` : null}
+			limit={CAROUSEL_SIZE}
+			inline
 		>
-			{#snippet list(shown)}<RecipeCards recipes={shown} />{/snippet}
+			{#snippet list(shown, all)}
+				<RecipeCards recipes={shown} carousel={!searching} {all} />
+			{/snippet}
 		</PreviewSection>
 	{:else}
 		<p class="text-prose text-muted-foreground">

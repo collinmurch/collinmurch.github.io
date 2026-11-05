@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { buildFeed, feedOrder, rfc822 } from "./feed";
+import { addedTime, buildFeed, feedOrder, rfc822 } from "./feed";
 
 const channel = {
 	title: "Recipes",
@@ -12,8 +12,26 @@ function feedOf(recipes) {
 }
 
 describe("rfc822", () => {
-	test("formats a date at UTC midnight", () => {
-		expect(rfc822("2026-10-12")).toBe("Mon, 12 Oct 2026 00:00:00 GMT");
+	test("formats a time in GMT", () => {
+		expect(rfc822(Date.parse("2026-11-04T16:36:45-05:00"))).toBe(
+			"Wed, 04 Nov 2026 21:36:45 GMT",
+		);
+	});
+});
+
+describe("addedTime", () => {
+	test("prefers the full timestamp", () => {
+		expect(
+			addedTime({ added: "2026-11-04", added_at: "2026-11-04T16:36:45-05:00" }),
+		).toBe(Date.parse("2026-11-04T21:36:45Z"));
+	});
+
+	test("falls back to UTC midnight of the date", () => {
+		expect(addedTime({ added: "2026-10-12" })).toBe(Date.parse("2026-10-12T00:00:00Z"));
+	});
+
+	test("is null for an undated recipe", () => {
+		expect(addedTime({})).toBeNull();
 	});
 });
 
@@ -32,6 +50,14 @@ describe("feedOrder", () => {
 			{ title: "Dated", added: "2026-01-01" },
 		]);
 		expect(order.map((r) => r.title)).toEqual(["Dated", "Undated"]);
+	});
+
+	test("orders recipes added the same day by time when known", () => {
+		const order = feedOrder([
+			{ title: "A", added: "2026-11-04", added_at: "2026-11-04T09:00:00-05:00" },
+			{ title: "B", added: "2026-11-04", added_at: "2026-11-04T16:00:00-05:00" },
+		]);
+		expect(order.map((r) => r.title)).toEqual(["B", "A"]);
 	});
 
 	test("orders recipes added the same day by title", () => {
@@ -84,6 +110,32 @@ describe("buildFeed", () => {
 		expect(feedOf([{ slug: "a", title: "A", added: "2026-10-12" }])).toContain(
 			"<pubDate>Mon, 12 Oct 2026 00:00:00 GMT</pubDate>",
 		);
+	});
+
+	test("dates an item to the second when the time is known", () => {
+		const recipe = {
+			slug: "a",
+			title: "A",
+			added: "2026-11-04",
+			added_at: "2026-11-04T16:36:45-05:00",
+		};
+		expect(feedOf([recipe])).toContain(
+			"<pubDate>Wed, 04 Nov 2026 21:36:45 GMT</pubDate>",
+		);
+	});
+
+	test("dates the channel by its newest item", () => {
+		const feed = feedOf([
+			{ slug: "a", title: "A", added: "2026-10-12" },
+			{ slug: "b", title: "B", added_at: "2026-11-04T16:36:45-05:00" },
+		]);
+		expect(feed).toContain(
+			"<lastBuildDate>Wed, 04 Nov 2026 21:36:45 GMT</lastBuildDate>",
+		);
+	});
+
+	test("leaves out the channel date when nothing is dated", () => {
+		expect(feedOf([{ slug: "a", title: "A" }])).not.toContain("<lastBuildDate>");
 	});
 
 	test("leaves out the date of an undated item", () => {

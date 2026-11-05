@@ -1,4 +1,4 @@
-export const SITE_ORIGIN = "https://collinmurch.com";
+export const SITE_ORIGIN = "https://www.collinmurch.com";
 
 const DEFAULT_META = {
 	title: "Collin Murch | Software Engineer",

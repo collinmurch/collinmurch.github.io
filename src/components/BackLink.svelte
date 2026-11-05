@@ -10,10 +10,6 @@
 	const { href, children } = $props();
 </script>
 
-<ChevronLink
-	{href}
-	back
-	class="mb-4 block w-fit text-prose text-muted-foreground capitalize"
->
+<ChevronLink {href} back class="mb-4 block w-fit text-prose text-muted-foreground">
 	{@render children()}
 </ChevronLink>
