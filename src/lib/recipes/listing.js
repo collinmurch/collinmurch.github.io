@@ -11,7 +11,7 @@ const COURSES = {
 };
 
 /** How many recipes a course's carousel on the listing shows before its "All N" card. */
-export const CAROUSEL_SIZE = 10;
+export const CAROUSEL_SIZE = 7;
 
 /** How many plans the listing shows before linking to the plans page. */
 export const PLAN_PREVIEW_SIZE = 6;
