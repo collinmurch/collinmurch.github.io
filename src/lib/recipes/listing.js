@@ -10,14 +10,11 @@ const COURSES = {
 	drink: "Drinks",
 };
 
-/**
- * How many recipes or plans a section of the listing shows before linking to
- * its own page. Six fills whole rows whether the cards sit one, two, or three across.
- */
-export const PREVIEW_SIZE = 6;
-
 /** How many recipes a course's carousel on the listing shows before its "All N" card. */
 export const CAROUSEL_SIZE = 10;
+
+/** How many plans the listing shows before linking to the plans page. */
+export const PLAN_PREVIEW_SIZE = 6;
 
 /** Recipe cards for a listing, the most recently and most often cooked first. */
 export function listRecipes(recipes) {

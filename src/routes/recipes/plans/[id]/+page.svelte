@@ -1,7 +1,7 @@
 <script>
 	import BackLink from "#components/BackLink.svelte";
 	import { fractionGlyphs } from "#lib/recipes/amounts";
-	import { humanize, mealDay, planTitle } from "#lib/recipes/format";
+	import { formatServings, humanize, mealDay, planTitle } from "#lib/recipes/format";
 	import { SUBHEADING } from "#lib/recipes/styles";
 	import { formatDate } from "#lib/utils/dates";
 
@@ -82,8 +82,7 @@
 				{#each data.meals as meal, index (index)}
 					{@const details = [
 						meal.date && mealDay(meal.date),
-						meal.servings &&
-							`${meal.servings} ${meal.servings === 1 ? "serving" : "servings"}`,
+						meal.servings && formatServings(meal.servings),
 					].filter(Boolean)}
 					<li class="flex flex-wrap items-baseline justify-between gap-x-4">
 						<a href={`/recipes/${meal.recipe}`}>{meal.title}</a>

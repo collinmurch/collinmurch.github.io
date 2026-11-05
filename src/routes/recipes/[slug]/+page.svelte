@@ -9,6 +9,7 @@
 	import {
 		describeSource,
 		formatMinutes,
+		formatServings,
 		humanize,
 		stepRuns,
 		tokenText,
@@ -134,8 +135,8 @@
 						aria-live="polite"
 						class="grid items-center justify-items-center border-s border-accent/14 px-3 text-sm whitespace-nowrap tabular-nums *:col-start-1 *:row-start-1"
 					>
-						<span class="invisible">{MAX_SERVINGS} servings</span>
-						<span>{servings} {servings === 1 ? "serving" : "servings"}</span>
+						<span class="invisible">{formatServings(MAX_SERVINGS)}</span>
+						<span>{formatServings(servings)}</span>
 					</output>
 					<Button
 						icon="plus"

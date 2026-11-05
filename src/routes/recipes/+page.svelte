@@ -3,7 +3,12 @@
 	import PreviewSection from "#components/PreviewSection.svelte";
 	import RecipeCards from "#components/RecipeCards.svelte";
 	import RecipeSearch from "#components/RecipeSearch.svelte";
-	import { byCourse, CAROUSEL_SIZE, matchesSearch } from "#lib/recipes/listing";
+	import {
+		byCourse,
+		CAROUSEL_SIZE,
+		matchesSearch,
+		PLAN_PREVIEW_SIZE,
+	} from "#lib/recipes/listing";
 
 	const { data } = $props();
 
@@ -54,7 +59,13 @@
 	{/each}
 
 	{#if data.plans.length > 0}
-		<PreviewSection id="plans" label="Plans" items={data.plans} href="/recipes/plans">
+		<PreviewSection
+			id="plans"
+			label="Plans"
+			items={data.plans}
+			href="/recipes/plans"
+			limit={PLAN_PREVIEW_SIZE}
+		>
 			{#snippet list(shown)}<PlanList plans={shown} />{/snippet}
 		</PreviewSection>
 	{/if}

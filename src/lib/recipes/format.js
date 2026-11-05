@@ -11,6 +11,11 @@ export function formatMinutes(minutes) {
 	return rest === 0 ? `${hours} hr` : `${hours} hr ${rest} min`;
 }
 
+/** A serving count, like "1 serving" or "4 servings". */
+export function formatServings(servings) {
+	return `${servings} ${servings === 1 ? "serving" : "servings"}`;
+}
+
 /**
  * Splits a section's content into runs of consecutive steps and the notes
  * between them, so each run can render as one numbered list.

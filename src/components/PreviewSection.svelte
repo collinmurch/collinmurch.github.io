@@ -10,17 +10,8 @@
 -->
 <script>
 	import ChevronLink from "#components/ChevronLink.svelte";
-	import { PREVIEW_SIZE } from "#lib/recipes/listing";
 
-	const {
-		id,
-		label,
-		items,
-		href = null,
-		limit = PREVIEW_SIZE,
-		inline = false,
-		list,
-	} = $props();
+	const { id, label, items, href = null, limit, inline = false, list } = $props();
 
 	const all = $derived(
 		href !== null && items.length > limit

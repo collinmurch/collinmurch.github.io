@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
 	describeSource,
 	formatMinutes,
+	formatServings,
 	humanize,
 	mealDay,
 	planTitle,
@@ -26,6 +27,13 @@ describe("formatMinutes", () => {
 
 	test("shows hours and minutes", () => {
 		expect(formatMinutes(65)).toBe("1 hr 5 min");
+	});
+});
+
+describe("formatServings", () => {
+	test("pluralizes every count but one", () => {
+		expect(formatServings(1)).toBe("1 serving");
+		expect(formatServings(4)).toBe("4 servings");
 	});
 });
 
