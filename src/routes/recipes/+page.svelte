@@ -36,6 +36,18 @@
 		{/if}
 	</div>
 
+	{#if !searching && data.plans.length > 0}
+		<PreviewSection
+			id="plans"
+			label="Plans"
+			items={data.plans}
+			href="/recipes/plans"
+			limit={PLAN_PREVIEW_SIZE}
+		>
+			{#snippet list(shown)}<PlanList plans={shown} />{/snippet}
+		</PreviewSection>
+	{/if}
+
 	{#each courses as { course, label, slug, recipes } (course)}
 		<!-- A search shows every match, so it never links away to a course page. -->
 		<PreviewSection
@@ -57,16 +69,4 @@
 				: "No recipes match that search."}
 		</p>
 	{/each}
-
-	{#if data.plans.length > 0}
-		<PreviewSection
-			id="plans"
-			label="Plans"
-			items={data.plans}
-			href="/recipes/plans"
-			limit={PLAN_PREVIEW_SIZE}
-		>
-			{#snippet list(shown)}<PlanList plans={shown} />{/snippet}
-		</PreviewSection>
-	{/if}
 </div>
